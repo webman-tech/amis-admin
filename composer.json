@@ -1,0 +1,18 @@
+{
+  "name": "kriss/webman-amis-admin",
+  "type": "library",
+  "license": "MIT",
+  "description": "Webman plugin kriss/webman-amis-admin",
+  "autoload": {
+    "psr-4": {
+      "Kriss\\WebmanAmisAdmin\\": "src"
+    }
+  },
+  "require": {
+    "php": ">=7.4",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "workerman/webman-framework": "^1.3"
+  }
+}
