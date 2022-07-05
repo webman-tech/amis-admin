@@ -1,6 +1,6 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\controller;
+namespace Kriss\WebmanAmisAdmin\Controller;
 
 use support\view\Raw;
 
