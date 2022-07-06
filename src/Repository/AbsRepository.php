@@ -11,8 +11,16 @@ abstract class AbsRepository implements RepositoryInterface
     public const SCENE_CREATE = 'create';
     public const SCENE_UPDATE = 'update';
 
-    protected string $keyName = 'id';
+    protected string $primaryKey = 'id';
     protected ?ValidatorInterface $validator = null;
+
+    /**
+     * @inheritDoc
+     */
+    public function getPrimaryKey(): string
+    {
+        return $this->primaryKey;
+    }
 
     /**
      * @inheritdoc

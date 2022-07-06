@@ -15,6 +15,8 @@ namespace Kriss\WebmanAmisAdmin\Amis;
  * @method $this width(string $value)
  * @method $this fixed(string $value) left | right | none
  * @method $this remark(string|array $value)
+ * @method $this align(string $value) left | right | center
+ * @method $this toggled(bool $is) 默认是否展示
  *
  * @method $this typeCode(array $schema = [])
  * @method $this typeColor(array $schema = [])
@@ -35,6 +37,7 @@ class GridColumn extends Component
 {
     protected array $schema = [
         'type' => 'text',
+        'align' => 'center',
     ];
 
     protected array $defaultValue = [

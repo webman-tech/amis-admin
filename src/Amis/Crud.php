@@ -13,6 +13,7 @@ class Crud extends Component
             'type' => 'crud',
             'syncLocation' => false,
             'autoGenerateFilter' => true,
+            'alwaysShowPagination' => true,
             'headerToolbar' => [
                 10 => 'reload',
                 20 => 'bulkActions',
@@ -34,7 +35,14 @@ class Crud extends Component
     public function withColumns(array $columns)
     {
         $quickEditEnable = isset($this->schema['quickSaveItemApi']);
-        foreach ($columns as &$column) {
+        foreach ($columns as $index => &$column) {
+            if ($column instanceof GridColumnActions) {
+                // 去除操作栏为空 buttons 的
+                if (count($column->get('buttons', [])) <= 0) {
+                    unset($columns[$index]);
+                    continue;
+                }
+            }
             if ($column instanceof Component) {
                 $column = $column->toArray();
             }
@@ -54,7 +62,7 @@ class Crud extends Component
         return $this;
     }
 
-    public function withCreate(string $api, array $form)
+    public function withCreate(string $api, array $form, string $can = '1==1')
     {
         return $this->withHeaderToolbar(30, [
             'type' => 'button',
@@ -62,6 +70,7 @@ class Crud extends Component
             'icon' => 'fa fa-plus',
             'actionType' => 'dialog',
             'level' => 'primary',
+            'visibleOn' => $can,
             'dialog' => [
                 'title' => '新增',
                 'body' => [

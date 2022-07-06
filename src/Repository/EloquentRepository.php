@@ -15,6 +15,9 @@ class EloquentRepository extends AbsRepository
         $this->initModel($model);
     }
 
+    /**
+     * @param $model
+     */
     protected function initModel($model)
     {
         if (is_string($model)) {
@@ -25,9 +28,12 @@ class EloquentRepository extends AbsRepository
         } else {
             throw new \InvalidArgumentException('model error');
         }
-        $this->keyName = $this->model()->getKeyName();
+        $this->primaryKey = $this->model()->getKeyName();
     }
 
+    /**
+     * @return EloquentModel
+     */
     protected function model(): EloquentModel
     {
         if (!$this->model) {
@@ -37,11 +43,19 @@ class EloquentRepository extends AbsRepository
     }
 
     /**
+     * @return EloquentBuilder
+     */
+    protected function query(): EloquentBuilder
+    {
+        return $this->model()->newQuery();
+    }
+
+    /**
      * @inheritDoc
      */
     public function pagination(int $page = 1, int $perPage = 20, array $search = [], array $order = []): array
     {
-        $query = $this->model()->newQuery()
+        $query = $this->query()
             ->with($this->gridRelations());
         $query = $this->buildSearch($query, $search);
         $query = $this->buildOrder($query, $order);
@@ -59,7 +73,7 @@ class EloquentRepository extends AbsRepository
     {
         $searchableAttributes = $this->searchableAttributes();
         foreach ($search as $attribute => $value) {
-            if (array_key_exists($attribute, $searchableAttributes)) {
+            if ($value && array_key_exists($attribute, $searchableAttributes)) {
                 $query = call_user_func($searchableAttributes[$attribute], $query, $value, $attribute);
             }
         }
@@ -115,7 +129,7 @@ class EloquentRepository extends AbsRepository
      */
     public function detail($id): array
     {
-        return $this->model()->newQuery()
+        return $this->query()
             ->findOrFail($id, $this->detailColumns())
             ->toArray();
     }
@@ -156,7 +170,7 @@ class EloquentRepository extends AbsRepository
      */
     protected function doUpdate(array $data, $id): void
     {
-        $model = $this->model()->newQuery()->findOrFail($id, $this->formColumns());
+        $model = $this->query()->findOrFail($id, $this->formColumns());
         foreach ($data as $key => $value) {
             $model->{$key} = $value;
         }
@@ -168,7 +182,7 @@ class EloquentRepository extends AbsRepository
      */
     public function destroy($id): void
     {
-        $model = $this->model()->newQuery()->findOrFail($id);
+        $model = $this->query()->findOrFail($id);
         $model->delete();
     }
 
@@ -177,6 +191,9 @@ class EloquentRepository extends AbsRepository
      */
     public function recovery($id): void
     {
-        $this->model()->newQuery()->whereKey($id)->restore();
+        $this->query()
+            ->withTrashed()
+            ->whereKey($id)
+            ->restore();
     }
 }

@@ -5,18 +5,21 @@ namespace Kriss\WebmanAmisAdmin\Amis;
 /**
  * table 的 actions column 列
  */
-class GridColumnActions extends Component
+class GridColumnActions extends GridColumn
 {
     public const INDEX_DETAIL = 10;
     public const INDEX_UPDATE = 20;
     public const INDEX_DELETE = 30;
     public const INDEX_RECOVERY = 40;
 
-    protected array $schema = [
-        'type' => 'operation',
-        'label' => '操作',
-        'buttons' => [],
-    ];
+    public function __construct()
+    {
+        $this->schema([
+            'type' => 'operation',
+            'label' => '操作',
+            'buttons' => [],
+        ]);
+    }
 
     /**
      * 详情
@@ -24,10 +27,11 @@ class GridColumnActions extends Component
      * @param string|null $initApi
      * @return $this
      */
-    public function withDetail(array $detailAttributes, string $initApi = null)
+    public function withDetail(array $detailAttributes, string $initApi = null, string $can = '1==1')
     {
         return $this->withDialogButton(static::INDEX_DETAIL, '详情', $detailAttributes, [
             'initApi' => $initApi,
+            'visibleOn' => $can,
         ]);
     }
 
@@ -38,11 +42,13 @@ class GridColumnActions extends Component
      * @param string|null $initApi
      * @return $this
      */
-    public function withUpdate(array $formFields, string $api, string $initApi = null)
+    public function withUpdate(array $formFields, string $api, string $initApi = null, string $can = '1==1')
     {
         return $this->withDialogButton(static::INDEX_UPDATE, '修改', $formFields, [
             'initApi' => $initApi,
             'api' => $api,
+            'level' => 'primary',
+            'visibleOn' => $can,
         ]);
     }
 
@@ -51,11 +57,12 @@ class GridColumnActions extends Component
      * @param string $api
      * @return $this
      */
-    public function withDelete(string $api)
+    public function withDelete(string $api, string $can = '1==1')
     {
         return $this->withAjaxButton(static::INDEX_DELETE, '删除', $api, [
             'level' => 'danger',
             'confirmText' => '确定要删除？',
+            'visibleOn' => $can,
         ]);
     }
 
@@ -64,11 +71,12 @@ class GridColumnActions extends Component
      * @param string $api
      * @return $this
      */
-    public function withRecovery(string $api)
+    public function withRecovery(string $api, string $can = '1==1')
     {
         return $this->withAjaxButton(static::INDEX_RECOVERY, '恢复', $api, [
             'level' => 'warning',
             'confirmText' => '确定要恢复？',
+            'visibleOn' => $can,
         ]);
     }
 

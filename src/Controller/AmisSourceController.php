@@ -16,13 +16,17 @@ abstract class AmisSourceController
     public const SCENE_CREATE = 'create';
     public const SCENE_UPDATE = 'update';
 
-    protected string $title;
     protected Amis $amis;
     protected bool $enableDetail = true;
+    protected string $visibleDetail = '1==1';
     protected bool $enableCreate = true;
+    protected string $visibleCreate = '1==1';
     protected bool $enableUpdate = true;
+    protected string $visibleUpdate = '1==1';
     protected bool $enableDelete = true;
+    protected string $visibleDelete = 'this.deleted_at==null';
     protected bool $enableRecovery = true;
+    protected string $visibleRecovery = 'this.deleted_at!=null';
 
     public function __construct()
     {
@@ -43,12 +47,19 @@ abstract class AmisSourceController
             if ($orderBy = $request->get('orderBy')) {
                 $order[$orderBy] = $request->get('orderDir', 'asc');
             }
-            return $this->amis->response($this->repository()->pagination(
-                $request->get('page'),
-                $request->get('perPage'),
-                $request->get(),
-                $order
-            ));
+            try {
+                return $this->amis->response($this->repository()->pagination(
+                    $request->get('page'),
+                    $request->get('perPage'),
+                    $request->get(),
+                    $order
+                ));
+            } catch (Throwable $e) {
+                return $this->amis->handleException($e, [
+                    'class' => get_called_class(),
+                    'function' => __FUNCTION__,
+                ]);
+            }
         }
 
         return $this->amis->response(
@@ -167,51 +178,6 @@ abstract class AmisSourceController
     }
 
     /**
-     * 列表的 columns
-     * @return array
-     */
-    protected function grid(): array
-    {
-        return [
-            ['name' => 'id', 'label' => 'ID'],
-        ];
-    }
-
-    /**
-     * 新增和修改的表单
-     * @param string $scene
-     * @return array
-     */
-    protected function form(string $scene): array
-    {
-        return [
-            //['type' => 'input-text', 'name' => 'username', 'label' => '用户名'],
-        ];
-    }
-
-    /**
-     * 明细的字段展示
-     * @return array
-     */
-    protected function detail(): array
-    {
-        return [
-            //['type' => 'input-text', 'name' => 'username', 'label' => '用户名'],
-        ];
-    }
-
-    /**
-     * 过滤搜索的字段
-     * @return array
-     */
-    protected function filter(): array
-    {
-        return [
-            ['type' => 'input-text', 'name' => 'id', 'label' => 'ID'],
-        ];
-    }
-
-    /**
      * @param Request $request
      * @return Amis\Page
      */
@@ -230,79 +196,111 @@ abstract class AmisSourceController
 
         $crud = Amis\Crud::make()
             ->schema([
+                'primaryField' => $this->repository()->getPrimaryKey(),
                 'api' => 'get:' . $routePrefix . '?_ajax=1',
-                //'quickSaveApi' => 'put:' . $request->path(), // 目前没有批量保存接口
+                //'quickSaveApi' => 'put:' . $routePrefix . '/all, // 目前没有批量保存接口
                 'quickSaveItemApi' => 'put:' . $routePrefix . '/${id}', // 需要 column 配置为 'quickEdit' => ['saveImmediately' => true]
             ])
-            ->withColumns($this->buildGridColumn($this->grid(), $routePrefix));
+            ->withColumns(array_merge(
+                $this->buildGridColumn($this->grid()),
+                [$this->gridActions($routePrefix)],
+            ));
         if ($this->enableCreate) {
-            $crud->withCreate('post:' . $routePrefix, $this->buildFormAttributes($this->form(static::SCENE_CREATE)));
+            $crud->withCreate(
+                'post:' . $routePrefix,
+                $this->buildFormAttributes($this->form(static::SCENE_CREATE)),
+                $this->visibleCreate
+            );
         }
         return $crud;
     }
 
     /**
-     * @param array $gridColumns
-     * @param string $routePrefix
+     * 列表的 columns
      * @return array
      */
-    protected function buildGridColumn(array $gridColumns, string $routePrefix): array
+    protected function grid(): array
+    {
+        return [
+            Amis\GridColumn::make()->name('id'),
+        ];
+    }
+
+    /**
+     * @param array $gridColumns
+     * @return array
+     */
+    protected function buildGridColumn(array $gridColumns): array
     {
         foreach ($gridColumns as &$item) {
             if ($item instanceof Amis\GridColumnActions) {
-                if ($this->enableDetail) {
-                    $item->withDetail(
-                        $this->buildDetailAttributes($this->detail()),
-                        "get:{$routePrefix}/\${id}"
-                    );
-                }
-                if ($this->enableUpdate) {
-                    $item->withUpdate(
-                        $this->buildFormAttributes($this->form(static::SCENE_UPDATE)),
-                        "put:{$routePrefix}/\${id}",
-                        "get:{$routePrefix}/\${id}"
-                    );
-                }
-                if ($this->enableDelete) {
-                    $item->withDelete("delete:{$routePrefix}/\${id}");
-                }
-                if ($this->enableRecovery) {
-                    $item->withRecovery("put:{$routePrefix}/\${id}/recovery");
-                }
                 $item = $item->toArray();
                 continue;
             }
 
+            if (is_string($item)) {
+                $item = Amis\GridColumn::make()->name($item);
+            }
+            if (is_array($item)) {
+                $item = Amis\GridColumn::make($item);
+            }
             if ($item instanceof Component) {
                 $item = $item->toArray();
-            }
-            if (!is_array($item)) {
-                $item = ['name' => $item];
             }
             $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
         }
         unset($item);
+
         return $gridColumns;
     }
 
     /**
-     * @param array $detailAttributes
+     * grid 操作栏
+     * @return Amis\GridColumnActions
+     */
+    protected function gridActions(string $routePrefix): Amis\GridColumnActions
+    {
+        $actions = Amis\GridColumnActions::make();
+        if ($this->enableDetail) {
+            $actions->withDetail(
+                $this->buildDetailAttributes($this->detail()),
+                "get:{$routePrefix}/\${id}",
+                $this->visibleDetail
+            );
+        }
+        if ($this->enableUpdate) {
+            $actions->withUpdate(
+                $this->buildFormAttributes($this->form(static::SCENE_UPDATE)),
+                "put:{$routePrefix}/\${id}",
+                "get:{$routePrefix}/\${id}",
+                $this->visibleUpdate
+            );
+        }
+        if ($this->enableDelete) {
+            $actions->withDelete(
+                "delete:{$routePrefix}/\${id}",
+                $this->visibleDelete
+            );
+        }
+        if ($this->enableRecovery) {
+            $actions->withRecovery(
+                "put:{$routePrefix}/\${id}/recovery",
+                $this->visibleRecovery
+            );
+        }
+        return $actions;
+    }
+
+    /**
+     * 新增和修改的表单
+     * @param string $scene
      * @return array
      */
-    protected function buildDetailAttributes(array $detailAttributes): array
+    protected function form(string $scene): array
     {
-        foreach ($detailAttributes as &$item) {
-            if ($item instanceof Component) {
-                $item = $item->toArray();
-            }
-            if (!is_array($item)) {
-                $item = ['name' => $item];
-            }
-            $item['type'] = $item['type'] ?? 'static';
-            $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
-        }
-        unset($item);
-        return $detailAttributes;
+        return [
+            //Amis\FormField::make()->name('name'),
+        ];
     }
 
     /**
@@ -312,16 +310,51 @@ abstract class AmisSourceController
     protected function buildFormAttributes(array $formAttributes): array
     {
         foreach ($formAttributes as &$item) {
+            if (is_string($item)) {
+                $item = Amis\FormField::make()->name($item);
+            }
+            if (is_array($item)) {
+                $item = Amis\FormField::make($item);
+            }
             if ($item instanceof Component) {
                 $item = $item->toArray();
             }
-            if (!is_array($item)) {
-                $item = ['name' => $item];
-            }
-            $item['type'] = $item['type'] ?? 'input-text';
             $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
         }
         unset($item);
         return $formAttributes;
+    }
+
+    /**
+     * 明细的字段展示
+     * @return array
+     */
+    protected function detail(): array
+    {
+        return [
+            Amis\DetailAttribute::make()->name('id'),
+        ];
+    }
+
+    /**
+     * @param array $detailAttributes
+     * @return array
+     */
+    protected function buildDetailAttributes(array $detailAttributes): array
+    {
+        foreach ($detailAttributes as &$item) {
+            if (is_string($item)) {
+                $item = Amis\DetailAttribute::make()->name($item);
+            }
+            if (is_array($item)) {
+                $item = Amis\DetailAttribute::make($item);
+            }
+            if ($item instanceof Component) {
+                $item = $item->toArray();
+            }
+            $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
+        }
+        unset($item);
+        return $detailAttributes;
     }
 }

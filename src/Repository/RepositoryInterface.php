@@ -5,6 +5,12 @@ namespace Kriss\WebmanAmisAdmin\Repository;
 interface RepositoryInterface
 {
     /**
+     * 主键
+     * @return string
+     */
+    public function getPrimaryKey(): string;
+
+    /**
      * 分页数据列表
      * @param int $page
      * @param int $perPage

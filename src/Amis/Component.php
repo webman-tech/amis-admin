@@ -48,6 +48,20 @@ class Component
         return $this->deepToArray($this->schema);
     }
 
+    public function get(string $schemaKey, $default = null)
+    {
+        $keys = explode('.', $schemaKey);
+        $array = $this->toArray();
+        foreach ($keys as $key) {
+            if (is_array($array) && array_key_exists($key, $array)) {
+                $array = $array[$key];
+            } else {
+                return $default;
+            }
+        }
+        return $array;
+    }
+
     protected function deepToArray(array $arr): array
     {
         $newArr = [];
