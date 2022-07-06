@@ -23,18 +23,18 @@ interface RepositoryInterface
 
     /**
      * 创建
-     * @param array $attributes
+     * @param array $data
      * @return void
      */
-    public function create(array $attributes): void;
+    public function create(array $data): void;
 
     /**
      * 更新
-     * @param array $attributes
+     * @param array $data
      * @param $id
      * @return void
      */
-    public function update(array $attributes, $id): void;
+    public function update(array $data, $id): void;
 
     /**
      * 删除

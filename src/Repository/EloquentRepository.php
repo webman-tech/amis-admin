@@ -15,71 +15,6 @@ class EloquentRepository extends AbsRepository
         $this->initModel($model);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function pagination(int $page = 1, int $perPage = 20, array $search = [], array $order = []): array
-    {
-        $query = $this->model()->newQuery();
-        $query = $this->buildSearch($query, $search);
-        $query = $this->buildOrder($query, $order);
-
-        return $query
-            ->paginate($perPage, $this->getGridColumns(), 'page', $page)
-            ->toArray();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function detail($id): array
-    {
-        return $this->model()->newQuery()
-            ->find($id, $this->getDetailColumns())
-            ->toArray();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function create(array $attributes): void
-    {
-        $model = $this->model();
-        foreach ($attributes as $key => $value) {
-            $model->{$key} = $value;
-        }
-        $model->save();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function update(array $attributes, $id): void
-    {
-        $model = $this->model()->newQuery()->find($id, $this->getFormColumns());
-        foreach ($attributes as $key => $value) {
-            $model->{$key} = $value;
-        }
-        $model->save();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function destroy($id): void
-    {
-        $model = $this->model()->newQuery()->find($id);
-        $model->delete();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function recovery($id): void
-    {
-        $this->model()->newQuery()->whereKey($id)->restore();
-    }
-
     protected function initModel($model)
     {
         if (is_string($model)) {
@@ -95,15 +30,63 @@ class EloquentRepository extends AbsRepository
 
     protected function model(): EloquentModel
     {
-        return $this->model ?: new $this->modelClass;
+        if (!$this->model) {
+            $this->model = new $this->modelClass;
+        }
+        return $this->model;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function pagination(int $page = 1, int $perPage = 20, array $search = [], array $order = []): array
+    {
+        $query = $this->model()->newQuery()
+            ->with($this->gridRelations());
+        $query = $this->buildSearch($query, $search);
+        $query = $this->buildOrder($query, $order);
+
+        return $this->queryPagination($query, $perPage, $page, $this->gridColumns());
+    }
+
+    /**
+     * 构建搜索条件
+     * @param EloquentBuilder $query
+     * @param array $search
+     * @return mixed
+     */
     protected function buildSearch(EloquentBuilder $query, array $search): EloquentBuilder
     {
-        $search = $this->filterByKey($search);
-        return $query->where($search);
+        $searchableAttributes = $this->searchableAttributes();
+        foreach ($search as $attribute => $value) {
+            if (array_key_exists($attribute, $searchableAttributes)) {
+                $query = call_user_func($searchableAttributes[$attribute], $query, $value, $attribute);
+            }
+        }
+        return $query;
     }
 
+    /**
+     * 搜索字段配置
+     * @return array
+     */
+    protected function searchableAttributes(): array
+    {
+        // 表下的所有字段可搜索
+        $columns = $this->model()->getConnection()->getSchemaBuilder()->getColumnListing($this->model()->getTable());
+        $result = [];
+        foreach ($columns as $column) {
+            $result[$column] = fn($query, $value, $attribute) => $query->where($attribute, $value);
+        }
+        return $result;
+    }
+
+    /**
+     * 构建排序条件
+     * @param EloquentBuilder $query
+     * @param array $order
+     * @return EloquentBuilder
+     */
     protected function buildOrder(EloquentBuilder $query, array $order): EloquentBuilder
     {
         foreach ($order as $column => $direction) {
@@ -112,10 +95,88 @@ class EloquentRepository extends AbsRepository
         return $query;
     }
 
-    protected function filterByKey(array $search): array
+    /**
+     * 查询分页数据
+     * @param EloquentBuilder $query
+     * @param int $perPage
+     * @param int $page
+     * @param array $columns
+     * @return array
+     */
+    protected function queryPagination(EloquentBuilder $query, int $perPage, int $page, array $columns): array
     {
-        $search = array_filter($search);
-        $columns = $this->model()->getConnection()->getSchemaBuilder()->getColumnListing($this->model()->getTable());
-        return array_filter($search, fn($key) => in_array($key, $columns), ARRAY_FILTER_USE_KEY);
+        return $query
+            ->paginate($perPage, $columns, 'page', $page)
+            ->toArray();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function detail($id): array
+    {
+        return $this->model()->newQuery()
+            ->findOrFail($id, $this->detailColumns())
+            ->toArray();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function create(array $data): void
+    {
+        $data = $this->validate($data, static::SCENE_CREATE);
+        $this->doCreate($data);
+    }
+
+    /**
+     * @param array $data
+     */
+    protected function doCreate(array $data): void
+    {
+        $model = $this->model();
+        foreach ($data as $key => $value) {
+            $model->{$key} = $value;
+        }
+        $model->save();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function update(array $data, $id): void
+    {
+        $data = $this->validate($data, static::SCENE_UPDATE);
+        $this->doUpdate($data, $id);
+    }
+
+    /**
+     * @param array $data
+     * @param $id
+     */
+    protected function doUpdate(array $data, $id): void
+    {
+        $model = $this->model()->newQuery()->findOrFail($id, $this->formColumns());
+        foreach ($data as $key => $value) {
+            $model->{$key} = $value;
+        }
+        $model->save();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroy($id): void
+    {
+        $model = $this->model()->newQuery()->findOrFail($id);
+        $model->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function recovery($id): void
+    {
+        $this->model()->newQuery()->whereKey($id)->restore();
     }
 }
