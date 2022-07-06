@@ -49,4 +49,11 @@ interface RepositoryInterface
      * @return void
      */
     public function recovery($id): void;
+
+    /**
+     * 根据 attribute 获取 label
+     * @param string $attribute
+     * @return string
+     */
+    public function getLabel(string $attribute): string;
 }

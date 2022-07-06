@@ -25,4 +25,9 @@ abstract class AbsRepository implements RepositoryInterface
     {
         return ['*'];
     }
+
+    public function getLabel(string $attribute): string
+    {
+        return $attribute;
+    }
 }

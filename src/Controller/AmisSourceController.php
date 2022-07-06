@@ -3,6 +3,8 @@
 namespace Kriss\WebmanAmisAdmin\Controller;
 
 use Kriss\WebmanAmisAdmin\Amis;
+use Kriss\WebmanAmisAdmin\Amis\Component;
+use Kriss\WebmanAmisAdmin\Exceptions\ActionDisableException;
 use Kriss\WebmanAmisAdmin\Repository\RepositoryInterface;
 use support\Container;
 use Throwable;
@@ -11,8 +13,16 @@ use Webman\Http\Response;
 
 abstract class AmisSourceController
 {
+    public const SCENE_CREATE = 'create';
+    public const SCENE_UPDATE = 'update';
+
     protected string $title;
     protected Amis $amis;
+    protected bool $enableDetail = true;
+    protected bool $enableCreate = true;
+    protected bool $enableUpdate = true;
+    protected bool $enableDelete = true;
+    protected bool $enableRecovery = true;
 
     public function __construct()
     {
@@ -41,7 +51,11 @@ abstract class AmisSourceController
             ));
         }
 
-        return $this->amis->response($this->amisPage($request));
+        return $this->amis->response(
+            $this->amisPage($request)
+                ->withBody(50, $this->amisCrud($request))
+                ->toArray()
+        );
     }
 
     /**
@@ -52,6 +66,9 @@ abstract class AmisSourceController
     public function store(Request $request): Response
     {
         try {
+            if (!$this->enableCreate) {
+                throw new ActionDisableException();
+            }
             $this->repository()->create($request->post());
             return $this->amis->response(['result' => 'ok']);
         } catch (Throwable $e) {
@@ -71,6 +88,9 @@ abstract class AmisSourceController
     public function show(Request $request, $id): Response
     {
         try {
+            if (!$this->enableDetail) {
+                throw new ActionDisableException();
+            }
             return $this->amis->response($this->repository()->detail($id));
         } catch (Throwable $e) {
             return $this->amis->handleException($e, [
@@ -89,6 +109,9 @@ abstract class AmisSourceController
     public function update(Request $request, $id): Response
     {
         try {
+            if (!$this->enableUpdate) {
+                throw new ActionDisableException();
+            }
             $this->repository()->update($request->post(), $id);
             return $this->amis->response(['result' => 'ok']);
         } catch (Throwable $e) {
@@ -108,6 +131,9 @@ abstract class AmisSourceController
     public function destroy(Request $request, $id): Response
     {
         try {
+            if (!$this->enableDelete) {
+                throw new ActionDisableException();
+            }
             $this->repository()->destroy($id);
             return $this->amis->response(['result' => 'ok']);
         } catch (Throwable $e) {
@@ -127,6 +153,9 @@ abstract class AmisSourceController
     public function recovery(Request $request, $id): Response
     {
         try {
+            if (!$this->enableRecovery) {
+                throw new ActionDisableException();
+            }
             $this->repository()->recovery($id);
             return $this->amis->response(['result' => 'ok']);
         } catch (Throwable $e) {
@@ -150,9 +179,10 @@ abstract class AmisSourceController
 
     /**
      * 新增和修改的表单
+     * @param string $scene
      * @return array
      */
-    protected function form(bool $isUpdate): array
+    protected function form(string $scene): array
     {
         return [
             //['type' => 'input-text', 'name' => 'username', 'label' => '用户名'],
@@ -181,54 +211,117 @@ abstract class AmisSourceController
         ];
     }
 
-    protected function amisPage(Request $request): array
+    /**
+     * @param Request $request
+     * @return Amis\Page
+     */
+    protected function amisPage(Request $request): Amis\Page
     {
-        $data = [
-            'type' => 'page',
-            'title' => $this->title,
-            'body' => [
-                [
-                    'type' => 'crud',
-                    'name' => 'crud',
-                    'api' => 'get:' . $request->path() . '?_ajax=1',
-                    //'quickSaveApi' => 'put:' . $request->path(), // 目前没有批量保存接口
-                    'quickSaveItemApi' => 'put:' . $request->path() . '/${id}', // 需要 column 配置为 'quickEdit' => ['saveImmediately' => true]
-                    'syncLocation' => false,
-                    'autoGenerateFilter' => true,
-                    'headerToolbar' => [
-                        'reload',
-                        [
-                            'type' => 'columns-toggler',
-                            'align' => 'right',
-                            'draggable' => true,
-                            'icon' => 'fas fa-cog',
-                        ],
-                        [
-                            'type' => 'button',
-                            'label' => '新增',
-                            'icon' => 'fa fa-plus',
-                            'actionType' => 'dialog',
-                            'className' => 'p-r',
-                            'level' => 'primary',
-                            'align' => 'right',
-                            'dialog' => [
-                                'title' => '新增',
-                                'body' => [
-                                    'type' => 'form',
-                                    'api' => 'post:' . $request->path(),
-                                    'body' => $this->form(false),
-                                ],
-                            ],
-                        ],
-                    ],
-                    'footerToolbar' => [
-                        'switch-per-page',
-                        'pagination',
-                    ],
-                    'columns' => $this->grid(),
-                ],
-            ]
-        ];
-        return $data;
+        return Amis\Page::make();
+    }
+
+    /**
+     * @param Request $request
+     * @return Amis\Crud
+     */
+    protected function amisCrud(Request $request): Amis\Crud
+    {
+        $routePrefix = $request->path();
+
+        $crud = Amis\Crud::make()
+            ->schema([
+                'api' => 'get:' . $routePrefix . '?_ajax=1',
+                //'quickSaveApi' => 'put:' . $request->path(), // 目前没有批量保存接口
+                'quickSaveItemApi' => 'put:' . $routePrefix . '/${id}', // 需要 column 配置为 'quickEdit' => ['saveImmediately' => true]
+            ])
+            ->withColumns($this->buildGridColumn($this->grid(), $routePrefix));
+        if ($this->enableCreate) {
+            $crud->withCreate('post:' . $routePrefix, $this->buildFormAttributes($this->form(static::SCENE_CREATE)));
+        }
+        return $crud;
+    }
+
+    /**
+     * @param array $gridColumns
+     * @param string $routePrefix
+     * @return array
+     */
+    protected function buildGridColumn(array $gridColumns, string $routePrefix): array
+    {
+        foreach ($gridColumns as &$item) {
+            if ($item instanceof Amis\GridColumnActions) {
+                if ($this->enableDetail) {
+                    $item->withDetail(
+                        $this->buildDetailAttributes($this->detail()),
+                        "get:{$routePrefix}/\${id}"
+                    );
+                }
+                if ($this->enableUpdate) {
+                    $item->withUpdate(
+                        $this->buildFormAttributes($this->form(static::SCENE_UPDATE)),
+                        "put:{$routePrefix}/\${id}",
+                        "get:{$routePrefix}/\${id}"
+                    );
+                }
+                if ($this->enableDelete) {
+                    $item->withDelete("delete:{$routePrefix}/\${id}");
+                }
+                if ($this->enableRecovery) {
+                    $item->withRecovery("put:{$routePrefix}/\${id}/recovery");
+                }
+                $item = $item->toArray();
+                continue;
+            }
+
+            if ($item instanceof Component) {
+                $item = $item->toArray();
+            }
+            if (!is_array($item)) {
+                $item = ['name' => $item];
+            }
+            $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
+        }
+        unset($item);
+        return $gridColumns;
+    }
+
+    /**
+     * @param array $detailAttributes
+     * @return array
+     */
+    protected function buildDetailAttributes(array $detailAttributes): array
+    {
+        foreach ($detailAttributes as &$item) {
+            if ($item instanceof Component) {
+                $item = $item->toArray();
+            }
+            if (!is_array($item)) {
+                $item = ['name' => $item];
+            }
+            $item['type'] = $item['type'] ?? 'static';
+            $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
+        }
+        unset($item);
+        return $detailAttributes;
+    }
+
+    /**
+     * @param array $formAttributes
+     * @return array
+     */
+    protected function buildFormAttributes(array $formAttributes): array
+    {
+        foreach ($formAttributes as &$item) {
+            if ($item instanceof Component) {
+                $item = $item->toArray();
+            }
+            if (!is_array($item)) {
+                $item = ['name' => $item];
+            }
+            $item['type'] = $item['type'] ?? 'input-text';
+            $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
+        }
+        unset($item);
+        return $formAttributes;
     }
 }
