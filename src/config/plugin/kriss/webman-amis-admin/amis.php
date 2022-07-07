@@ -27,6 +27,11 @@ return [
          * @link https://aisuda.bce.baidu.com/amis/zh-CN/docs/start/getting-started#%E5%88%87%E6%8D%A2%E4%B8%BB%E9%A2%98
          */
         'theme' => '',
+        /**
+         * 语言
+         * @link https://aisuda.bce.baidu.com/amis/zh-CN/docs/extend/i18n
+         */
+        'locale' => str_replace('_', '-', config('translation.locale', 'zh-CN')),
     ],
     /**
      * @see \Kriss\WebmanAmisAdmin\Amis::renderApp()

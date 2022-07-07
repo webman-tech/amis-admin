@@ -35,13 +35,17 @@
     (function () {
         let amis = amisRequire('amis/embed');
 
+        window.amisAppBeforeLoad && window.amisAppBeforeLoad(amis);
+
         let amisJSON = Object.assign({
             type: 'page',
         }, <?= json_encode($amisJSON) ?>);
         window.amisApp = amis.embed(
             '#root',
             amisJSON,
-            Object.assign({}, window.amisAppProps || {}),
+            Object.assign({
+                locale: '<?= $assets['locale'] ?? 'zh-CN' ?>',
+            }, window.amisAppProps || {}),
             Object.assign({
                 theme: '<?= $assets['theme'] ?? 'default' ?>',
             }, window.amisAppEnv || {})

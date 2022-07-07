@@ -37,6 +37,8 @@ $routeMode = $routeMode ?? 'hash';
     (function () {
         let amis = amisRequire('amis/embed');
 
+        window.amisAppBeforeLoad && window.amisAppBeforeLoad(amis);
+
         const match = amisRequire('path-to-regexp').match;
         const history = <?= $routeMode === 'history' ? 'History.createBrowserHistory()' : 'History.createHashHistory()' ?>;
 
@@ -107,7 +109,8 @@ $routeMode = $routeMode ?? 'hash';
             '#root',
             amisJSON,
             Object.assign({
-                location: history.location
+                location: history.location,
+                locale: '<?= $assets['locale'] ?? 'zh-CN' ?>',
             }, window.amisAppProps || {}),
             Object.assign({
                 updateLocation: (location, replace) => {
