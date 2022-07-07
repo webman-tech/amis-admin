@@ -41,11 +41,13 @@
         window.amisApp = amis.embed(
             '#root',
             amisJSON,
-            {},
-            {
-                theme: '<?= $assets['theme'] ?? 'cxd' ?>',
-            }
+            Object.assign({}, window.amisAppProps || {}),
+            Object.assign({
+                theme: '<?= $assets['theme'] ?? 'default' ?>',
+            }, window.amisAppEnv || {})
         );
+
+        window.amisAppLoaded && window.amisAppLoaded(window.amisApp);
     })();
 </script>
 </body>

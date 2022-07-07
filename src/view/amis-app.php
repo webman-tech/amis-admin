@@ -106,10 +106,10 @@ $routeMode = $routeMode ?? 'hash';
         window.amisApp = amis.embed(
             '#root',
             amisJSON,
-            {
+            Object.assign({
                 location: history.location
-            },
-            {
+            }, window.amisAppProps || {}),
+            Object.assign({
                 updateLocation: (location, replace) => {
                     location = normalizeLink(location);
                     if (location === 'goBack') {
@@ -162,8 +162,8 @@ $routeMode = $routeMode ?? 'hash';
                     }
                 },
                 isCurrentUrl: isCurrentUrl,
-                theme: '<?= $assets['theme'] ?? 'cxd' ?>',
-            }
+                theme: '<?= $assets['theme'] ?? 'default' ?>',
+            }, window.amisAppEnv || {})
         );
 
         history.listen(state => {
@@ -171,6 +171,8 @@ $routeMode = $routeMode ?? 'hash';
                 location: state.location || state
             });
         });
+
+        window.amisAppLoaded && window.amisAppLoaded(window.amisApp);
     })();
 </script>
 </body>
