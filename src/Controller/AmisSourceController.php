@@ -33,6 +33,9 @@ abstract class AmisSourceController
         $this->amis = Container::get(Amis::class);
     }
 
+    /**
+     * @return RepositoryInterface
+     */
     abstract protected function repository(): RepositoryInterface;
 
     /**
@@ -201,6 +204,7 @@ abstract class AmisSourceController
                 'api' => 'get:' . $routePrefix . '?_ajax=1',
                 //'quickSaveApi' => 'put:' . $routePrefix . '/all, // 目前没有批量保存接口
                 'quickSaveItemApi' => 'put:' . $routePrefix . '/${id}', // 需要 column 配置为 'quickEdit' => ['saveImmediately' => true]
+                'bulkActions' => $this->gridBatchActions(),
             ])
             ->withColumns(array_merge(
                 $this->buildGridColumn($this->grid()),
@@ -309,6 +313,15 @@ abstract class AmisSourceController
     protected function gridActionsConfig(): array
     {
         return [];
+    }
+
+    /**
+     * 批量操作
+     * @return Amis\GridBatchActions
+     */
+    protected function gridBatchActions(): Amis\GridBatchActions
+    {
+        return Amis\GridBatchActions::make();
     }
 
     /**

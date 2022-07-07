@@ -73,11 +73,18 @@ class Component
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return $this->deepToArray($this->schema);
     }
 
+    /**
+     * @param array $arr
+     * @return array
+     */
     protected function deepToArray(array $arr): array
     {
         $newArr = [];

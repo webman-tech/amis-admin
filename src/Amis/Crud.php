@@ -2,11 +2,22 @@
 
 namespace Kriss\WebmanAmisAdmin\Amis;
 
+use Kriss\WebmanAmisAdmin\Amis\Traits\ActionButtonSupport;
+
 /**
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/crud
  */
 class Crud extends Component
 {
+    use ActionButtonSupport;
+
+    public const INDEX_RELOAD = 10;
+    public const INDEX_BULK_ACTIONS = 20;
+    public const INDEX_CREATE = 30;
+    public const INDEX_COLUMNS_TOGGLE = 90;
+    public const INDEX_SWITCH_PER_PAGE = 10;
+    public const INDEX_PAGINATION = 20;
+
     public function __construct()
     {
         $this->schema = [
@@ -15,9 +26,9 @@ class Crud extends Component
             'autoGenerateFilter' => true,
             'alwaysShowPagination' => true,
             'headerToolbar' => [
-                10 => 'reload',
-                20 => 'bulkActions',
-                90 => [
+                static::INDEX_RELOAD => 'reload',
+                static::INDEX_BULK_ACTIONS => 'bulkActions',
+                static::INDEX_COLUMNS_TOGGLE => [
                     'type' => 'columns-toggler',
                     'align' => 'right',
                     'draggable' => true,
@@ -25,8 +36,8 @@ class Crud extends Component
                 ],
             ],
             'footerToolbar' => [
-                10 => 'switch-per-page',
-                20 => 'pagination',
+                static::INDEX_SWITCH_PER_PAGE => 'switch-per-page',
+                static::INDEX_PAGINATION => 'pagination',
             ],
             'columns' => [],
         ];
@@ -65,38 +76,55 @@ class Crud extends Component
         return $this;
     }
 
+    /**
+     * 新增按钮
+     * @param string $api
+     * @param array $form
+     * @param string $can
+     * @return Crud
+     */
     public function withCreate(string $api, array $form, string $can = '1==1')
     {
-        return $this->withHeaderToolbar(30, $this->merge([
-            'type' => 'button',
-            'label' => '新增',
-            'icon' => 'fa fa-plus',
-            'actionType' => 'dialog',
+        return $this->withButtonDialog(static::INDEX_CREATE, '新增', $form, $this->merge([
+            'api' => $api,
             'level' => 'primary',
             'visibleOn' => $can,
-            'dialog' => [
-                'title' => '新增',
-                'body' => [
-                    'type' => 'form',
-                    'api' => $api,
-                    'body' => $form,
-                ],
-            ],
         ], $this->config['schema_create']));
     }
 
+    /**
+     * @param int $index
+     * @param $schema
+     * @return $this
+     */
     public function withHeaderToolbar(int $index, $schema)
     {
         $this->schema['headerToolbar'][$index] = $schema;
         return $this;
     }
 
+    /**
+     * @param int $index
+     * @param $schema
+     * @return $this
+     */
     public function withFooterToolbar(int $index, $schema)
     {
         $this->schema['footerToolbar'][$index] = $schema;
         return $this;
     }
 
+    /**
+     * @inheritDoc
+     */
+    protected function setActionButton(int $index, array $schema): void
+    {
+        $this->schema['headerToolbar'][$index] = $schema;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function toArray(): array
     {
         ksort($this->schema['headerToolbar']);
@@ -105,4 +133,6 @@ class Crud extends Component
         $this->schema['footerToolbar'] = array_filter(array_values($this->schema['footerToolbar']));
         return parent::toArray();
     }
+
+
 }
