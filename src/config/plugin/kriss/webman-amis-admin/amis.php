@@ -53,4 +53,18 @@ return [
             ],
         ],*/
     ],
+    /**
+     * 默认的验证器
+     * 返回一个 \Kriss\WebmanAmisAdmin\Validator\ValidatorInterface
+     */
+    'validator' => fn() => new \Kriss\WebmanAmisAdmin\Validator\NullValidator(),
+    //'validator' => fn() => new \Kriss\WebmanAmisAdmin\Validator\LaravelValidator(\support\Container::get(\Illuminate\Contracts\Validation\Factory::class)),
+    /**
+     * 异常自定义处理
+     * 可以通过 $amis->response() 返回数据，也可以再次抛出异常
+     */
+    'exception_handler' => null,
+    /*'exception_handler' => function (\Kriss\WebmanAmisAdmin\Amis $amis, Throwable $e, array $extraInfo = []) {
+        throw $e;
+    }*/
 ];

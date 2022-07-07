@@ -3,6 +3,7 @@
 namespace Kriss\WebmanAmisAdmin\Repository;
 
 use Kriss\WebmanAmisAdmin\Exceptions\ValidationException;
+use Kriss\WebmanAmisAdmin\Helper\ConfigHelper;
 use Kriss\WebmanAmisAdmin\Validator\NullValidator;
 use Kriss\WebmanAmisAdmin\Validator\ValidatorInterface;
 
@@ -127,7 +128,16 @@ abstract class AbsRepository implements RepositoryInterface
      */
     protected function validator(): ValidatorInterface
     {
-        return $this->validator ?? new NullValidator();
+        if ($this->validator) {
+            return $this->validator;
+        }
+        if ($validator = ConfigHelper::get('amis.validator')) {
+            $this->validator = call_user_func($validator);
+        } else {
+            $this->validator = new NullValidator();
+        }
+
+        return $this->validator;
     }
 
     /**
