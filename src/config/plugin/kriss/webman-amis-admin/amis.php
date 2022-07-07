@@ -10,7 +10,7 @@ return [
          */
         'lang' => config('translation.locale', 'zh'),
         /**
-         * 静态资源
+         * 静态资源，建议下载下来放到 public 目录下然后替换链接
          * @link https://aisuda.bce.baidu.com/amis/zh-CN/docs/start/getting-started#sdk
          */
         'css' => [
@@ -20,7 +20,7 @@ return [
         ],
         'js' => [
             'https://unpkg.com/amis/sdk/sdk.js',
-            'https://unpkg.com/history@4.10.1/umd/history.js',
+            'https://unpkg.com/history@4.10.1/umd/history.js', // 使用 app 必须
         ],
         /**
          * 切换主题
@@ -32,17 +32,16 @@ return [
          * @link https://aisuda.bce.baidu.com/amis/zh-CN/docs/extend/i18n
          */
         'locale' => str_replace('_', '-', config('translation.locale', 'zh-CN')),
+        /**
+         * debug
+         * @link https://aisuda.bce.baidu.com/amis/zh-CN/docs/extend/debug
+         */
+        'debug' => false,
     ],
     /**
      * @see \Kriss\WebmanAmisAdmin\Amis::renderApp()
      */
     'app' => [
-        /**
-         * 视图文件
-         * @see \support\view\Raw::render()
-         */
-        'view' => 'amis-app',
-        'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
         /**
          * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/app
          */
@@ -57,12 +56,6 @@ return [
      * @see \Kriss\WebmanAmisAdmin\Amis::renderPage()
      */
     'page' => [
-        /**
-         * 视图文件
-         * @see \support\view\Raw::render()
-         */
-        'view' => 'amis-page',
-        'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
         /**
          * @link https://aisuda.bce.baidu.com/amis/zh-CN/docs/start/getting-started
          */

@@ -76,14 +76,19 @@ class Amis
      */
     public function renderApp(array $schema = [])
     {
-        $data = ConfigHelper::get('amis.app', [
+        $defaultData = [
             'view' => 'amis-app',
             'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
-        ]);
-        $data = ArrayHelper::merge($data, [
             'assets' => ConfigHelper::get('amis.assets', []),
-            'amisJSON' => $schema,
-        ]);
+        ];
+        $schema['type'] = 'app';
+        $data = ArrayHelper::merge(
+            $defaultData,
+            ConfigHelper::get('amis.app', []),
+            [
+                'amisJSON' => $schema,
+            ],
+        );
         return Raw::render($data['view'], $data, $data['view_path']);
     }
 
@@ -96,15 +101,20 @@ class Amis
      */
     public function renderPage(string $title, array $schema = [])
     {
-        $data = ConfigHelper::get('amis.page', [
+        $defaultData = [
             'view' => 'amis-page',
             'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
-        ]);
-        $data = ArrayHelper::merge($data, [
             'assets' => ConfigHelper::get('amis.assets', []),
-            'amisJSON' => $schema,
-            'title' => $title,
-        ]);
+        ];
+        $schema['type'] = 'page';
+        $data = ArrayHelper::merge(
+            $defaultData,
+            ConfigHelper::get('amis.page', []),
+            [
+                'amisJSON' => $schema,
+                'title' => $title,
+            ],
+        );
 
         return Raw::render($data['view'], $data, $data['view_path']);
     }
