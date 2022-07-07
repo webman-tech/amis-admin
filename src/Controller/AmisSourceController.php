@@ -17,16 +17,6 @@ abstract class AmisSourceController
     public const SCENE_UPDATE = 'update';
 
     protected Amis $amis;
-    protected bool $enableDetail = true;
-    protected string $visibleDetail = '1==1';
-    protected bool $enableCreate = true;
-    protected string $visibleCreate = '1==1';
-    protected bool $enableUpdate = true;
-    protected string $visibleUpdate = '1==1';
-    protected bool $enableDelete = true;
-    protected string $visibleDelete = 'this.deleted_at==null';
-    protected bool $enableRecovery = true;
-    protected string $visibleRecovery = 'this.deleted_at!=null';
 
     public function __construct()
     {
@@ -80,7 +70,7 @@ abstract class AmisSourceController
     public function store(Request $request): Response
     {
         try {
-            if (!$this->enableCreate) {
+            if (!$this->authCreate()) {
                 throw new ActionDisableException();
             }
             $this->repository()->create($request->post());
@@ -94,7 +84,26 @@ abstract class AmisSourceController
     }
 
     /**
-     * 明细
+     * 新增后端是否可用
+     * @return bool
+     */
+    protected function authCreate(): bool
+    {
+        return true;
+    }
+
+    /**
+     * 新增前端是否可见
+     * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
+     * @return string
+     */
+    protected function authCreateVisible(): string
+    {
+        return '1==1';
+    }
+
+    /**
+     * 详情
      * @param Request $request
      * @param $id
      * @return Response
@@ -102,7 +111,7 @@ abstract class AmisSourceController
     public function show(Request $request, $id): Response
     {
         try {
-            if (!$this->enableDetail) {
+            if (!$this->authDetail($id)) {
                 throw new ActionDisableException();
             }
             return $this->amis->response($this->repository()->detail($id));
@@ -115,6 +124,26 @@ abstract class AmisSourceController
     }
 
     /**
+     * 详情后端是否可用
+     * @param string|int|null $id
+     * @return bool
+     */
+    protected function authDetail($id = null): bool
+    {
+        return true;
+    }
+
+    /**
+     * 详情前端是否可见
+     * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
+     * @return string
+     */
+    protected function authDetailVisible(): string
+    {
+        return '1==1';
+    }
+
+    /**
      * 更新
      * @param Request $request
      * @param $id
@@ -123,7 +152,7 @@ abstract class AmisSourceController
     public function update(Request $request, $id): Response
     {
         try {
-            if (!$this->enableUpdate) {
+            if (!$this->authUpdate($id)) {
                 throw new ActionDisableException();
             }
             $this->repository()->update($request->post(), $id);
@@ -137,6 +166,26 @@ abstract class AmisSourceController
     }
 
     /**
+     * 更新后端是否可用
+     * @param string|int|null $id
+     * @return bool
+     */
+    protected function authUpdate($id = null): bool
+    {
+        return true;
+    }
+
+    /**
+     * 更新前端是否可见
+     * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
+     * @return string
+     */
+    protected function authUpdateVisible(): string
+    {
+        return '1==1';
+    }
+
+    /**
      * 删除
      * @param Request $request
      * @param $id
@@ -145,7 +194,7 @@ abstract class AmisSourceController
     public function destroy(Request $request, $id): Response
     {
         try {
-            if (!$this->enableDelete) {
+            if (!$this->authDestroy($id)) {
                 throw new ActionDisableException();
             }
             $this->repository()->destroy($id);
@@ -159,6 +208,26 @@ abstract class AmisSourceController
     }
 
     /**
+     * 删除后端是否可用
+     * @param string|int|null $id
+     * @return bool
+     */
+    protected function authDestroy($id = null): bool
+    {
+        return true;
+    }
+
+    /**
+     * 删除前端是否可见
+     * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
+     * @return string
+     */
+    protected function authDestroyVisible(): string
+    {
+        return 'this.deleted_at === null';
+    }
+
+    /**
      * 恢复
      * @param Request $request
      * @param $id
@@ -167,7 +236,7 @@ abstract class AmisSourceController
     public function recovery(Request $request, $id): Response
     {
         try {
-            if (!$this->enableRecovery) {
+            if (!$this->authRecovery($id)) {
                 throw new ActionDisableException();
             }
             $this->repository()->recovery($id);
@@ -178,6 +247,26 @@ abstract class AmisSourceController
                 'function' => __FUNCTION__,
             ]);
         }
+    }
+
+    /**
+     * 恢复后端是否可用
+     * @param string|int|null $id
+     * @return bool
+     */
+    protected function authRecovery($id = null): bool
+    {
+        return true;
+    }
+
+    /**
+     * 恢复前端是否可见
+     * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
+     * @return string
+     */
+    protected function authRecoveryVisible(): string
+    {
+        return 'this.deleted_at !== null';
     }
 
     /**
@@ -210,11 +299,11 @@ abstract class AmisSourceController
                 $this->buildGridColumn($this->grid()),
                 [$this->gridActions($routePrefix)],
             ));
-        if ($this->enableCreate) {
+        if ($this->authCreate()) {
             $crud->withCreate(
                 'post:' . $routePrefix,
                 $this->buildFormFields($this->form(static::SCENE_CREATE)),
-                $this->visibleCreate
+                $this->authCreateVisible()
             );
         }
         return $crud;
@@ -276,31 +365,31 @@ abstract class AmisSourceController
     protected function gridActions(string $routePrefix): Amis\GridColumnActions
     {
         $actions = Amis\GridColumnActions::make()->config($this->gridActionsConfig());
-        if ($this->enableDetail) {
+        if ($this->authDetail()) {
             $actions->withDetail(
                 $this->buildDetailAttributes($this->detail()),
                 "get:{$routePrefix}/\${id}",
-                $this->visibleDetail
+                $this->authDetailVisible()
             );
         }
-        if ($this->enableUpdate) {
+        if ($this->authUpdate()) {
             $actions->withUpdate(
                 $this->buildFormFields($this->form(static::SCENE_UPDATE)),
                 "put:{$routePrefix}/\${id}",
                 "get:{$routePrefix}/\${id}",
-                $this->visibleUpdate
+                $this->authUpdateVisible()
             );
         }
-        if ($this->enableDelete) {
+        if ($this->authDestroy()) {
             $actions->withDelete(
                 "delete:{$routePrefix}/\${id}",
-                $this->visibleDelete
+                $this->authDestroyVisible()
             );
         }
-        if ($this->enableRecovery) {
+        if ($this->authRecovery()) {
             $actions->withRecovery(
                 "put:{$routePrefix}/\${id}/recovery",
-                $this->visibleRecovery
+                $this->authRecoveryVisible()
             );
         }
         return $actions;

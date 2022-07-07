@@ -39,7 +39,7 @@ class EloquentRepository extends AbsRepository
     /**
      * @return EloquentModel
      */
-    protected function model(): EloquentModel
+    public function model(): EloquentModel
     {
         if (!$this->model) {
             $this->model = new $this->modelClass;
@@ -50,7 +50,7 @@ class EloquentRepository extends AbsRepository
     /**
      * @return EloquentBuilder
      */
-    protected function query(): EloquentBuilder
+    public function query(): EloquentBuilder
     {
         return $this->model()->newQuery();
     }
