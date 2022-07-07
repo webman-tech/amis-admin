@@ -3,7 +3,9 @@
 namespace Kriss\WebmanAmisAdmin;
 
 use Kriss\WebmanAmisAdmin\Exceptions\ValidationException;
+use Kriss\WebmanAmisAdmin\Helper\ArrayHelper;
 use Kriss\WebmanAmisAdmin\Helper\ConfigHelper;
+use support\view\Raw;
 use Throwable;
 use Webman\Http\Response;
 
@@ -64,5 +66,46 @@ class Amis
         }
 
         return $this->response([], $e->getMessage());
+    }
+
+    /**
+     * 渲染 app 多页面结构
+     * @param array $schema
+     * @return string
+     * @throws Throwable
+     */
+    public function renderApp(array $schema = [])
+    {
+        $data = ConfigHelper::get('amis.app', [
+            'view' => 'amis-app',
+            'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
+        ]);
+        $data = ArrayHelper::merge($data, [
+            'assets' => ConfigHelper::get('amis.assets', []),
+            'amisJSON' => $schema,
+        ]);
+        return Raw::render($data['view'], $data, $data['view_path']);
+    }
+
+    /**
+     * 渲染单页面
+     * @param string $title
+     * @param array $schema
+     * @return string
+     * @throws Throwable
+     */
+    public function renderPage(string $title, array $schema = [])
+    {
+        $data = ConfigHelper::get('amis.page', [
+            'view' => 'amis-page',
+            'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
+        ]);
+        $data = ArrayHelper::merge($data, [
+            'assets' => ConfigHelper::get('amis.assets', []),
+            'amisJSON' => $schema,
+            'title' => $title,
+        ]);
+
+        return Raw::render($data['view'], $data, $data['view_path']);
     }
 }

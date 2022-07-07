@@ -1,15 +1,15 @@
 <?php
-/** @var string|null $lang */
+/** @var string|null $title */
 /** @var array $assets */
 /** @var array $amisJSON */
 /** @var string|null $routeMode */
 
 $routeMode = $routeMode ?? 'hash';
 ?>
-<html lang="<?= $lang ?? 'zh' ?>">
+<html lang="<?= $assets['lang'] ?? 'zh' ?>">
 <head>
     <meta charset="UTF-8"/>
-    <title><?= $amisJSON['brandName'] ?? 'App Admin' ?></title>
+    <title><?= $title ?? 'App Admin' ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
@@ -162,7 +162,7 @@ $routeMode = $routeMode ?? 'hash';
                     }
                 },
                 isCurrentUrl: isCurrentUrl,
-                theme: '<?= $theme ?? 'cxd' ?>',
+                theme: '<?= $assets['theme'] ?? 'cxd' ?>',
             }
         );
 
