@@ -1,6 +1,6 @@
 # kriss/webman-amis-admin
 
-[amis](kriss/webman-amis-admin) For webman quick use ~
+[amis](https://github.com/baidu/amis) For webman quick use ~
 
 ## 简介
 
