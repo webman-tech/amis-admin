@@ -3,6 +3,7 @@
 namespace Kriss\WebmanAmisAdmin\Amis;
 
 use Kriss\WebmanAmisAdmin\Helper\ArrayHelper;
+use Kriss\WebmanAmisAdmin\Helper\ConfigHelper;
 use support\Container;
 
 /**
@@ -11,9 +12,22 @@ use support\Container;
  */
 class Component
 {
+    protected array $config = [
+        'schema' => [],
+    ];
     protected array $schema = [
         'type' => '',
     ];
+
+    public function __construct()
+    {
+        $componentConfig = ConfigHelper::get('amis.components.' . static::class, []);
+        if (is_callable($componentConfig)) {
+            $componentConfig = call_user_func($componentConfig);
+        }
+        $this->config((array)$componentConfig);
+        $this->schema($this->config['schema']);
+    }
 
     /**
      * @param array|null $schema
@@ -40,6 +54,21 @@ class Component
             $this->schema = $schema;
         } else {
             $this->schema = $this->merge($this->schema, $schema);
+        }
+        return $this;
+    }
+
+    /**
+     * @param array $config
+     * @param bool $overwrite
+     * @return $this
+     */
+    public function config(array $config, bool $overwrite = false)
+    {
+        if ($overwrite) {
+            $this->config = $config;
+        } else {
+            $this->config = $this->merge($this->config, $config);
         }
         return $this;
     }

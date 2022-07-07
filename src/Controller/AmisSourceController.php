@@ -195,6 +195,7 @@ abstract class AmisSourceController
         $routePrefix = $request->path();
 
         $crud = Amis\Crud::make()
+            ->config($this->crudConfig())
             ->schema([
                 'primaryField' => $this->repository()->getPrimaryKey(),
                 'api' => 'get:' . $routePrefix . '?_ajax=1',
@@ -213,6 +214,15 @@ abstract class AmisSourceController
             );
         }
         return $crud;
+    }
+
+    /**
+     * 配置 Amis\Crud 的 config
+     * @return array
+     */
+    protected function crudConfig(): array
+    {
+        return [];
     }
 
     /**
@@ -256,11 +266,12 @@ abstract class AmisSourceController
 
     /**
      * grid 操作栏
+     * @param string $routePrefix
      * @return Amis\GridColumnActions
      */
     protected function gridActions(string $routePrefix): Amis\GridColumnActions
     {
-        $actions = Amis\GridColumnActions::make();
+        $actions = Amis\GridColumnActions::make()->config($this->gridActionsConfig());
         if ($this->enableDetail) {
             $actions->withDetail(
                 $this->buildDetailAttributes($this->detail()),
@@ -289,6 +300,15 @@ abstract class AmisSourceController
             );
         }
         return $actions;
+    }
+
+    /**
+     * 配置 GridColumnActions 的 config
+     * @return array
+     */
+    protected function gridActionsConfig(): array
+    {
+        return [];
     }
 
     /**

@@ -30,6 +30,9 @@ class Crud extends Component
             ],
             'columns' => [],
         ];
+        $this->config['schema_create'] = [];
+
+        parent::__construct();
     }
 
     public function withColumns(array $columns)
@@ -64,7 +67,7 @@ class Crud extends Component
 
     public function withCreate(string $api, array $form, string $can = '1==1')
     {
-        return $this->withHeaderToolbar(30, [
+        return $this->withHeaderToolbar(30, $this->merge([
             'type' => 'button',
             'label' => '新增',
             'icon' => 'fa fa-plus',
@@ -79,7 +82,7 @@ class Crud extends Component
                     'body' => $form,
                 ],
             ],
-        ]);
+        ], $this->config['schema_create']));
     }
 
     public function withHeaderToolbar(int $index, $schema)

@@ -31,7 +31,7 @@ return [
          * @see \support\view\Raw::render()
          */
         'view' => 'amis-app',
-        'view_path' => '../vendor/kriss/webman-amis-admin/src',
+        'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
         /**
          * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/app
          */
@@ -40,5 +40,17 @@ return [
             'logo' => '/favicon.ico',
             'api' => '/admin/pages', // 修改成获取菜单的路由
         ],
-    ]
+    ],
+    'components' => [
+        /**
+         * 用于全局替换组件的默认参数
+         * @see \Kriss\WebmanAmisAdmin\Amis\Component::$config
+         */
+        // 例如: 将列表页的字段默认左显示
+        /*\Kriss\WebmanAmisAdmin\Amis\GridColumn::class => [
+            'schema' => [
+                'align' => 'left',
+            ],
+        ],*/
+    ],
 ];
