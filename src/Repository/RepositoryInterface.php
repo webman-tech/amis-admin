@@ -12,6 +12,7 @@ interface RepositoryInterface
 
     /**
      * 分页数据列表
+     * 返回格式参考：https://aisuda.bce.baidu.com/amis/zh-CN/components/crud#%E6%95%B0%E6%8D%AE%E6%BA%90%E6%8E%A5%E5%8F%A3%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%A6%81%E6%B1%82
      * @param int $page
      * @param int $perPage
      * @param array $search

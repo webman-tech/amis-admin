@@ -33,7 +33,7 @@ abstract class AmisSourceController
         $this->amis = Container::get(Amis::class);
     }
 
-    abstract public function repository(): RepositoryInterface;
+    abstract protected function repository(): RepositoryInterface;
 
     /**
      * page 数据和列表数据
@@ -208,7 +208,7 @@ abstract class AmisSourceController
         if ($this->enableCreate) {
             $crud->withCreate(
                 'post:' . $routePrefix,
-                $this->buildFormAttributes($this->form(static::SCENE_CREATE)),
+                $this->buildFormFields($this->form(static::SCENE_CREATE)),
                 $this->visibleCreate
             );
         }
@@ -270,7 +270,7 @@ abstract class AmisSourceController
         }
         if ($this->enableUpdate) {
             $actions->withUpdate(
-                $this->buildFormAttributes($this->form(static::SCENE_UPDATE)),
+                $this->buildFormFields($this->form(static::SCENE_UPDATE)),
                 "put:{$routePrefix}/\${id}",
                 "get:{$routePrefix}/\${id}",
                 $this->visibleUpdate
@@ -304,12 +304,12 @@ abstract class AmisSourceController
     }
 
     /**
-     * @param array $formAttributes
+     * @param array $formFields
      * @return array
      */
-    protected function buildFormAttributes(array $formAttributes): array
+    protected function buildFormFields(array $formFields): array
     {
-        foreach ($formAttributes as &$item) {
+        foreach ($formFields as &$item) {
             if (is_string($item)) {
                 $item = Amis\FormField::make()->name($item);
             }
@@ -322,7 +322,7 @@ abstract class AmisSourceController
             $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
         }
         unset($item);
-        return $formAttributes;
+        return $formFields;
     }
 
     /**

@@ -37,6 +37,7 @@ class GridColumn extends Component
 {
     protected array $schema = [
         'type' => 'text',
+        'name' => '',
         'align' => 'center',
     ];
 
@@ -47,30 +48,9 @@ class GridColumn extends Component
         'copyable' => true,
     ];
 
-    protected function solveMapSearch()
-    {
-        if (isset($this->schema['type']) && $this->schema['type'] === 'mapping' && isset($this->schema['map'])) {
-            if (isset($this->schema['searchable']) && $this->schema['searchable'] !== false) {
-                if (!is_array($this->schema['searchable'])) {
-                    $this->schema['searchable'] = [
-                        'type' => 'select',
-                        'options' => array_map(
-                            fn($label, $value) => [
-                                'label' => $label,
-                                'value' => $value,
-                            ],
-                            array_values($this->schema['map']),
-                            array_keys($this->schema['map'])
-                        )
-                    ];
-                }
-            }
-        }
-    }
-
     public function toArray(): array
     {
-        $this->solveMapSearch();
+        $this->solveSearchable();
 
         return parent::toArray();
     }
@@ -88,5 +68,42 @@ class GridColumn extends Component
             $this->schema[$name] = $value;
         }
         return $this;
+    }
+
+    protected function solveSearchable()
+    {
+        $searchable = $this->schema['searchable'] ?? false;
+        if (!$searchable) {
+            return;
+        }
+
+        $autoSolve = !is_array($searchable);
+        if ($autoSolve) {
+            $searchable = ['type' => 'input-text'];
+        }
+        $searchable['name'] = $searchable['name'] ?? $this->schema['name'];
+        $searchable['clearable'] = $searchable['clearable'] ?? true;
+
+        if (!$autoSolve) {
+            $this->schema['searchable'] = $searchable;
+            return;
+        }
+        $type = $this->schema['type'];
+        if ($type === 'mapping') {
+            if (isset($this->schema['map'])) {
+                $searchable['type'] = 'select';
+                $searchable['options'] = array_map(
+                    fn($label, $value) => [
+                        'label' => $label,
+                        'value' => $value,
+                    ],
+                    array_values($this->schema['map']),
+                    array_keys($this->schema['map'])
+                );
+            }
+        } elseif ($type === 'date' || $type === 'datetime') {
+            $searchable['type'] = 'input-datetime-range';
+        }
+        $this->schema['searchable'] = $searchable;
     }
 }

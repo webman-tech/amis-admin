@@ -2,6 +2,7 @@
 
 namespace Kriss\WebmanAmisAdmin\Amis;
 
+use Kriss\WebmanAmisAdmin\Helper\ArrayHelper;
 use support\Container;
 
 /**
@@ -48,20 +49,6 @@ class Component
         return $this->deepToArray($this->schema);
     }
 
-    public function get(string $schemaKey, $default = null)
-    {
-        $keys = explode('.', $schemaKey);
-        $array = $this->toArray();
-        foreach ($keys as $key) {
-            if (is_array($array) && array_key_exists($key, $array)) {
-                $array = $array[$key];
-            } else {
-                return $default;
-            }
-        }
-        return $array;
-    }
-
     protected function deepToArray(array $arr): array
     {
         $newArr = [];
@@ -77,34 +64,23 @@ class Component
     }
 
     /**
-     * @link https://github.com/yiisoft/arrays/blob/master/src/ArrayHelper.php::merge
+     * 获取 schema 中的值
+     * @param string $schemaKey
+     * @param null $default
+     * @return array|mixed
+     */
+    public function get(string $schemaKey, $default = null)
+    {
+        return ArrayHelper::get($this->toArray(), $schemaKey, $default);
+    }
+
+    /**
+     * 合并数组
      * @param ...$arrays
      * @return array
      */
     protected function merge(...$arrays): array
     {
-        $result = array_shift($arrays) ?: [];
-        while (!empty($arrays)) {
-            /** @var mixed $value */
-            foreach (array_shift($arrays) as $key => $value) {
-                if (is_int($key)) {
-                    if (array_key_exists($key, $result)) {
-                        if ($result[$key] !== $value) {
-                            /** @var mixed */
-                            $result[] = $value;
-                        }
-                    } else {
-                        /** @var mixed */
-                        $result[$key] = $value;
-                    }
-                } elseif (isset($result[$key]) && is_array($value) && is_array($result[$key])) {
-                    $result[$key] = $this->merge($result[$key], $value);
-                } else {
-                    /** @var mixed */
-                    $result[$key] = $value;
-                }
-            }
-        }
-        return $result;
+        return ArrayHelper::merge(...$arrays);
     }
 }

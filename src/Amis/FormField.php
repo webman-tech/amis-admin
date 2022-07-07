@@ -87,6 +87,7 @@ class FormField extends Component
     protected array $schema = [
         'type' => 'input-text',
         'name' => '',
+        'clearable' => true,
     ];
 
     protected array $defaultValue = [

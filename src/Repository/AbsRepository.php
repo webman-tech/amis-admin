@@ -8,6 +8,8 @@ use Kriss\WebmanAmisAdmin\Validator\ValidatorInterface;
 
 abstract class AbsRepository implements RepositoryInterface
 {
+    public const SCENE_LIST = 'list';
+    public const SCENE_DETAIL = 'detail';
     public const SCENE_CREATE = 'create';
     public const SCENE_UPDATE = 'update';
 
@@ -76,6 +78,26 @@ abstract class AbsRepository implements RepositoryInterface
     }
 
     /**
+     * 获取需要隐藏的字段
+     * @param string $scene
+     * @return array
+     */
+    protected function hiddenAttributes(string $scene): array
+    {
+        return [];
+    }
+
+    /**
+     * 获取默认隐藏后需要展示的字段
+     * @param string $scene
+     * @return array
+     */
+    protected function visibleAttributes(string $scene): array
+    {
+        return [];
+    }
+
+    /**
      * 验证字段
      * @return array 验证过后的字段
      * @throws ValidationException
@@ -84,9 +106,9 @@ abstract class AbsRepository implements RepositoryInterface
     {
         return $this->validator()->validate(
             $data,
-            $this->getRules($scene),
-            $this->getRuleMessages($scene),
-            $this->getRuleCustomeAttributes($scene)
+            $this->rules($scene),
+            $this->ruleMessages($scene),
+            $this->ruleCustomAttributes($scene)
         );
     }
 
@@ -112,7 +134,7 @@ abstract class AbsRepository implements RepositoryInterface
      * @param string $scene
      * @return array
      */
-    protected function getRules(string $scene): array
+    protected function rules(string $scene): array
     {
         return [];
     }
@@ -121,7 +143,7 @@ abstract class AbsRepository implements RepositoryInterface
      * @param string $scene
      * @return array
      */
-    protected function getRuleMessages(string $scene): array
+    protected function ruleMessages(string $scene): array
     {
         return [];
     }
@@ -130,7 +152,7 @@ abstract class AbsRepository implements RepositoryInterface
      * @param string $scene
      * @return array
      */
-    protected function getRuleCustomeAttributes(string $scene): array
+    protected function ruleCustomAttributes(string $scene): array
     {
         return [];
     }

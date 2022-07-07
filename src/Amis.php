@@ -20,7 +20,7 @@ class Amis
         $data = array_merge([
             'status' => $msg ? 1 : 0,
             'msg' => $msg,
-            'data' => $data,
+            'data' => $data ?? '{}',
         ], $extra);
 
         return json($data, JSON_UNESCAPED_UNICODE);

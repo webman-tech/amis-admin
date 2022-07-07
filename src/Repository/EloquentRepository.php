@@ -2,8 +2,13 @@
 
 namespace Kriss\WebmanAmisAdmin\Repository;
 
+use Illuminate\Contracts\Pagination\Paginator as PaginatorInterface;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Collection as DBCollection;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 class EloquentRepository extends AbsRepository
 {
@@ -60,7 +65,20 @@ class EloquentRepository extends AbsRepository
         $query = $this->buildSearch($query, $search);
         $query = $this->buildOrder($query, $order);
 
-        return $this->queryPagination($query, $perPage, $page, $this->gridColumns());
+        $paginator = $this->queryPagination($query, $perPage, $page, $this->gridColumns());
+        if ($paginator instanceof AbstractPaginator) {
+            /** @var DBCollection $itemCollection */
+            $itemCollection = $paginator->getCollection();
+        } elseif ($paginator instanceof DBCollection) {
+            $itemCollection = $paginator;
+        } else {
+            throw new \InvalidArgumentException('error $paginator type');
+        }
+        $itemCollection
+            ->makeHidden($this->hiddenAttributes(static::SCENE_LIST))
+            ->makeVisible($this->visibleAttributes(static::SCENE_LIST));
+
+        return $this->solvePaginationResult($paginator);
     }
 
     /**
@@ -115,13 +133,38 @@ class EloquentRepository extends AbsRepository
      * @param int $perPage
      * @param int $page
      * @param array $columns
+     * @return PaginatorInterface|DBCollection 返回分页或全量数据
+     */
+    protected function queryPagination(EloquentBuilder $query, int $perPage, int $page, array $columns)
+    {
+        return $query->paginate($perPage, $columns, 'page', $page);
+    }
+
+    /**
+     * 处理分页结果
+     * @param PaginatorInterface|DBCollection $paginator
      * @return array
      */
-    protected function queryPagination(EloquentBuilder $query, int $perPage, int $page, array $columns): array
+    protected function solvePaginationResult($paginator): array
     {
-        return $query
-            ->paginate($perPage, $columns, 'page', $page)
-            ->toArray();
+        if ($paginator instanceof LengthAwarePaginator) {
+            return [
+                'items' => $paginator->items(),
+                'total' => $paginator->total(),
+            ];
+        }
+        if ($paginator instanceof Paginator) {
+            return [
+                'items' => $paginator->items(),
+                'hasNext' => $paginator->hasMorePages(),
+            ];
+        }
+        if ($paginator instanceof DBCollection) {
+            return [
+                'items' => $paginator,
+            ];
+        }
+        throw new \InvalidArgumentException('$paginator type error');
     }
 
     /**
@@ -131,6 +174,8 @@ class EloquentRepository extends AbsRepository
     {
         return $this->query()
             ->findOrFail($id, $this->detailColumns())
+            ->makeHidden($this->hiddenAttributes(static::SCENE_DETAIL))
+            ->makeVisible($this->visibleAttributes(static::SCENE_DETAIL))
             ->toArray();
     }
 
@@ -152,7 +197,7 @@ class EloquentRepository extends AbsRepository
         foreach ($data as $key => $value) {
             $model->{$key} = $value;
         }
-        $model->save();
+        $this->doSave($model);
     }
 
     /**
@@ -174,6 +219,14 @@ class EloquentRepository extends AbsRepository
         foreach ($data as $key => $value) {
             $model->{$key} = $value;
         }
+        $this->doSave($model);
+    }
+
+    /**
+     * @param EloquentModel $model
+     */
+    protected function doSave(EloquentModel $model): void
+    {
         $model->save();
     }
 
