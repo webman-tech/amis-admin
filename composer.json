@@ -6,7 +6,10 @@
   "autoload": {
     "psr-4": {
       "Kriss\\WebmanAmisAdmin\\": "src"
-    }
+    },
+    "files": [
+      "src/helper.php"
+    ]
   },
   "require": {
     "php": ">=7.4",

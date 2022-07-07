@@ -6,8 +6,6 @@ use Kriss\WebmanAmisAdmin\Amis;
 use Kriss\WebmanAmisAdmin\Amis\Component;
 use Kriss\WebmanAmisAdmin\Exceptions\ActionDisableException;
 use Kriss\WebmanAmisAdmin\Repository\RepositoryInterface;
-use support\Container;
-use Throwable;
 use Webman\Http\Request;
 use Webman\Http\Response;
 
@@ -15,13 +13,6 @@ abstract class AmisSourceController
 {
     public const SCENE_CREATE = 'create';
     public const SCENE_UPDATE = 'update';
-
-    protected Amis $amis;
-
-    public function __construct()
-    {
-        $this->amis = Container::get(Amis::class);
-    }
 
     /**
      * @return RepositoryInterface
@@ -40,22 +31,15 @@ abstract class AmisSourceController
             if ($orderBy = $request->get('orderBy')) {
                 $order[$orderBy] = $request->get('orderDir', 'asc');
             }
-            try {
-                return $this->amis->response($this->repository()->pagination(
-                    $request->get('page'),
-                    $request->get('perPage'),
-                    $request->get(),
-                    $order
-                ));
-            } catch (Throwable $e) {
-                return $this->amis->handleException($e, [
-                    'class' => get_called_class(),
-                    'function' => __FUNCTION__,
-                ]);
-            }
+            return amis_response($this->repository()->pagination(
+                $request->get('page'),
+                $request->get('perPage'),
+                $request->get(),
+                $order
+            ));
         }
 
-        return $this->amis->response(
+        return amis_response(
             $this->amisPage($request)
                 ->withBody(50, $this->amisCrud($request))
                 ->toArray()
@@ -69,18 +53,11 @@ abstract class AmisSourceController
      */
     public function store(Request $request): Response
     {
-        try {
-            if (!$this->authCreate()) {
-                throw new ActionDisableException();
-            }
-            $this->repository()->create($request->post());
-            return $this->amis->response(['result' => 'ok']);
-        } catch (Throwable $e) {
-            return $this->amis->handleException($e, [
-                'class' => get_called_class(),
-                'function' => __FUNCTION__,
-            ]);
+        if (!$this->authCreate()) {
+            throw new ActionDisableException();
         }
+        $this->repository()->create($request->post());
+        return amis_response(['result' => 'ok']);
     }
 
     /**
@@ -110,17 +87,10 @@ abstract class AmisSourceController
      */
     public function show(Request $request, $id): Response
     {
-        try {
-            if (!$this->authDetail($id)) {
-                throw new ActionDisableException();
-            }
-            return $this->amis->response($this->repository()->detail($id));
-        } catch (Throwable $e) {
-            return $this->amis->handleException($e, [
-                'class' => get_called_class(),
-                'function' => __FUNCTION__,
-            ]);
+        if (!$this->authDetail($id)) {
+            throw new ActionDisableException();
         }
+        return amis_response($this->repository()->detail($id));
     }
 
     /**
@@ -151,18 +121,11 @@ abstract class AmisSourceController
      */
     public function update(Request $request, $id): Response
     {
-        try {
-            if (!$this->authUpdate($id)) {
-                throw new ActionDisableException();
-            }
-            $this->repository()->update($request->post(), $id);
-            return $this->amis->response(['result' => 'ok']);
-        } catch (Throwable $e) {
-            return $this->amis->handleException($e, [
-                'class' => get_called_class(),
-                'function' => __FUNCTION__,
-            ]);
+        if (!$this->authUpdate($id)) {
+            throw new ActionDisableException();
         }
+        $this->repository()->update($request->post(), $id);
+        return amis_response(['result' => 'ok']);
     }
 
     /**
@@ -193,18 +156,11 @@ abstract class AmisSourceController
      */
     public function destroy(Request $request, $id): Response
     {
-        try {
-            if (!$this->authDestroy($id)) {
-                throw new ActionDisableException();
-            }
-            $this->repository()->destroy($id);
-            return $this->amis->response(['result' => 'ok']);
-        } catch (Throwable $e) {
-            return $this->amis->handleException($e, [
-                'class' => get_called_class(),
-                'function' => __FUNCTION__,
-            ]);
+        if (!$this->authDestroy($id)) {
+            throw new ActionDisableException();
         }
+        $this->repository()->destroy($id);
+        return amis_response(['result' => 'ok']);
     }
 
     /**
@@ -235,18 +191,11 @@ abstract class AmisSourceController
      */
     public function recovery(Request $request, $id): Response
     {
-        try {
-            if (!$this->authRecovery($id)) {
-                throw new ActionDisableException();
-            }
-            $this->repository()->recovery($id);
-            return $this->amis->response(['result' => 'ok']);
-        } catch (Throwable $e) {
-            return $this->amis->handleException($e, [
-                'class' => get_called_class(),
-                'function' => __FUNCTION__,
-            ]);
+        if (!$this->authRecovery($id)) {
+            throw new ActionDisableException();
         }
+        $this->repository()->recovery($id);
+        return amis_response(['result' => 'ok']);
     }
 
     /**

@@ -1,5 +1,9 @@
 <?php
 
+use Kriss\WebmanAmisAdmin\Amis;
+use Kriss\WebmanAmisAdmin\Amis\Component;
+use Kriss\WebmanAmisAdmin\Controller\RenderController;
+
 return [
     /**
      * amis 资源
@@ -39,7 +43,7 @@ return [
         'debug' => false,
     ],
     /**
-     * @see \Kriss\WebmanAmisAdmin\Amis::renderApp()
+     * @see Amis::renderApp()
      */
     'app' => [
         /**
@@ -53,7 +57,7 @@ return [
         'title' => config('app.name'),
     ],
     /**
-     * @see \Kriss\WebmanAmisAdmin\Amis::renderPage()
+     * @see Amis::renderPage()
      */
     'page' => [
         /**
@@ -63,16 +67,16 @@ return [
     ],
     /**
      * 登录页面配置
-     * @see \Kriss\WebmanAmisAdmin\Controller\LayoutController::login()
+     * @see RenderController::login()
      */
     'page_login' => [
         //'background' => '#eee', // 可以使用图片, 'url(http://xxxx)'
         'login_api' => '/admin/auth/login',
-        'success_redirect' => '/admin'
+        'success_redirect' => '/admin',
     ],
     /**
      * 用于全局替换组件的默认参数
-     * @see \Kriss\WebmanAmisAdmin\Amis\Component::$config
+     * @see Component::$config
      */
     'components' => [
         // 例如: 将列表页的字段默认左显示
@@ -88,12 +92,4 @@ return [
      */
     'validator' => fn() => new \Kriss\WebmanAmisAdmin\Validator\NullValidator(),
     //'validator' => fn() => new \Kriss\WebmanAmisAdmin\Validator\LaravelValidator(\support\Container::get(\Illuminate\Contracts\Validation\Factory::class)),
-    /**
-     * 异常自定义处理
-     * 可以通过 $amis->response() 返回数据，也可以再次抛出异常
-     */
-    'exception_handler' => null,
-    /*'exception_handler' => function (\Kriss\WebmanAmisAdmin\Amis $amis, Throwable $e, array $extraInfo = []) {
-        throw $e;
-    }*/
 ];

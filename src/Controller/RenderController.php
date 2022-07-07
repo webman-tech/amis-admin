@@ -7,18 +7,11 @@ use Kriss\WebmanAmisAdmin\Helper\ArrayHelper;
 use Kriss\WebmanAmisAdmin\Helper\ConfigHelper;
 use support\Container;
 
-class LayoutController
+class RenderController
 {
-    protected Amis $amis;
-
-    public function __construct()
+    public function app()
     {
-        $this->amis = Container::get(Amis::class);
-    }
-
-    public function index()
-    {
-        return $this->amis->renderApp();
+        return Container::get(Amis::class)->renderApp();
     }
 
     public function login()
@@ -86,6 +79,7 @@ class LayoutController
                 ->toArray();
         }
         $schema = ArrayHelper::merge($schema, $data['schema']);
-        return $this->amis->renderPage($data['title'], $schema);
+
+        return Container::get(Amis::class)->renderPage($data['title'], $schema);
     }
 }

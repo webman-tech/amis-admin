@@ -8,9 +8,9 @@ class ValidationException extends RuntimeException
 {
     public array $errors;
 
-    public function __construct(array $errors)
+    public function __construct(array $errors, string $message = null)
     {
         $this->errors = $errors;
-        parent::__construct('Validation Error', 422);
+        parent::__construct($message ?? 'Validation Error', 422);
     }
 }

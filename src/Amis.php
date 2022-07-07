@@ -2,7 +2,6 @@
 
 namespace Kriss\WebmanAmisAdmin;
 
-use Kriss\WebmanAmisAdmin\Exceptions\ValidationException;
 use Kriss\WebmanAmisAdmin\Helper\ArrayHelper;
 use Kriss\WebmanAmisAdmin\Helper\ConfigHelper;
 use support\view\Raw;
@@ -27,45 +26,6 @@ class Amis
         ], $extra);
 
         return json($data, JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-     * @param Throwable $e
-     * @param array $extraInfo
-     * @return Response
-     */
-    public function handleException(Throwable $e, array $extraInfo = []): Response
-    {
-        if ($exceptionHandler = ConfigHelper::get('amis.exception_handler')) {
-            try {
-                $result = $exceptionHandler($this, $e, $extraInfo);
-                if ($result instanceof Response) {
-                    return $result;
-                }
-                if (is_string($result)) {
-                    return $this->response([], $result);
-                }
-                if (is_array($result)) {
-                    return $this->response($result);
-                }
-                if ($result instanceof Throwable) {
-                    $e = $result;
-                }
-            } catch (Throwable $newException) {
-                $e = $newException;
-            }
-        }
-
-        if ($e instanceof ValidationException) {
-            // 服务端验证的返回形式参考
-            // https://aisuda.bce.baidu.com/amis/zh-CN/components/form/formitem#%E9%80%9A%E8%BF%87%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4%E6%8E%A5%E5%8F%A3
-            return $this->response([], '', [
-                'errors' => $e->errors,
-                'status' => 422,
-            ]);
-        }
-
-        return $this->response([], $e->getMessage());
     }
 
     /**
