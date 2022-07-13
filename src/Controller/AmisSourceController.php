@@ -15,6 +15,12 @@ abstract class AmisSourceController
     public const SCENE_UPDATE = 'update';
 
     /**
+     * 设置只展示
+     * @var bool
+     */
+    protected bool $onlyShow = false;
+
+    /**
      * @return RepositoryInterface
      */
     abstract protected function repository(): RepositoryInterface;
@@ -66,6 +72,10 @@ abstract class AmisSourceController
      */
     protected function authCreate(): bool
     {
+        if ($this->onlyShow) {
+            return false;
+        }
+
         return true;
     }
 
@@ -76,6 +86,10 @@ abstract class AmisSourceController
      */
     protected function authCreateVisible(): string
     {
+        if ($this->onlyShow) {
+            return '1==0';
+        }
+
         return '1==1';
     }
 
@@ -135,6 +149,10 @@ abstract class AmisSourceController
      */
     protected function authUpdate($id = null): bool
     {
+        if ($this->onlyShow) {
+            return false;
+        }
+
         return true;
     }
 
@@ -145,6 +163,10 @@ abstract class AmisSourceController
      */
     protected function authUpdateVisible(): string
     {
+        if ($this->onlyShow) {
+            return '1==0';
+        }
+
         return '1==1';
     }
 
@@ -170,6 +192,10 @@ abstract class AmisSourceController
      */
     protected function authDestroy($id = null): bool
     {
+        if ($this->onlyShow) {
+            return false;
+        }
+
         return true;
     }
 
@@ -180,6 +206,10 @@ abstract class AmisSourceController
      */
     protected function authDestroyVisible(): string
     {
+        if ($this->onlyShow) {
+            return '1==0';
+        }
+
         return 'this.deleted_at === null';
     }
 
@@ -205,6 +235,10 @@ abstract class AmisSourceController
      */
     protected function authRecovery($id = null): bool
     {
+        if ($this->onlyShow) {
+            return false;
+        }
+
         return true;
     }
 
@@ -215,6 +249,10 @@ abstract class AmisSourceController
      */
     protected function authRecoveryVisible(): string
     {
+        if ($this->onlyShow) {
+            return '1==0';
+        }
+
         return 'this.deleted_at !== null';
     }
 
