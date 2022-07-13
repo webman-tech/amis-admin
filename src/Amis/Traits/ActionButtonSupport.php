@@ -57,7 +57,7 @@ trait ActionButtonSupport
      * @param array $schema
      * @return $this
      */
-    public function withButton(int $index, string $label, array $schema)
+    public function withButton(int $index, string $label, array $schema = [])
     {
         $schema['type'] = $schema['type'] ?? 'button';
         $schema['label'] = $schema['label'] ?? $label;
