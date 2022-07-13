@@ -2,10 +2,80 @@
 
 namespace Kriss\WebmanAmisAdmin\Amis\Traits;
 
+/**
+ * 操作按钮
+ * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/action
+ */
 trait ActionButtonSupport
 {
     /**
-     * dialog button
+     * ajax 请求
+     * @param int $index
+     * @param string $label
+     * @param string $api
+     * @param array $schema
+     * @return $this
+     */
+    public function withButtonAjax(int $index, string $label, string $api, array $schema = [])
+    {
+        return $this->withButton($index, $label, $this->merge([
+            'actionType' => 'ajax',
+            'api' => $api,
+        ], $schema));
+    }
+
+    /**
+     * 下载请求
+     * @param int $index
+     * @param string $label
+     * @param string $api
+     * @param array $schema
+     * @return $this
+     */
+    public function withButtonDownload(int $index, string $label, string $api, array $schema = [])
+    {
+        return $this->withButton($index, $label, $this->merge([
+            'actionType' => 'download',
+            'api' => $api,
+        ], $schema));
+    }
+
+    /**
+     * 单页跳转
+     * @param int $index
+     * @param string $label
+     * @param string $link
+     * @param array $schema
+     * @return $this
+     */
+    public function withButtonLink(int $index, string $label, string $link, array $schema = [])
+    {
+        return $this->withButton($index, $label, $this->merge([
+            'actionType' => 'link',
+            'link' => $link,
+        ], $schema));
+    }
+
+    /**
+     * 直接跳转
+     * @param int $index
+     * @param string $label
+     * @param string $link
+     * @param bool $blank
+     * @param array $schema
+     * @return $this
+     */
+    public function withButtonUrl(int $index, string $label, string $link, bool $blank = false, array $schema = [])
+    {
+        return $this->withButton($index, $label, $this->merge([
+            'actionType' => 'url',
+            'url' => $link,
+            'blank' => $blank,
+        ], $schema));
+    }
+
+    /**
+     * 弹框
      * @param int $index
      * @param string $label
      * @param string|array $body
@@ -36,18 +106,33 @@ trait ActionButtonSupport
     }
 
     /**
-     * ajax button
+     * 抽屉
      * @param int $index
      * @param string $label
-     * @param string $api
+     * @param string|array $body
      * @param array $schema
      * @return $this
      */
-    public function withButtonAjax(int $index, string $label, string $api, array $schema = [])
+    public function withButtonDrawer(int $index, string $label, $body, array $schema = [])
     {
+        if (isset($schema['api'])) {
+            $schema['drawer']['body']['api'] = $schema['api'];
+            unset($schema['api']);
+        }
+        if (isset($schema['initApi'])) {
+            $schema['drawer']['body']['initApi'] = $schema['initApi'];
+            unset($schema['initApi']);
+        }
+
         return $this->withButton($index, $label, $this->merge([
-            'actionType' => 'ajax',
-            'api' => $api,
+            'actionType' => 'drawer',
+            'drawer' => [
+                'title' => $label,
+                'body' => [
+                    'type' => 'form',
+                    'body' => $body,
+                ],
+            ],
         ], $schema));
     }
 

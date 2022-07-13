@@ -10,6 +10,7 @@ class Page extends Component
 {
     protected array $schema = [
         'type' => 'page',
+        'body' => [],
     ];
 
     /**
