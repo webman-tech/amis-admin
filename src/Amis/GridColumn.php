@@ -49,6 +49,35 @@ class GridColumn extends Component
         'copyable' => true,
     ];
 
+    /**
+     * 截断
+     * @param int $size
+     * @param array|bool $popOver
+     * @return GridColumn
+     */
+    public function truncate(int $size = 20, $popOver = null)
+    {
+        $schema = [
+            'type' => 'tpl',
+            'tpl' => "\${{$this->schema['name']}|truncate:{$size}}",
+        ];
+        if ($popOver !== false) {
+            $schema['popOverEnableOn'] = "this.{$this->schema['name']}.length > {$size}";
+            if (is_array($popOver)) {
+                $schema['popOver'] = $this->merge([
+                    'showIcon' => true,
+                    'body' => [
+                        'type' => 'tpl',
+                        'tpl' => "\${{$this->schema['name']}}",
+                    ],
+                ], $popOver);
+            } else {
+                $schema['popOver'] = "\${{$this->schema['name']}}";
+            }
+        }
+        return $this->schema($schema);
+    }
+
     public function toArray(): array
     {
         $this->solveSearchable();
