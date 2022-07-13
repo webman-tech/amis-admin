@@ -52,6 +52,7 @@ class GridColumn extends Component
     public function toArray(): array
     {
         $this->solveSearchable();
+        $this->solveQuickEdit();
 
         return parent::toArray();
     }
@@ -105,6 +106,33 @@ class GridColumn extends Component
         } elseif ($type === 'date' || $type === 'datetime') {
             $searchable['type'] = 'input-datetime-range';
         }
+
         $this->schema['searchable'] = $searchable;
+    }
+
+    protected function solveQuickEdit()
+    {
+        $quickEdit = $this->schema['quickEdit'] ?? false;
+        if (!$quickEdit || is_array($quickEdit)) {
+            return;
+        }
+
+        $type = $this->schema['type'];
+        if ($type === 'mapping') {
+            if (isset($this->schema['map'])) {
+                $quickEdit = [];
+                $quickEdit['type'] = 'select';
+                $quickEdit['options'] = array_map(
+                    fn($label, $value) => [
+                        'label' => $label,
+                        'value' => $value,
+                    ],
+                    array_values($this->schema['map']),
+                    array_keys($this->schema['map'])
+                );
+            }
+        }
+
+        $this->schema['quickEdit'] = $quickEdit;
     }
 }
