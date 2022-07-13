@@ -125,7 +125,7 @@ class GridColumn extends Component
                 $searchable['type'] = 'select';
                 $searchable['options'] = array_map(
                     fn($label, $value) => [
-                        'label' => $label,
+                        'label' => strip_tags($label),
                         'value' => $value,
                     ],
                     array_values($this->schema['map']),
@@ -153,7 +153,7 @@ class GridColumn extends Component
                 $quickEdit['type'] = 'select';
                 $quickEdit['options'] = array_map(
                     fn($label, $value) => [
-                        'label' => $label,
+                        'label' => strip_tags($label),
                         'value' => $value,
                     ],
                     array_values($this->schema['map']),
