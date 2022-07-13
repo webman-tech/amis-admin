@@ -62,7 +62,7 @@ class GridColumn extends Component
             'tpl' => "\${{$this->schema['name']}|truncate:{$size}}",
         ];
         if ($popOver !== false) {
-            $schema['popOverEnableOn'] = "this.{$this->schema['name']}.length > {$size}";
+            $schema['popOverEnableOn'] = "this.{$this->schema['name']} && this.{$this->schema['name']}.length > {$size}";
             if (is_array($popOver)) {
                 $schema['popOver'] = $this->merge([
                     'showIcon' => true,
