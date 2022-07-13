@@ -41,10 +41,14 @@ class Amis
             'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
             'assets' => ConfigHelper::get('amis.assets', []),
         ];
+        $appData = ConfigHelper::get('amis.app', []);
+        if (isset($appData['amisJSON']) && is_callable($appData['amisJSON'])) {
+            $appData['amisJSON'] = call_user_func($appData['amisJSON']);
+        }
         $schema['type'] = 'app';
         $data = ArrayHelper::merge(
             $defaultData,
-            ConfigHelper::get('amis.app', []),
+            $appData,
             [
                 'amisJSON' => $schema,
             ],
@@ -66,10 +70,14 @@ class Amis
             'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
             'assets' => ConfigHelper::get('amis.assets', []),
         ];
+        $pageData = ConfigHelper::get('amis.page', []);
+        if (isset($appData['amisJSON']) && is_callable($appData['amisJSON'])) {
+            $pageData['amisJSON'] = call_user_func($appData['amisJSON']);
+        }
         $schema['type'] = 'page';
         $data = ArrayHelper::merge(
             $defaultData,
-            ConfigHelper::get('amis.page', []),
+            $pageData,
             [
                 'amisJSON' => $schema,
                 'title' => $title,
