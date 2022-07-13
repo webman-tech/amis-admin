@@ -43,6 +43,23 @@ abstract class AbsRepository implements RepositoryInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getLabelRemark(string $attribute)
+    {
+        return $this->attributeLabelRemarks()[$attribute] ?? null;
+    }
+
+    /**
+     * $attribute => $labelRemark
+     * @return array
+     */
+    protected function attributeLabelRemarks(): array
+    {
+        return [];
+    }
+
+    /**
      * grid 的关联 with
      * @return array
      */

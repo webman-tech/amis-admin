@@ -429,6 +429,7 @@ abstract class AmisSourceController
                 $item = $item->toArray();
             }
             $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
+            $item['labelRemark'] = $item['labelRemark'] ?? $this->repository()->getLabelRemark($item['name']);
         }
         unset($item);
         return $formFields;

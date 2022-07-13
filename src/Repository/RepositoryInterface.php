@@ -63,4 +63,11 @@ interface RepositoryInterface
      * @return string
      */
     public function getLabel(string $attribute): string;
+
+    /**
+     * 根据 attribute 获取 labelRemark
+     * @param string $attribute
+     * @return string|array|null
+     */
+    public function getLabelRemark(string $attribute);
 }
