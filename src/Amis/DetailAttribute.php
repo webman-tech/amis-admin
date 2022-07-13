@@ -11,6 +11,11 @@ namespace Kriss\WebmanAmisAdmin\Amis;
  * @method $this value(string $value)
  * @method $this type(string $value)
  * @method $this badge(array $schema)
+ * @method $this labelRemark(string $value)
+ * @method $this hidden(bool $is = true)
+ * @method $this hiddenOn(string $expression)
+ * @method $this visible(bool $is = true)
+ * @method $this visibleOn(string $expression)
  *
  * @method $this typeCode(array $schema = [])
  * @method $this typeColor(array $schema = [])
@@ -34,6 +39,11 @@ class DetailAttribute extends Component
         'name' => '',
     ];
 
+    protected array $defaultValue = [
+        'hidden' => true,
+        'visible' => true,
+    ];
+
     /**
      * 复制
      * @param null|string $content
@@ -53,7 +63,11 @@ class DetailAttribute extends Component
             $this->schema['type'] = 'static-' . lcfirst(substr($name, 4));
             $this->schema($arguments[0] ?? []);
         } else {
-            $this->schema[$name] = $arguments[0] ?? null;
+            $value = $arguments[0] ?? null;
+            if ($value === null) {
+                $value = $this->defaultValue[$name] ?? null;
+            }
+            $this->schema[$name] = $value;
         }
         return $this;
     }
