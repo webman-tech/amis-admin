@@ -14,10 +14,17 @@ class EloquentRepository extends AbsRepository
 {
     protected ?EloquentModel $model = null;
     protected string $modelClass;
+    protected ?array $defaultOrder = null;
 
     public function __construct($model)
     {
         $this->initModel($model);
+        if ($this->defaultOrder === null) {
+            $this->defaultOrder = [
+                // 默认按照主键倒序
+                $this->model()->getKeyName() => 'desc',
+            ];
+        }
     }
 
     /**
@@ -121,6 +128,9 @@ class EloquentRepository extends AbsRepository
      */
     protected function buildOrder(EloquentBuilder $query, array $order): EloquentBuilder
     {
+        if (!$order) {
+            $order = $this->defaultOrder;
+        }
         foreach ($order as $column => $direction) {
             $query->orderBy($column, $direction);
         }

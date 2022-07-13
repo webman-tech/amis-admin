@@ -20,6 +20,7 @@ namespace Kriss\WebmanAmisAdmin\Amis;
  * @method $this typeCode(array $schema = [])
  * @method $this typeColor(array $schema = [])
  * @method $this typeDate(array $schema = [])
+ * @method $this typeDatetime(array $schema = [])
  * @method $this typeHtml(array $schema = [])
  * @method $this typeImage(array $schema = [])
  * @method $this typeImages(array $schema = [])
