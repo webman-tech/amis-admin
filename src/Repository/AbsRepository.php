@@ -181,6 +181,6 @@ abstract class AbsRepository implements RepositoryInterface
      */
     protected function ruleCustomAttributes(string $scene): array
     {
-        return [];
+        return $this->attributeLabels();
     }
 }
