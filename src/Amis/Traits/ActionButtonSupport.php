@@ -151,6 +151,18 @@ trait ActionButtonSupport
     }
 
     /**
+     * 分割线
+     * @param int $index
+     * @return ActionButtonSupport
+     */
+    public function withDivider(int $index)
+    {
+        $schema['type'] = 'divider';
+        $this->setActionButton($index, $schema);
+        return $this;
+    }
+
+    /**
      * 设置 button 到 schema 中
      * @param int $index
      * @param array $schema
