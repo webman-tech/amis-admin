@@ -21,9 +21,27 @@ abstract class AmisSourceController
     protected bool $onlyShow = false;
 
     /**
+     * @var RepositoryInterface|null
+     */
+    protected ?RepositoryInterface $repository = null;
+
+    /**
+     * 获取 repository
      * @return RepositoryInterface
      */
-    abstract protected function repository(): RepositoryInterface;
+    protected function repository(): RepositoryInterface
+    {
+        if ($this->repository === null) {
+            $this->repository = $this->createRepository();
+        }
+        return $this->repository;
+    }
+
+    /**
+     * 创建 Repository
+     * @return RepositoryInterface
+     */
+    abstract protected function createRepository(): RepositoryInterface;
 
     /**
      * page 数据和列表数据
