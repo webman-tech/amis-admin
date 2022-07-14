@@ -43,6 +43,11 @@ class GridColumnActions extends GridColumn
         return $this->withButtonDialog(static::INDEX_DETAIL, '详情', $detailAttributes, $this->merge([
             'initApi' => $initApi,
             'visibleOn' => $can,
+            'dialog' => [
+                'actions' => [
+                    ['type' => 'button', 'label' => '取消', 'actionType' => 'cancel'],
+                ],
+            ],
         ], $this->config['schema_detail']));
     }
 
