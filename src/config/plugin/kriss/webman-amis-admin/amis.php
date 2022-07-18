@@ -69,11 +69,13 @@ return [
      * 登录页面配置
      * @see RenderController::login()
      */
-    'page_login' => [
-        //'background' => '#eee', // 可以使用图片, 'url(http://xxxx)'
-        'login_api' => '/admin/auth/login',
-        'success_redirect' => '/admin',
-    ],
+    'page_login' => function() {
+        return [
+            //'background' => '#eee', // 可以使用图片, 'url(http://xxxx)'
+            'login_api' => '/admin/auth/login',
+            'success_redirect' => '/admin',
+        ];
+    },
     /**
      * 用于全局替换组件的默认参数
      * @see Component::$config

@@ -17,7 +17,7 @@ class RenderController
     public function login()
     {
         // 默认值，可以被配置参数替换
-        $data = [
+        $defaultData = [
             // 以下为常用的替换参数
             'background' => '#eee', // 可以使用图片, 'url(http://xxxx)'
             'title' => config('app.name', '登录'),
@@ -34,7 +34,14 @@ class RenderController
             'schema' => [],
             'schema_overwrite' => false,
         ];
-        $data = ArrayHelper::merge(ConfigHelper::get('amis.page_login', []), $data);
+        $data = ConfigHelper::get('amis.page_login', []);
+        if (is_callable($data)) {
+            $data = call_user_func($data);
+        }
+        if (isset($data['form'])) {
+            unset($defaultData['form']);
+        }
+        $data = ArrayHelper::merge($defaultData, $data);
 
         $schema = [];
         if (!$data['schema_overwrite']) {
