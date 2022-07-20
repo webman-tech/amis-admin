@@ -34,7 +34,7 @@ class RenderController
             'schema' => [],
             'schema_overwrite' => false,
         ];
-        $data = ConfigHelper::get('amis.page_login', []);
+        $data = ConfigHelper::get('page_login', []);
         if (is_callable($data)) {
             $data = call_user_func($data);
         }

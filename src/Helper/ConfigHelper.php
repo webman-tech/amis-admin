@@ -4,6 +4,8 @@ namespace Kriss\WebmanAmisAdmin\Helper;
 
 class ConfigHelper
 {
+    public const AMIS_MODULE = '__amis_module';
+
     /**
      * 获取配置
      * @param string $key
@@ -12,6 +14,7 @@ class ConfigHelper
      */
     public static function get(string $key, $default = null)
     {
-        return config('plugin.kriss.webman-amis-admin.' . $key, $default);
+        $module = request()->{self::AMIS_MODULE} ?? 'amis';
+        return config("plugin.kriss.webman-amis-admin.{$module}.{$key}", $default);
     }
 }

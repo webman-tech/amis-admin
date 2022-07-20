@@ -148,7 +148,7 @@ abstract class AbsRepository implements RepositoryInterface
         if ($this->validator) {
             return $this->validator;
         }
-        if ($validator = ConfigHelper::get('amis.validator')) {
+        if ($validator = ConfigHelper::get('validator')) {
             $this->validator = call_user_func($validator);
         } else {
             $this->validator = new NullValidator();

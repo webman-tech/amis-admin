@@ -14,6 +14,7 @@
 - 无侵入：不设定任何初始 sql，业务无关
 - 无前端：基本不需要考虑前端，熟悉 amis 和 php 即可
 - 高扩展：amis 的各种组件支持全局控制和页面级控制
+- 支持多应用模式：可以支持作用于类似 admin/agent/user 多后台形式
 
 局限：
 
@@ -32,6 +33,30 @@ composer require kriss/webman-amis-admin
 ## 使用
 
 TODO
+
+### 多应用支持
+
+1. 复制一份 `config/plugin/kriss/webman-amis-admin/amis.php` 到 `config/plugin/kriss/webman-amis-admin/amis-user.php`
+
+2. 继承 `AmisModuleChangeMiddleware` 实现一个无 `_construct` 的中间件（因为 webman 目前还不支持中间件注册使用 __construct），例如：
+
+```php
+<?php
+
+namespace app\middleware;
+
+use Kriss\WebmanAmisAdmin\Middleware\AmisModuleChangeMiddleware;
+
+class AmisModuleChange2User extends AmisModuleChangeMiddleware
+{
+    public function __construct()
+    {
+        parent::__construct('amis-user');
+    }
+}
+```
+
+3. 在响应的路由或全局中间件中引入 `AmisModuleChange2User`
 
 ## 扩展
 

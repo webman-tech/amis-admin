@@ -39,9 +39,9 @@ class Amis
         $defaultData = [
             'view' => 'amis-app',
             'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
-            'assets' => ConfigHelper::get('amis.assets', []),
+            'assets' => ConfigHelper::get('assets', []),
         ];
-        $appData = ConfigHelper::get('amis.app', []);
+        $appData = ConfigHelper::get('app', []);
         if (isset($appData['amisJSON']) && is_callable($appData['amisJSON'])) {
             $appData['amisJSON'] = call_user_func($appData['amisJSON']);
         }
@@ -68,9 +68,9 @@ class Amis
         $defaultData = [
             'view' => 'amis-page',
             'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
-            'assets' => ConfigHelper::get('amis.assets', []),
+            'assets' => ConfigHelper::get('assets', []),
         ];
-        $pageData = ConfigHelper::get('amis.page', []);
+        $pageData = ConfigHelper::get('page', []);
         if (isset($appData['amisJSON']) && is_callable($appData['amisJSON'])) {
             $pageData['amisJSON'] = call_user_func($appData['amisJSON']);
         }

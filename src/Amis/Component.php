@@ -21,7 +21,7 @@ class Component
 
     public function __construct()
     {
-        $componentConfig = ConfigHelper::get('amis.components.' . static::class, []);
+        $componentConfig = ConfigHelper::get('components.' . static::class, []);
         if (is_callable($componentConfig)) {
             $componentConfig = call_user_func($componentConfig);
         }
