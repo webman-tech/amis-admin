@@ -83,7 +83,12 @@ class Amis
                 'title' => $title,
             ],
         );
+        /**
+         * Fix https://github.com/walkor/webman-framework/commit/a559a642058aa9d5fd9dea9d129dc31b615c56eb
+         */
+        $app = $data['view_path'];
+        unset($data['view_path']);
 
-        return Raw::render($data['view'], $data, $data['view_path']);
+        return Raw::render($data['view'], $data, $app);
     }
 }
