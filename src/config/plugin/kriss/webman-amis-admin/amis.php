@@ -4,6 +4,13 @@ use Kriss\WebmanAmisAdmin\Amis;
 use Kriss\WebmanAmisAdmin\Amis\Component;
 use Kriss\WebmanAmisAdmin\Controller\RenderController;
 
+/**
+ * Amis 静态资源的基础 url
+ * 建议生产环境使用指定的版本，否则会存在因版本变更引起的问题
+ * 更加建议使用公司自己的 cdn，或者将静态资源下载后放到本地，提交速度
+ */
+$amisAssetBaseUrl = 'https://unpkg.com/amis@latest/sdk/';
+
 return [
     /**
      * amis 资源
@@ -18,12 +25,12 @@ return [
          * @link https://aisuda.bce.baidu.com/amis/zh-CN/docs/start/getting-started#sdk
          */
         'css' => [
-            'https://unpkg.com/amis/sdk/sdk.css',
-            'https://unpkg.com/amis/sdk/helper.css',
-            'https://unpkg.com/amis/sdk/iconfont.css',
+            $amisAssetBaseUrl . 'sdk.css',
+            $amisAssetBaseUrl . 'helper.css',
+            $amisAssetBaseUrl . 'iconfont.css',
         ],
         'js' => [
-            'https://unpkg.com/amis/sdk/sdk.js',
+            $amisAssetBaseUrl . 'sdk.js',
             'https://unpkg.com/history@4.10.1/umd/history.js', // 使用 app 必须
         ],
         /**
