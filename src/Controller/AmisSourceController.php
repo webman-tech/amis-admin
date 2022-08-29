@@ -85,7 +85,7 @@ abstract class AmisSourceController
     }
 
     /**
-     * 新增后端是否可用
+     * 【后端】判断新增是否可用
      * @return bool
      */
     protected function authCreate(): bool
@@ -98,7 +98,7 @@ abstract class AmisSourceController
     }
 
     /**
-     * 新增前端是否可见
+     * 【前端】判断新增是否可见
      * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
      * @return string
      */
@@ -126,7 +126,7 @@ abstract class AmisSourceController
     }
 
     /**
-     * 详情后端是否可用
+     * 【后端】详情判断是否可用
      * @param string|int|null $id
      * @return bool
      */
@@ -136,7 +136,7 @@ abstract class AmisSourceController
     }
 
     /**
-     * 详情前端是否可见
+     * 【前端】详情判断是否可见
      * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
      * @return string
      */
@@ -161,7 +161,7 @@ abstract class AmisSourceController
     }
 
     /**
-     * 更新后端是否可用
+     * 【后端】判断更新是否可用
      * @param string|int|null $id
      * @return bool
      */
@@ -175,7 +175,7 @@ abstract class AmisSourceController
     }
 
     /**
-     * 更新前端是否可见
+     * 【前端】判断更新是否可见
      * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
      * @return string
      */
@@ -204,7 +204,7 @@ abstract class AmisSourceController
     }
 
     /**
-     * 删除后端是否可用
+     * 【后端】判断删除是否可用
      * @param string|int|null $id
      * @return bool
      */
@@ -218,7 +218,7 @@ abstract class AmisSourceController
     }
 
     /**
-     * 删除前端是否可见
+     * 【前端】判断删除是否可见
      * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
      * @return string
      */
@@ -247,7 +247,7 @@ abstract class AmisSourceController
     }
 
     /**
-     * 恢复后端是否可用
+     * 【后端】判断恢复是否可用
      * @param string|int|null $id
      * @return bool
      */
@@ -261,7 +261,7 @@ abstract class AmisSourceController
     }
 
     /**
-     * 恢复前端是否可见
+     * 【前端】判断恢复是否可见
      * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
      * @return string
      */
