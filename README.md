@@ -46,7 +46,9 @@ AmisSourceController 中使用的 repository 的方法封装，负责提供对�
 
 ### Component
 
-Amis 组件的封装，目前仅封装了常用的组件类型和属性， 但 amis 的所有组件都可以通过 `Component::make(['type' => 'xxx])` 来配置
+Amis 组件的封装，目前仅封装了常用的组件类型和属性， 但 amis 的所有组件都可以通过 `Component::make(['type' => 'xxx'])` 来配置
+
+所有组件也都支持 `schema()` 方法来覆盖（支持嵌套覆盖）参数
 
 > 组件支持 Controller 级别和全局（config中）修改默认配置参数
 
