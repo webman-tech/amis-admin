@@ -5,7 +5,6 @@ namespace Kriss\WebmanAmisAdmin\Repository;
 use Illuminate\Contracts\Pagination\Paginator as PaginatorInterface;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Collection as DBCollection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\AbstractPaginator;
@@ -100,7 +99,7 @@ class EloquentRepository extends AbsRepository
     {
         $searchableAttributes = $this->searchableAttributes();
         foreach ($search as $attribute => $value) {
-            if ($value && array_key_exists($attribute, $searchableAttributes)) {
+            if (array_key_exists($attribute, $searchableAttributes)) {
                 $query = call_user_func($searchableAttributes[$attribute], $query, $value, $attribute);
             }
         }
@@ -214,10 +213,10 @@ class EloquentRepository extends AbsRepository
 
     /**
      * 处理明细结果
-     * @param Model $query
+     * @param EloquentModel $query
      * @return array
      */
-    protected function solveDetailResult(Model $query): array
+    protected function solveDetailResult(EloquentModel $query): array
     {
         return $query->toArray();
     }

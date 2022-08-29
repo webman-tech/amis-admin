@@ -58,7 +58,7 @@ abstract class AmisSourceController
             return amis_response($this->repository()->pagination(
                 $request->get('page'),
                 $request->get('perPage'),
-                $request->get(),
+                array_filter($request->get(), fn($item) => $item !== ''), // 仅过滤空字符串的，保留为 0 的情况
                 $order
             ));
         }
