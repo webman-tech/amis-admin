@@ -32,13 +32,29 @@ composer require kriss/webman-amis-admin
 
 ## 使用
 
-TODO
+参考使用：[https://github.com/krissss/webman-basic](https://github.com/krissss/webman-basic)
+
+> 注意: Amis 实际上是前后端分离的框架，即数据接口是数据接口，页面配置（json）是页面配置， 因此不能用常规的 PHP 框架下的 admin 框架（如 laravel-admin 等）来思考
+
+### AmisSourceController
+
+是一个基础的 CRUD 资源控制器基类，负责控制页面结构，操作按钮权限等
+
+### Repository
+
+AmisSourceController 中使用的 repository 的方法封装，负责提供对数据的增删改
+
+### Component
+
+Amis 组件的封装，目前仅封装了常用的组件类型和属性， 但 amis 的所有组件都可以通过 `Component::make(['type' => 'xxx])` 来配置
+
+> 组件支持 Controller 级别和全局（config中）修改默认配置参数
 
 ### 多应用支持
 
 1. 复制一份 `config/plugin/kriss/webman-amis-admin/amis.php` 到 `config/plugin/kriss/webman-amis-admin/amis-user.php`
 
-2. 继承 `AmisModuleChangeMiddleware` 实现一个无 `_construct` 的中间件（因为 webman 目前还不支持中间件注册使用 __construct），例如：
+2. 继承 `AmisModuleChangeMiddleware` 实现一个无 `__construct` 的中间件（因为 webman 目前还不支持中间件注册使用 __construct），例如：
 
 ```php
 <?php
@@ -57,11 +73,3 @@ class AmisModuleChange2User extends AmisModuleChangeMiddleware
 ```
 
 3. 在响应的路由或全局中间件中引入 `AmisModuleChange2User`
-
-## 扩展
-
-TODO
-
-## 例子
-
-参考使用：[https://github.com/krissss/webman-basic](https://github.com/krissss/webman-basic)
