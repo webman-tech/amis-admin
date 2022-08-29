@@ -60,42 +60,6 @@ abstract class AbsRepository implements RepositoryInterface
     }
 
     /**
-     * grid 的关联 with
-     * @return array
-     */
-    protected function gridRelations(): array
-    {
-        return [];
-    }
-
-    /**
-     * gird 的查询的列数据
-     * @return string[]
-     */
-    protected function gridColumns(): array
-    {
-        return ['*'];
-    }
-
-    /**
-     * form 的查询字段
-     * @return string[]
-     */
-    protected function formColumns(): array
-    {
-        return ['*'];
-    }
-
-    /**
-     * detail 的查询字段
-     * @return string[]
-     */
-    protected function detailColumns(): array
-    {
-        return ['*'];
-    }
-
-    /**
      * 获取需要隐藏的字段
      * @param string $scene
      * @return array

@@ -5,10 +5,13 @@ namespace Kriss\WebmanAmisAdmin\Repository;
 use Illuminate\Contracts\Pagination\Paginator as PaginatorInterface;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Collection as DBCollection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 class EloquentRepository extends AbsRepository
 {
@@ -22,7 +25,7 @@ class EloquentRepository extends AbsRepository
         if ($this->defaultOrder === null) {
             $this->defaultOrder = [
                 // 默认按照主键倒序
-                $this->model()->getKeyName() => 'desc',
+                $this->model()->qualifyColumn($this->model()->getKeyName()) => 'desc',
             ];
         }
     }
@@ -67,12 +70,12 @@ class EloquentRepository extends AbsRepository
      */
     public function pagination(int $page = 1, int $perPage = 20, array $search = [], array $order = []): array
     {
-        $query = $this->query()
-            ->with($this->gridRelations());
+        $query = $this->query();
         $query = $this->buildSearch($query, $search);
         $query = $this->buildOrder($query, $order);
+        $query = $this->extGridQuery($query);
 
-        $paginator = $this->queryPagination($query, $perPage, $page, $this->gridColumns());
+        $paginator = $this->queryPagination($query, $perPage, $page);
         if ($paginator instanceof AbstractPaginator) {
             /** @var DBCollection $itemCollection */
             $itemCollection = $paginator->getCollection();
@@ -81,11 +84,11 @@ class EloquentRepository extends AbsRepository
         } else {
             throw new \InvalidArgumentException('error $paginator type');
         }
-        $itemCollection
+        $itemCollection = $itemCollection
             ->makeHidden($this->hiddenAttributes(static::SCENE_LIST))
             ->makeVisible($this->visibleAttributes(static::SCENE_LIST));
 
-        return $this->solvePaginationResult($paginator);
+        return $this->solvePaginationResult($itemCollection);
     }
 
     /**
@@ -138,16 +141,25 @@ class EloquentRepository extends AbsRepository
     }
 
     /**
+     * 扩展列表的 query
+     * @param EloquentBuilder $query
+     * @return EloquentBuilder
+     */
+    protected function extGridQuery(EloquentBuilder $query): EloquentBuilder
+    {
+        return $query;
+    }
+
+    /**
      * 查询分页数据
      * @param EloquentBuilder $query
      * @param int $perPage
      * @param int $page
-     * @param array $columns
      * @return PaginatorInterface|DBCollection 返回分页或全量数据
      */
-    protected function queryPagination(EloquentBuilder $query, int $perPage, int $page, array $columns)
+    protected function queryPagination(EloquentBuilder $query, int $perPage, int $page)
     {
-        return $query->paginate($perPage, $columns, 'page', $page);
+        return $query->paginate($perPage, ['*'], 'page', $page);
     }
 
     /**
@@ -182,11 +194,33 @@ class EloquentRepository extends AbsRepository
      */
     public function detail($id): array
     {
-        return $this->query()
-            ->findOrFail($id, $this->detailColumns())
+        $query = $this->query();
+        $query = $this->extDetailQuery($query);
+        $collection = $query->findOrFail($id)
             ->makeHidden($this->hiddenAttributes(static::SCENE_DETAIL))
-            ->makeVisible($this->visibleAttributes(static::SCENE_DETAIL))
-            ->toArray();
+            ->makeVisible($this->visibleAttributes(static::SCENE_DETAIL));
+
+        return $this->solveDetailResult($collection);
+    }
+
+    /**
+     * 扩展 detail 的 query
+     * @param EloquentBuilder $query
+     * @return EloquentBuilder
+     */
+    protected function extDetailQuery(EloquentBuilder $query): EloquentBuilder
+    {
+        return $query;
+    }
+
+    /**
+     * 处理明细结果
+     * @param Collection|DBCollection|Model $query
+     * @return array
+     */
+    protected function solveDetailResult(Collection $query): array
+    {
+        return $query->toArray();
     }
 
     /**
@@ -225,7 +259,7 @@ class EloquentRepository extends AbsRepository
      */
     protected function doUpdate(array $data, $id): void
     {
-        $model = $this->query()->findOrFail($id, $this->formColumns());
+        $model = $this->query()->findOrFail($id);
         foreach ($data as $key => $value) {
             $model->{$key} = $value;
         }
@@ -254,8 +288,9 @@ class EloquentRepository extends AbsRepository
      */
     public function recovery($id): void
     {
-        $this->query()
-            ->withTrashed()
+        /** @var SoftDeletes $query */
+        $query = $this->query();
+        $query->withTrashed()
             ->whereKey($id)
             ->restore();
     }
