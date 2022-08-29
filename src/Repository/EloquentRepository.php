@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Collection;
 
 class EloquentRepository extends AbsRepository
 {
@@ -215,10 +214,10 @@ class EloquentRepository extends AbsRepository
 
     /**
      * 处理明细结果
-     * @param Collection|DBCollection|Model $query
+     * @param Model $query
      * @return array
      */
-    protected function solveDetailResult(Collection $query): array
+    protected function solveDetailResult(Model $query): array
     {
         return $query->toArray();
     }
