@@ -82,11 +82,11 @@ class EloquentRepository extends AbsRepository
         } else {
             throw new \InvalidArgumentException('error $paginator type');
         }
-        $itemCollection = $itemCollection
+        $itemCollection
             ->makeHidden($this->hiddenAttributes(static::SCENE_LIST))
             ->makeVisible($this->visibleAttributes(static::SCENE_LIST));
 
-        return $this->solvePaginationResult($itemCollection);
+        return $this->solvePaginationResult($paginator);
     }
 
     /**
