@@ -85,7 +85,8 @@ class Crud extends Component
      */
     public function withCreate(string $api, array $form, string $can = '1==1')
     {
-        return $this->withButtonDialog(static::INDEX_CREATE, '新增', $form, $this->merge([
+        $label = $this->config['schema_create']['label'] ?? '新增';
+        return $this->withButtonDialog(static::INDEX_CREATE, $label, $form, $this->merge([
             'api' => $api,
             'level' => 'primary',
             'visibleOn' => $can,
@@ -133,6 +134,4 @@ class Crud extends Component
         $this->schema['footerToolbar'] = array_filter(array_values($this->schema['footerToolbar']));
         return parent::toArray();
     }
-
-
 }

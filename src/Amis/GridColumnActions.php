@@ -18,15 +18,15 @@ class GridColumnActions extends GridColumn
 
     public function __construct()
     {
-        $this->schema([
-            'type' => 'operation',
-            'label' => '操作',
-            'buttons' => [],
-        ]);
         $this->config['schema_detail'] = [];
         $this->config['schema_update'] = [];
         $this->config['schema_delete'] = [];
         $this->config['schema_recovery'] = [];
+        $this->config['schema'] = [
+            'type' => 'operation',
+            'label' => '操作',
+            'buttons' => [],
+        ];
 
         parent::__construct();
     }
@@ -40,7 +40,8 @@ class GridColumnActions extends GridColumn
      */
     public function withDetail(array $detailAttributes, string $initApi = null, string $can = '1==1')
     {
-        return $this->withButtonDialog(static::INDEX_DETAIL, '详情', $detailAttributes, $this->merge([
+        $label = $this->config['schema_detail']['label'] ?? '详情';
+        return $this->withButtonDialog(static::INDEX_DETAIL, $label, $detailAttributes, $this->merge([
             'initApi' => $initApi,
             'visibleOn' => $can,
             'dialog' => [
@@ -61,7 +62,8 @@ class GridColumnActions extends GridColumn
      */
     public function withUpdate(array $formFields, string $api, string $initApi = null, string $can = '1==1')
     {
-        return $this->withButtonDialog(static::INDEX_UPDATE, '修改', $formFields, $this->merge([
+        $label = $this->config['schema_update']['label'] ?? '修改';
+        return $this->withButtonDialog(static::INDEX_UPDATE, $label, $formFields, $this->merge([
             'initApi' => $initApi,
             'api' => $api,
             'level' => 'primary',
@@ -77,9 +79,10 @@ class GridColumnActions extends GridColumn
      */
     public function withDelete(string $api, string $can = '1==1')
     {
-        return $this->withButtonAjax(static::INDEX_DELETE, '删除', $api, $this->merge([
+        $label = $this->config['schema_delete']['label'] ?? '删除';
+        return $this->withButtonAjax(static::INDEX_DELETE, $label, $api, $this->merge([
             'level' => 'danger',
-            'confirmText' => '确定要删除？',
+            'confirmText' => "确定要{$label}？",
             'visibleOn' => $can,
         ], $this->config['schema_delete']));
     }
@@ -92,9 +95,10 @@ class GridColumnActions extends GridColumn
      */
     public function withRecovery(string $api, string $can = '1==1')
     {
-        return $this->withButtonAjax(static::INDEX_RECOVERY, '恢复', $api, $this->merge([
+        $label = $this->config['schema_recovery']['label'] ?? '恢复';
+        return $this->withButtonAjax(static::INDEX_RECOVERY, $label, $api, $this->merge([
             'level' => 'warning',
-            'confirmText' => '确定要恢复？',
+            'confirmText' => "确定要{$label}？",
             'visibleOn' => $can,
         ], $this->config['schema_recovery']));
     }
