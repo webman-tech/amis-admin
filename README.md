@@ -26,6 +26,8 @@
 composer require kriss/webman-amis-admin
 ```
 
+要求 webman > 1.4 且关闭了 controller_reuse（原因：controller_reuse 导致成员变量会被缓存，AmisSourceController 需要使用到成员做单个请求的缓存）
+
 ## 配置
 
 详见： [amis.php](src/config/plugin/kriss/webman-amis-admin/amis.php)
