@@ -1,6 +1,6 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Amis\Traits;
+namespace WebmanTech\AmisAdmin\Amis\Traits;
 
 /**
  * 操作按钮

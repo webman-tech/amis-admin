@@ -1,11 +1,11 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Repository;
+namespace WebmanTech\AmisAdmin\Repository;
 
-use Kriss\WebmanAmisAdmin\Exceptions\ValidationException;
-use Kriss\WebmanAmisAdmin\Helper\ConfigHelper;
-use Kriss\WebmanAmisAdmin\Validator\NullValidator;
-use Kriss\WebmanAmisAdmin\Validator\ValidatorInterface;
+use WebmanTech\AmisAdmin\Exceptions\ValidationException;
+use WebmanTech\AmisAdmin\Helper\ConfigHelper;
+use WebmanTech\AmisAdmin\Validator\NullValidator;
+use WebmanTech\AmisAdmin\Validator\ValidatorInterface;
 
 abstract class AbsRepository implements RepositoryInterface
 {

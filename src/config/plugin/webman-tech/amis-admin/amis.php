@@ -1,8 +1,8 @@
 <?php
 
-use Kriss\WebmanAmisAdmin\Amis;
-use Kriss\WebmanAmisAdmin\Amis\Component;
-use Kriss\WebmanAmisAdmin\Controller\RenderController;
+use WebmanTech\AmisAdmin\Amis;
+use WebmanTech\AmisAdmin\Amis\Component;
+use WebmanTech\AmisAdmin\Controller\RenderController;
 
 /**
  * Amis 静态资源的基础 url
@@ -89,7 +89,7 @@ return [
      */
     'components' => [
         // 例如: 将列表页的字段默认左显示
-        /*\Kriss\WebmanAmisAdmin\Amis\GridColumn::class => [
+        /*\WebmanTech\AmisAdmin\Amis\GridColumn::class => [
             'schema' => [
                 'align' => 'left',
             ],
@@ -97,8 +97,8 @@ return [
     ],
     /**
      * 默认的验证器
-     * 返回一个 \Kriss\WebmanAmisAdmin\Validator\ValidatorInterface
+     * 返回一个 \WebmanTech\AmisAdmin\Validator\ValidatorInterface
      */
-    'validator' => fn() => new \Kriss\WebmanAmisAdmin\Validator\NullValidator(),
-    //'validator' => fn() => new \Kriss\WebmanAmisAdmin\Validator\LaravelValidator(\support\Container::get(\Illuminate\Contracts\Validation\Factory::class)),
+    'validator' => fn() => new \WebmanTech\AmisAdmin\Validator\NullValidator(),
+    //'validator' => fn() => new \WebmanTech\AmisAdmin\Validator\LaravelValidator(\support\Container::get(\Illuminate\Contracts\Validation\Factory::class)),
 ];

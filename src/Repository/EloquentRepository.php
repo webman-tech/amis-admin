@@ -1,6 +1,6 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Repository;
+namespace WebmanTech\AmisAdmin\Repository;
 
 use Illuminate\Contracts\Pagination\Paginator as PaginatorInterface;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;

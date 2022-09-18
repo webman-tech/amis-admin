@@ -1,6 +1,6 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Amis;
+namespace WebmanTech\AmisAdmin\Amis;
 
 /**
  * table 的单个 column

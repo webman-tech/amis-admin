@@ -61,7 +61,7 @@ Amis 组件的封装，目前仅封装了常用的组件类型和属性， 但 a
 
 namespace app\middleware;
 
-use Kriss\WebmanAmisAdmin\Middleware\AmisModuleChangeMiddleware;
+use WebmanTech\AmisAdmin\Middleware\AmisModuleChangeMiddleware;
 
 class AmisModuleChange2User extends AmisModuleChangeMiddleware
 {

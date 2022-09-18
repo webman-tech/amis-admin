@@ -1,5 +1,5 @@
 <?php
-namespace Kriss\WebmanAmisAdmin;
+namespace WebmanTech\AmisAdmin;
 
 class Install
 {

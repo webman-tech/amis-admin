@@ -1,6 +1,6 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Validator;
+namespace WebmanTech\AmisAdmin\Validator;
 
 class NullValidator implements ValidatorInterface
 {

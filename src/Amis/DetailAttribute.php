@@ -1,6 +1,6 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Amis;
+namespace WebmanTech\AmisAdmin\Amis;
 
 /**
  * 详情的一个字段

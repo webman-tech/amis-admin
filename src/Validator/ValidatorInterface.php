@@ -1,8 +1,8 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Validator;
+namespace WebmanTech\AmisAdmin\Validator;
 
-use Kriss\WebmanAmisAdmin\Exceptions\ValidationException;
+use WebmanTech\AmisAdmin\Exceptions\ValidationException;
 
 interface ValidatorInterface
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Amis;
+namespace WebmanTech\AmisAdmin\Amis;
 
-use Kriss\WebmanAmisAdmin\Helper\ArrayHelper;
-use Kriss\WebmanAmisAdmin\Helper\ConfigHelper;
+use WebmanTech\AmisAdmin\Helper\ArrayHelper;
+use WebmanTech\AmisAdmin\Helper\ConfigHelper;
 use support\Container;
 
 /**

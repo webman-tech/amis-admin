@@ -1,8 +1,8 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Amis;
+namespace WebmanTech\AmisAdmin\Amis;
 
-use Kriss\WebmanAmisAdmin\Amis\Traits\ActionButtonSupport;
+use WebmanTech\AmisAdmin\Amis\Traits\ActionButtonSupport;
 
 /**
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/crud

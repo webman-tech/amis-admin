@@ -1,9 +1,9 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin;
+namespace WebmanTech\AmisAdmin;
 
-use Kriss\WebmanAmisAdmin\Helper\ArrayHelper;
-use Kriss\WebmanAmisAdmin\Helper\ConfigHelper;
+use WebmanTech\AmisAdmin\Helper\ArrayHelper;
+use WebmanTech\AmisAdmin\Helper\ConfigHelper;
 use support\view\Raw;
 use Throwable;
 use Webman\Http\Response;

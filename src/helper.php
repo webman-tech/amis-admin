@@ -1,6 +1,6 @@
 <?php
 
-use Kriss\WebmanAmisAdmin\Amis;
+use WebmanTech\AmisAdmin\Amis;
 use support\Container;
 use Webman\Http\Response;
 

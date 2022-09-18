@@ -1,6 +1,6 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Exceptions;
+namespace WebmanTech\AmisAdmin\Exceptions;
 
 use RuntimeException;
 

@@ -5,7 +5,7 @@
   "description": "Webman plugin webman-tech/amis-admin",
   "autoload": {
     "psr-4": {
-      "Kriss\\WebmanAmisAdmin\\": "src"
+      "WebmanTech\\AmisAdmin\\": "src"
     },
     "files": [
       "src/helper.php"

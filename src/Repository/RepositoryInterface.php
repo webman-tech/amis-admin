@@ -1,6 +1,6 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Repository;
+namespace WebmanTech\AmisAdmin\Repository;
 
 interface RepositoryInterface
 {

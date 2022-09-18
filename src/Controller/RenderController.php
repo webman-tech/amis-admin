@@ -1,10 +1,10 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Controller;
+namespace WebmanTech\AmisAdmin\Controller;
 
-use Kriss\WebmanAmisAdmin\Amis;
-use Kriss\WebmanAmisAdmin\Helper\ArrayHelper;
-use Kriss\WebmanAmisAdmin\Helper\ConfigHelper;
+use WebmanTech\AmisAdmin\Amis;
+use WebmanTech\AmisAdmin\Helper\ArrayHelper;
+use WebmanTech\AmisAdmin\Helper\ConfigHelper;
 use support\Container;
 
 class RenderController

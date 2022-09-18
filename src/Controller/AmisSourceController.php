@@ -1,11 +1,11 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Controller;
+namespace WebmanTech\AmisAdmin\Controller;
 
-use Kriss\WebmanAmisAdmin\Amis;
-use Kriss\WebmanAmisAdmin\Amis\Component;
-use Kriss\WebmanAmisAdmin\Exceptions\ActionDisableException;
-use Kriss\WebmanAmisAdmin\Repository\RepositoryInterface;
+use WebmanTech\AmisAdmin\Amis;
+use WebmanTech\AmisAdmin\Amis\Component;
+use WebmanTech\AmisAdmin\Exceptions\ActionDisableException;
+use WebmanTech\AmisAdmin\Repository\RepositoryInterface;
 use Webman\Http\Request;
 use Webman\Http\Response;
 

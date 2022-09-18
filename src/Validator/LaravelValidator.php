@@ -1,9 +1,9 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Validator;
+namespace WebmanTech\AmisAdmin\Validator;
 
 use Illuminate\Contracts\Validation\Factory;
-use Kriss\WebmanAmisAdmin\Exceptions\ValidationException;
+use WebmanTech\AmisAdmin\Exceptions\ValidationException;
 
 class LaravelValidator implements ValidatorInterface
 {

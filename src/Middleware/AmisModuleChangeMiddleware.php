@@ -1,8 +1,8 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Middleware;
+namespace WebmanTech\AmisAdmin\Middleware;
 
-use Kriss\WebmanAmisAdmin\Helper\ConfigHelper;
+use WebmanTech\AmisAdmin\Helper\ConfigHelper;
 use Webman\Http\Request;
 use Webman\Http\Response;
 use Webman\MiddlewareInterface;

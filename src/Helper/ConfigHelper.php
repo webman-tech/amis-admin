@@ -1,6 +1,6 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Helper;
+namespace WebmanTech\AmisAdmin\Helper;
 
 class ConfigHelper
 {

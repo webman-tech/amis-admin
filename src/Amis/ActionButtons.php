@@ -1,8 +1,8 @@
 <?php
 
-namespace Kriss\WebmanAmisAdmin\Amis;
+namespace WebmanTech\AmisAdmin\Amis;
 
-use Kriss\WebmanAmisAdmin\Amis\Traits\ActionButtonSupport;
+use WebmanTech\AmisAdmin\Amis\Traits\ActionButtonSupport;
 
 class ActionButtons extends Component
 {
