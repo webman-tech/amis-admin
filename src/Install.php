@@ -9,7 +9,7 @@ class Install
      * @var array
      */
     protected static $pathRelation = array (
-  'config/plugin/kriss/webman-amis-admin' => 'config/plugin/kriss/webman-amis-admin',
+  'config/plugin/webman-tech/amis-admin' => 'config/plugin/webman-tech/amis-admin',
 );
 
     /**

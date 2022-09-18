@@ -15,6 +15,6 @@ class ConfigHelper
     public static function get(string $key, $default = null)
     {
         $module = request()->{self::AMIS_MODULE} ?? 'amis';
-        return config("plugin.kriss.webman-amis-admin.{$module}.{$key}", $default);
+        return config("plugin.webman-tech.amis-admin.{$module}.{$key}", $default);
     }
 }

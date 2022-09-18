@@ -1,4 +1,4 @@
-# kriss/webman-amis-admin
+# webman-tech/amis-admin
 
 [amis](https://github.com/baidu/amis) For webman quick use ~
 
@@ -23,7 +23,7 @@
 ## 安装
 
 ```bash
-composer require kriss/webman-amis-admin
+composer require webman-tech/amis-admin
 ```
 
 要求 webman > 1.4 且关闭了 controller_reuse（原因：controller_reuse 导致成员变量会被缓存，AmisSourceController 需要使用到成员做单个请求的缓存）
@@ -52,7 +52,7 @@ Amis 组件的封装，目前仅封装了常用的组件类型和属性， 但 a
 
 ### 多应用支持
 
-1. 复制一份 `config/plugin/kriss/webman-amis-admin/amis.php` 到 `config/plugin/kriss/webman-amis-admin/amis-user.php`
+1. 复制一份 `config/plugin/webman-tech/amis-admin/amis.php` 到 `config/plugin/webman-tech/amis-admin/amis-user.php`
 
 2. 继承 `AmisModuleChangeMiddleware` 实现一个无 `__construct` 的中间件（因为 webman 目前还不支持中间件注册使用 __construct），例如：
 

@@ -38,7 +38,7 @@ class Amis
     {
         $defaultData = [
             'view' => 'amis-app',
-            'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
+            'view_path' => '../vendor/webman-tech/amis-admin/src', // 相对 app 目录
             'assets' => ConfigHelper::get('assets', []),
         ];
         $appData = ConfigHelper::get('app', []);
@@ -73,7 +73,7 @@ class Amis
     {
         $defaultData = [
             'view' => 'amis-page',
-            'view_path' => '../vendor/kriss/webman-amis-admin/src', // 相对 app 目录
+            'view_path' => '../vendor/webman-tech/amis-admin/src', // 相对 app 目录
             'assets' => ConfigHelper::get('assets', []),
         ];
         $pageData = ConfigHelper::get('page', []);

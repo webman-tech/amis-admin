@@ -1,8 +1,8 @@
 {
-  "name": "kriss/webman-amis-admin",
+  "name": "webman-tech/amis-admin",
   "type": "library",
   "license": "MIT",
-  "description": "Webman plugin kriss/webman-amis-admin",
+  "description": "Webman plugin webman-tech/amis-admin",
   "autoload": {
     "psr-4": {
       "Kriss\\WebmanAmisAdmin\\": "src"
