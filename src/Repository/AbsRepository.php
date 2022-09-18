@@ -80,6 +80,35 @@ abstract class AbsRepository implements RepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function create(array $data): void
+    {
+        $data = $this->validate($data, static::SCENE_CREATE);
+        $this->doCreate($data);
+    }
+
+    /**
+     * @param array $data
+     */
+    abstract protected function doCreate(array $data): void;
+
+    /**
+     * @inheritDoc
+     */
+    public function update(array $data, $id): void
+    {
+        $data = $this->validate($data, static::SCENE_UPDATE);
+        $this->doUpdate($data, $id);
+    }
+
+    /**
+     * @param array $data
+     * @param $id
+     */
+    abstract protected function doUpdate(array $data, $id): void;
+
+    /**
      * 验证字段
      * @return array 验证过后的字段
      * @throws ValidationException

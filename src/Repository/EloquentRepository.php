@@ -224,15 +224,6 @@ class EloquentRepository extends AbsRepository
     /**
      * @inheritDoc
      */
-    public function create(array $data): void
-    {
-        $data = $this->validate($data, static::SCENE_CREATE);
-        $this->doCreate($data);
-    }
-
-    /**
-     * @param array $data
-     */
     protected function doCreate(array $data): void
     {
         $model = $this->model();
@@ -244,16 +235,6 @@ class EloquentRepository extends AbsRepository
 
     /**
      * @inheritDoc
-     */
-    public function update(array $data, $id): void
-    {
-        $data = $this->validate($data, static::SCENE_UPDATE);
-        $this->doUpdate($data, $id);
-    }
-
-    /**
-     * @param array $data
-     * @param $id
      */
     protected function doUpdate(array $data, $id): void
     {

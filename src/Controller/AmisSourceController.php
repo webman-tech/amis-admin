@@ -80,7 +80,7 @@ abstract class AmisSourceController
         if (!$this->authCreate()) {
             throw new ActionDisableException();
         }
-        $this->repository()->create($request->post());
+        $this->repository()->create(array_replace_recursive($request->post(), $request->file()));
         return amis_response(['result' => 'ok']);
     }
 

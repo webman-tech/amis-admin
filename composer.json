@@ -13,7 +13,8 @@
   },
   "require": {
     "php": ">=7.4",
-    "ext-json": "*"
+    "ext-json": "*",
+    "webman-tech/polyfill": "^1.0"
   },
   "require-dev": {
     "workerman/webman-framework": "^1.3",
