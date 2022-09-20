@@ -73,3 +73,7 @@ class AmisModuleChange2User extends AmisModuleChangeMiddleware
 ```
 
 3. 在响应的路由或全局中间件中引入 `AmisModuleChange2User`
+
+## 注意点
+
+1. 如果使用 LaravelValidator，校验 file 时需要安装依赖：`webman-tech/polyfill`

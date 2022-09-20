@@ -13,13 +13,13 @@
   },
   "require": {
     "php": ">=7.4",
-    "ext-json": "*",
-    "webman-tech/polyfill": "^1.0"
+    "ext-json": "*"
   },
   "require-dev": {
     "workerman/webman-framework": "^1.3",
     "illuminate/database": "^8.83",
     "illuminate/pagination": "^8.83",
-    "illuminate/validation": "^8.83"
+    "illuminate/validation": "^8.83",
+    "webman-tech/polyfill": "^1.0"
   }
 }
