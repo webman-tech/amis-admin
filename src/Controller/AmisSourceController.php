@@ -2,15 +2,20 @@
 
 namespace WebmanTech\AmisAdmin\Controller;
 
-use WebmanTech\AmisAdmin\Amis;
-use WebmanTech\AmisAdmin\Amis\Component;
-use WebmanTech\AmisAdmin\Exceptions\ActionDisableException;
-use WebmanTech\AmisAdmin\Repository\RepositoryInterface;
 use Webman\Http\Request;
 use Webman\Http\Response;
+use WebmanTech\AmisAdmin\Amis;
+use WebmanTech\AmisAdmin\Amis\Component;
+use WebmanTech\AmisAdmin\Repository\RepositoryInterface;
 
 abstract class AmisSourceController
 {
+    use Traits\AmisSourceController\CreateTrait;
+    use Traits\AmisSourceController\UpdateTrait;
+    use Traits\AmisSourceController\DetailTrait;
+    use Traits\AmisSourceController\DeleteTrait;
+    use Traits\AmisSourceController\RecoveryTrait;
+
     public const SCENE_CREATE = 'create';
     public const SCENE_UPDATE = 'update';
 
@@ -71,210 +76,6 @@ abstract class AmisSourceController
     }
 
     /**
-     * 新增
-     * @param Request $request
-     * @return Response
-     */
-    public function store(Request $request): Response
-    {
-        if (!$this->authCreate()) {
-            throw new ActionDisableException();
-        }
-        $this->repository()->create(array_replace_recursive($request->post(), $request->file()));
-        return amis_response(['result' => 'ok']);
-    }
-
-    /**
-     * 【后端】判断新增是否可用
-     * @return bool
-     */
-    protected function authCreate(): bool
-    {
-        if ($this->onlyShow) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 【前端】判断新增是否可见
-     * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
-     * @return string
-     */
-    protected function authCreateVisible(): string
-    {
-        if ($this->onlyShow) {
-            return '1==0';
-        }
-
-        return '1==1';
-    }
-
-    /**
-     * 详情
-     * @param Request $request
-     * @param $id
-     * @return Response
-     */
-    public function show(Request $request, $id): Response
-    {
-        if (!$this->authDetail($id)) {
-            throw new ActionDisableException();
-        }
-        return amis_response($this->repository()->detail($id));
-    }
-
-    /**
-     * 【后端】详情判断是否可用
-     * @param string|int|null $id
-     * @return bool
-     */
-    protected function authDetail($id = null): bool
-    {
-        return true;
-    }
-
-    /**
-     * 【前端】详情判断是否可见
-     * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
-     * @return string
-     */
-    protected function authDetailVisible(): string
-    {
-        return '1==1';
-    }
-
-    /**
-     * 更新
-     * @param Request $request
-     * @param $id
-     * @return Response
-     */
-    public function update(Request $request, $id): Response
-    {
-        if (!$this->authUpdate($id)) {
-            throw new ActionDisableException();
-        }
-        $this->repository()->update($request->post(), $id);
-        return amis_response(['result' => 'ok']);
-    }
-
-    /**
-     * 【后端】判断更新是否可用
-     * @param string|int|null $id
-     * @return bool
-     */
-    protected function authUpdate($id = null): bool
-    {
-        if ($this->onlyShow) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 【前端】判断更新是否可见
-     * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
-     * @return string
-     */
-    protected function authUpdateVisible(): string
-    {
-        if ($this->onlyShow) {
-            return '1==0';
-        }
-
-        return '1==1';
-    }
-
-    /**
-     * 删除
-     * @param Request $request
-     * @param $id
-     * @return Response
-     */
-    public function destroy(Request $request, $id): Response
-    {
-        if (!$this->authDestroy($id)) {
-            throw new ActionDisableException();
-        }
-        $this->repository()->destroy($id);
-        return amis_response(['result' => 'ok']);
-    }
-
-    /**
-     * 【后端】判断删除是否可用
-     * @param string|int|null $id
-     * @return bool
-     */
-    protected function authDestroy($id = null): bool
-    {
-        if ($this->onlyShow) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 【前端】判断删除是否可见
-     * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
-     * @return string
-     */
-    protected function authDestroyVisible(): string
-    {
-        if ($this->onlyShow) {
-            return '1==0';
-        }
-
-        return 'this.deleted_at === null';
-    }
-
-    /**
-     * 恢复
-     * @param Request $request
-     * @param $id
-     * @return Response
-     */
-    public function recovery(Request $request, $id): Response
-    {
-        if (!$this->authRecovery($id)) {
-            throw new ActionDisableException();
-        }
-        $this->repository()->recovery($id);
-        return amis_response(['result' => 'ok']);
-    }
-
-    /**
-     * 【后端】判断恢复是否可用
-     * @param string|int|null $id
-     * @return bool
-     */
-    protected function authRecovery($id = null): bool
-    {
-        if ($this->onlyShow) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 【前端】判断恢复是否可见
-     * amis 表达式，通过 this 获取当前 model, 如 this.id != 1
-     * @return string
-     */
-    protected function authRecoveryVisible(): string
-    {
-        if ($this->onlyShow) {
-            return '1==0';
-        }
-
-        return 'this.deleted_at !== null';
-    }
-
-    /**
      * @param Request $request
      * @return Amis\Page
      */
@@ -304,13 +105,7 @@ abstract class AmisSourceController
                 $this->buildGridColumn($this->grid()),
                 [$this->gridActions($routePrefix)],
             ));
-        if ($this->authCreate()) {
-            $crud->withCreate(
-                'post:' . $routePrefix,
-                $this->buildFormFields($this->form(static::SCENE_CREATE)),
-                $this->authCreateVisible()
-            );
-        }
+        $this->addCreateAction($crud, $routePrefix);
         return $crud;
     }
 
@@ -370,33 +165,12 @@ abstract class AmisSourceController
     protected function gridActions(string $routePrefix): Amis\GridColumnActions
     {
         $actions = Amis\GridColumnActions::make()->config($this->gridActionsConfig());
-        if ($this->authDetail()) {
-            $actions->withDetail(
-                $this->buildDetailAttributes($this->detail()),
-                "get:{$routePrefix}/\${id}",
-                $this->authDetailVisible()
-            );
-        }
-        if ($this->authUpdate()) {
-            $actions->withUpdate(
-                $this->buildFormFields($this->form(static::SCENE_UPDATE)),
-                "put:{$routePrefix}/\${id}",
-                "get:{$routePrefix}/\${id}",
-                $this->authUpdateVisible()
-            );
-        }
-        if ($this->authDestroy()) {
-            $actions->withDelete(
-                "delete:{$routePrefix}/\${id}",
-                $this->authDestroyVisible()
-            );
-        }
-        if ($this->authRecovery()) {
-            $actions->withRecovery(
-                "put:{$routePrefix}/\${id}/recovery",
-                $this->authRecoveryVisible()
-            );
-        }
+
+        $this->addDetailAction($actions, $routePrefix);
+        $this->addUpdateAction($actions, $routePrefix);
+        $this->addDeleteAction($actions, $routePrefix);
+        $this->addRecoveryAction($actions, $routePrefix);
+
         return $actions;
     }
 
@@ -416,73 +190,5 @@ abstract class AmisSourceController
     protected function gridBatchActions(): Amis\GridBatchActions
     {
         return Amis\GridBatchActions::make();
-    }
-
-    /**
-     * 新增和修改的表单
-     * @param string $scene
-     * @return array
-     */
-    protected function form(string $scene): array
-    {
-        return [
-            //Amis\FormField::make()->name('name'),
-        ];
-    }
-
-    /**
-     * @param array $formFields
-     * @return array
-     */
-    protected function buildFormFields(array $formFields): array
-    {
-        foreach ($formFields as &$item) {
-            if (is_string($item)) {
-                $item = Amis\FormField::make()->name($item);
-            }
-            if (is_array($item)) {
-                $item = Amis\FormField::make($item);
-            }
-            if ($item instanceof Component) {
-                $item = $item->toArray();
-            }
-            $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
-            $item['labelRemark'] = $item['labelRemark'] ?? $this->repository()->getLabelRemark($item['name']);
-        }
-        unset($item);
-        return $formFields;
-    }
-
-    /**
-     * 明细的字段展示
-     * @return array
-     */
-    protected function detail(): array
-    {
-        return [
-            Amis\DetailAttribute::make()->name('id'),
-        ];
-    }
-
-    /**
-     * @param array $detailAttributes
-     * @return array
-     */
-    protected function buildDetailAttributes(array $detailAttributes): array
-    {
-        foreach ($detailAttributes as &$item) {
-            if (is_string($item)) {
-                $item = Amis\DetailAttribute::make()->name($item);
-            }
-            if (is_array($item)) {
-                $item = Amis\DetailAttribute::make($item);
-            }
-            if ($item instanceof Component) {
-                $item = $item->toArray();
-            }
-            $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
-        }
-        unset($item);
-        return $detailAttributes;
     }
 }
