@@ -54,7 +54,7 @@ trait DetailTrait
         if ($this->authDetail()) {
             $actions->withDetail(
                 $this->buildDetailAttributes($this->detail()),
-                "get:{$routePrefix}/\${id}",
+                "get:{$routePrefix}/\${{$this->repository()->getPrimaryKey()}}",
                 $this->authDetailVisible()
             );
         }
@@ -67,7 +67,7 @@ trait DetailTrait
     protected function detail(): array
     {
         return [
-            Amis\DetailAttribute::make()->name('id'),
+            Amis\DetailAttribute::make()->name($this->repository()->getPrimaryKey()),
         ];
     }
 

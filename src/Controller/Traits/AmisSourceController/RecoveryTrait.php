@@ -62,7 +62,7 @@ trait RecoveryTrait
     {
         if ($this->authRecovery()) {
             $actions->withRecovery(
-                "put:{$routePrefix}/\${id}/recovery",
+                "put:{$routePrefix}/\${{$this->repository()->getPrimaryKey()}}/recovery",
                 $this->authRecoveryVisible()
             );
         }

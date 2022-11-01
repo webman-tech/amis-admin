@@ -62,7 +62,7 @@ trait DeleteTrait
     {
         if ($this->authDestroy()) {
             $actions->withDelete(
-                "delete:{$routePrefix}/\${id}",
+                "delete:{$routePrefix}/\${{$this->repository()->getPrimaryKey()}}",
                 $this->authDestroyVisible()
             );
         }

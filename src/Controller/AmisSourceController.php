@@ -96,9 +96,9 @@ abstract class AmisSourceController
             ->config($this->crudConfig())
             ->schema([
                 'primaryField' => $this->repository()->getPrimaryKey(),
-                'api' => 'get:' . $routePrefix . '?_ajax=1',
-                //'quickSaveApi' => 'put:' . $routePrefix . '/all, // 目前没有批量保存接口
-                'quickSaveItemApi' => 'put:' . $routePrefix . '/${id}', // 需要 column 配置为 'quickEdit' => ['saveImmediately' => true]
+                'api' => "get:{$routePrefix}?_ajax=1",
+                //'quickSaveApi' => "put:{$routePrefix}/all", // 目前没有批量保存接口
+                'quickSaveItemApi' => "put:{$routePrefix}/\${{$this->repository()->getPrimaryKey()}}", // 需要 column 配置为 'quickEdit' => ['saveImmediately' => true]
                 'bulkActions' => $this->gridBatchActions(),
             ])
             ->withColumns(array_merge(
@@ -125,7 +125,7 @@ abstract class AmisSourceController
     protected function grid(): array
     {
         return [
-            Amis\GridColumn::make()->name('id'),
+            Amis\GridColumn::make()->name($this->repository()->getPrimaryKey()),
         ];
     }
 
