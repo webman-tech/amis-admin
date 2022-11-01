@@ -33,6 +33,6 @@ class LaravelValidator implements ValidatorInterface
             $errors = array_map(fn($messages) => $messages[0], $validator->errors()->toArray());
             throw new ValidationException($errors);
         }
-        return array_filter($data, fn($key) => array_key_exists($key, $rules), ARRAY_FILTER_USE_KEY);
+        return $validator->validated();
     }
 }
