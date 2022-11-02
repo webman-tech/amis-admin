@@ -60,6 +60,23 @@ abstract class AbsRepository implements RepositoryInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getDescription(string $attribute)
+    {
+        return $this->attributeDescriptions()[$attribute] ?? null;
+    }
+
+    /**
+     * $attribute => $labelRemark
+     * @return array
+     */
+    protected function attributeDescriptions(): array
+    {
+        return [];
+    }
+
+    /**
      * 获取需要隐藏的字段
      * @param string $scene
      * @return array

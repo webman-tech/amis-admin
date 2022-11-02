@@ -34,8 +34,15 @@ trait CreateUpdateFormTrait
             if ($item instanceof Amis\Component) {
                 $item = $item->toArray();
             }
-            $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
-            $item['labelRemark'] = $item['labelRemark'] ?? $this->repository()->getLabelRemark($item['name']);
+            if ($value = $item['label'] ?? $this->repository()->getLabel($item['name'])) {
+                $item['label'] = $value;
+            }
+            if ($value = $item['labelRemark'] ?? $this->repository()->getLabelRemark($item['name'])) {
+                $item['labelRemark'] = $value;
+            }
+            if ($value = $item['description'] ?? $this->repository()->getDescription($item['name'])) {
+                $item['description'] = $value;
+            }
         }
         unset($item);
         return $formFields;

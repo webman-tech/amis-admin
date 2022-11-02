@@ -70,4 +70,11 @@ interface RepositoryInterface
      * @return string|array|null
      */
     public function getLabelRemark(string $attribute);
+
+    /**
+     * 根据 attribute 获取 description
+     * @param string $attribute
+     * @return string|array|null
+     */
+    public function getDescription(string $attribute);
 }
