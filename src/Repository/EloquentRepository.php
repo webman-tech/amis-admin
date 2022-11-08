@@ -29,6 +29,14 @@ class EloquentRepository extends AbsRepository
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getPrimaryKey(): string
+    {
+        return $this->primaryKey ?: $this->model()->getKeyName();
+    }
+
+    /**
      * @param $model
      */
     protected function initModel($model)

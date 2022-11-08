@@ -14,7 +14,7 @@ abstract class AbsRepository implements RepositoryInterface
     public const SCENE_CREATE = 'create';
     public const SCENE_UPDATE = 'update';
 
-    protected string $primaryKey = 'id';
+    protected ?string $primaryKey = null;
     protected ?ValidatorInterface $validator = null;
 
     /**
@@ -22,7 +22,7 @@ abstract class AbsRepository implements RepositoryInterface
      */
     public function getPrimaryKey(): string
     {
-        return $this->primaryKey;
+        return $this->primaryKey ?? 'id';
     }
 
     /**
