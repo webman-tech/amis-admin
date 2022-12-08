@@ -3,6 +3,7 @@
 namespace WebmanTech\AmisAdmin\Amis;
 
 use WebmanTech\AmisAdmin\Amis\Traits\ActionButtonSupport;
+use WebmanTech\AmisAdmin\Helper\ArrayHelper;
 
 /**
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/crud
@@ -48,7 +49,7 @@ class Crud extends Component
 
     public function withColumns(array $columns)
     {
-        $quickEditEnable = isset($this->schema['quickSaveItemApi']);
+        $quickEditEnable = isset($this->schema['_columnQuickEditApi']) && is_array($this->schema['_columnQuickEditApi']);
         foreach ($columns as $index => &$column) {
             if ($column instanceof GridColumnActions) {
                 // 去除操作栏为空 buttons 的
@@ -60,13 +61,32 @@ class Crud extends Component
             if ($column instanceof Component) {
                 $column = $column->toArray();
             }
-            if ($quickEditEnable) {
-                // 处理 quickEdit 为 true 时自动添加 saveImmediately = true
-                if (isset($column['quickEdit']) && $column['quickEdit'] !== false) {
-                    if (!is_array($column['quickEdit'])) {
-                        $column['quickEdit'] = [];
-                    }
-                    $column['quickEdit']['saveImmediately'] = true;
+            if ($quickEditEnable && isset($column['quickEdit'])) {
+                if (isset($column['quickEdit']['saveImmediately']) && $column['quickEdit']['saveImmediately'] === true) {
+                    // 当设置 saveImmediately 更改为数组模式
+                    $column['quickEdit']['saveImmediately'] = [];
+                }
+                $apiDataSchema = [];
+                if ($attributeName = $column['name'] ?? '') {
+                    $apiDataSchema = [
+                        'data' => [
+                            $attributeName => '${' . $attributeName . '}',
+                        ],
+                    ];
+                }
+                $quickEditSchema = [
+                    'saveImmediately' => [
+                        'api' => ArrayHelper::merge(
+                            $this->schema['_columnQuickEditApi'],
+                            $apiDataSchema,
+                        ),
+                    ],
+                ];
+                // 处理 quickEdit 为 true 时的逻辑
+                if ($column['quickEdit'] === true) {
+                    $column['quickEdit'] = $quickEditSchema;
+                } elseif (is_array($column['quickEdit'])) {
+                    $column['quickEdit'] = ArrayHelper::merge($quickEditSchema, $column['quickEdit']);
                 }
             }
         }

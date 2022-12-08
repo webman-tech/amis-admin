@@ -97,8 +97,16 @@ abstract class AmisSourceController
             ->schema([
                 'primaryField' => $this->repository()->getPrimaryKey(),
                 'api' => "get:{$routePrefix}?_ajax=1",
-                //'quickSaveApi' => "put:{$routePrefix}/all", // 目前没有批量保存接口
-                'quickSaveItemApi' => "put:{$routePrefix}/\${{$this->repository()->getPrimaryKey()}}", // 需要 column 配置为 'quickEdit' => ['saveImmediately' => true]
+                // 批量保存接口，目前不支持
+                //'quickSaveApi' => "put:{$routePrefix}/all",
+                // 单个快速编辑接口，需要 column 配置为 'quickEdit' => ['saveImmediately' => true]
+                // 但是此接口形式会将所有字段都提交更新
+                //'quickSaveItemApi' => "put:{$routePrefix}/\${{$this->repository()->getPrimaryKey()}}",
+                // 自定义的参数，用于列快速编辑时的 api 情况，可以处理快速编辑仅编辑某个字段
+                '_columnQuickEditApi' => [
+                    'method' => 'put',
+                    'url' => "{$routePrefix}/\${{$this->repository()->getPrimaryKey()}}",
+                ],
                 'bulkActions' => $this->gridBatchActions(),
             ])
             ->withColumns(array_merge(
