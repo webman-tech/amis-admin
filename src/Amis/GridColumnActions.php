@@ -45,6 +45,7 @@ class GridColumnActions extends GridColumn
             'initApi' => $initApi,
             'visibleOn' => $can,
             'dialog' => [
+                'closeOnOutside' => true,
                 'actions' => [
                     ['type' => 'button', 'label' => '取消', 'actionType' => 'cancel'],
                 ],
