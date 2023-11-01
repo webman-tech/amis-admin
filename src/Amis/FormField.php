@@ -12,6 +12,7 @@ namespace WebmanTech\AmisAdmin\Amis;
  * @method $this size(string $value) 'xs' | 'sm' | 'md' | 'lg' | 'full'
  * @method $this placeholder(string $value)
  * @method $this labelRemark(string|array $value)
+ * @method $this description(string $value)
  * @method $this disabled(bool $is = true)
  * @method $this disabledOn(string $expression)
  * @method $this hidden(bool $is = true)

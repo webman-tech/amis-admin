@@ -12,6 +12,7 @@ namespace WebmanTech\AmisAdmin\Amis;
  * @method $this type(string $value)
  * @method $this badge(array $schema)
  * @method $this labelRemark(string $value)
+ * @method $this description(string $value)
  * @method $this hidden(bool $is = true)
  * @method $this hiddenOn(string $expression)
  * @method $this visible(bool $is = true)
