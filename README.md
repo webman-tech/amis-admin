@@ -58,3 +58,7 @@ Amis 组件的封装，目前仅封装了常用的组件类型和属性， 但 a
 
 - [多应用支持](./docs/multi_app.md)
 - [常用配置](./docs/common_usage.md)
+
+## 不使用 cdn
+
+配合使用 [kriss/composer-assets-plugin](https://github.com/krissss/composer-assets-plugin)
