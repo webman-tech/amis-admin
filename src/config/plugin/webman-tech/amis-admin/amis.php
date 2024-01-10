@@ -59,7 +59,7 @@ return [
         'amisJSON' => [
             'brandName' => config('app.name', 'App Admin'),
             'logo' => '/favicon.ico',
-            'api' => '/admin/pages', // 修改成获取菜单的路由
+            'api' => route('admin.pages'), // 修改成获取菜单的路由
         ],
         'title' => config('app.name'),
     ],
@@ -79,8 +79,8 @@ return [
     'page_login' => function() {
         return [
             //'background' => '#eee', // 可以使用图片, 'url(http://xxxx)'
-            'login_api' => '/admin/auth/login',
-            'success_redirect' => '/admin',
+            'login_api' => route('admin.login'),
+            'success_redirect' => route('admin'),
         ];
     },
     /**
@@ -101,4 +101,8 @@ return [
      */
     'validator' => fn() => new \WebmanTech\AmisAdmin\Validator\NullValidator(),
     //'validator' => fn() => new \WebmanTech\AmisAdmin\Validator\LaravelValidator(\support\Container::get(\Illuminate\Contracts\Validation\Factory::class)),
+    /**
+     * 用于获取当前请求的路径，当部署到二级目录时有用
+     */
+    'request_path_getter' => null,
 ];

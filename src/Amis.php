@@ -2,6 +2,7 @@
 
 namespace WebmanTech\AmisAdmin;
 
+use Webman\Http\Request;
 use WebmanTech\AmisAdmin\Helper\ArrayHelper;
 use WebmanTech\AmisAdmin\Helper\ConfigHelper;
 use support\view\Raw;
@@ -96,5 +97,19 @@ class Amis
         unset($data['view_path']);
 
         return Raw::render($data['view'], $data, $app);
+    }
+
+    /**
+     * 获取请求接口的路劲
+     * @param Request $request
+     * @return string
+     */
+    public function getRequestPath(Request $request): string
+    {
+        if ($requestPathGetter = ConfigHelper::get('request_path_getter')) {
+            return $requestPathGetter($request);
+        }
+
+        return $request->path();
     }
 }
