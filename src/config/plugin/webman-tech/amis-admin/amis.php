@@ -32,6 +32,13 @@ return [
         'js' => [
             $amisAssetBaseUrl . 'sdk.js',
             'https://unpkg.com/history@4.10.1/umd/history.js', // 使用 app 必须
+            // 可以添加复杂的 script 脚本
+            /*[
+                'type' => 'script',
+                'content' => <<<JS
+window.xxx = xxx;
+JS,
+            ]*/
         ],
         /**
          * 切换主题

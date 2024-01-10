@@ -30,12 +30,16 @@ $debug = $assets['debug'] ?? false;
 </head>
 <body>
 <div id="root" class="app-wrapper"></div>
-<?php foreach ($assets['js'] as $js): ?>
-    <script src="<?= $js ?>"></script>
+<?php foreach ($assets['js'] as $item): ?>
+<?php if($item['type'] === 'js'): ?>
+    <script src="<?= $item['content'] ?>"></script>
+<?php elseif ($item['type'] === 'script'): ?>
+    <script><?= $item['content'] ?></script>
+<?php endif; ?>
 <?php endforeach; ?>
 <script type="text/javascript">
   (function () {
-      <?= $script ?? '' ?>
+    <?= $script ?? '' ?>
 
     const amis = amisRequire('amis/embed');
 

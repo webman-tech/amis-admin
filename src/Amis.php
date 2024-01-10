@@ -40,7 +40,7 @@ class Amis
         $defaultData = [
             'view' => 'amis-app',
             'view_path' => '../vendor/webman-tech/amis-admin/src', // 相对 app 目录
-            'assets' => ConfigHelper::get('assets', []),
+            'assets' => $this->getAssets(),
         ];
         $appData = ConfigHelper::get('app', []);
         if (isset($appData['amisJSON']) && is_callable($appData['amisJSON'])) {
@@ -75,7 +75,7 @@ class Amis
         $defaultData = [
             'view' => 'amis-page',
             'view_path' => '../vendor/webman-tech/amis-admin/src', // 相对 app 目录
-            'assets' => ConfigHelper::get('assets', []),
+            'assets' => $this->getAssets(),
         ];
         $pageData = ConfigHelper::get('page', []);
         if (isset($appData['amisJSON']) && is_callable($appData['amisJSON'])) {
@@ -111,5 +111,26 @@ class Amis
         }
 
         return $request->path();
+    }
+
+    private function getAssets(): array
+    {
+        $assets = ConfigHelper::get('assets', []);
+
+        $assets['js'] = $assets['js'] ?? [];
+        if (is_callable($assets['js'])) {
+            $assets['js'] = call_user_func($assets['js']);
+        }
+        $assets['js'] = array_map(function ($item) {
+            if (is_string($item)) {
+                $item = ['type' => 'js', 'content' => $item];
+            }
+            if (!is_array($item) && !isset($item['type'], $item['content'])) {
+                throw new \InvalidArgumentException('js 配置错误');
+            }
+            return $item;
+        }, $assets['js']);
+
+        return $assets;
     }
 }
