@@ -32,6 +32,13 @@ return [
         'js' => [
             $amisAssetBaseUrl . 'sdk.js',
             'https://unpkg.com/history@4.10.1/umd/history.js', // 使用 app 必须
+            // 可以添加复杂的 script 脚本
+            /*[
+                'type' => 'script',
+                'content' => <<<JS
+window.xxx = xxx;
+JS,
+            ]*/
         ],
         /**
          * 切换主题
@@ -59,7 +66,7 @@ return [
         'amisJSON' => [
             'brandName' => config('app.name', 'App Admin'),
             'logo' => '/favicon.ico',
-            'api' => '/admin/pages', // 修改成获取菜单的路由
+            'api' => route('admin.pages'), // 修改成获取菜单的路由
         ],
         'title' => config('app.name'),
     ],
@@ -79,8 +86,8 @@ return [
     'page_login' => function() {
         return [
             //'background' => '#eee', // 可以使用图片, 'url(http://xxxx)'
-            'login_api' => '/admin/auth/login',
-            'success_redirect' => '/admin',
+            'login_api' => route('admin.login'),
+            'success_redirect' => route('admin'),
         ];
     },
     /**
@@ -101,4 +108,8 @@ return [
      */
     'validator' => fn() => new \WebmanTech\AmisAdmin\Validator\NullValidator(),
     //'validator' => fn() => new \WebmanTech\AmisAdmin\Validator\LaravelValidator(\support\Container::get(\Illuminate\Contracts\Validation\Factory::class)),
+    /**
+     * 用于获取当前请求的路径，当部署到二级目录时有用
+     */
+    'request_path_getter' => null,
 ];

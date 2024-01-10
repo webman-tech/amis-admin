@@ -90,7 +90,7 @@ abstract class AmisSourceController
      */
     protected function amisCrud(Request $request): Amis\Crud
     {
-        $routePrefix = $request->path();
+        $routePrefix = amis()->getRequestPath($request);
 
         $crud = Amis\Crud::make()
             ->config($this->crudConfig())

@@ -5,13 +5,12 @@ namespace WebmanTech\AmisAdmin\Controller;
 use WebmanTech\AmisAdmin\Amis;
 use WebmanTech\AmisAdmin\Helper\ArrayHelper;
 use WebmanTech\AmisAdmin\Helper\ConfigHelper;
-use support\Container;
 
 class RenderController
 {
     public function app()
     {
-        return Container::get(Amis::class)->renderApp();
+        return amis()->renderApp();
     }
 
     public function login()
@@ -87,6 +86,6 @@ class RenderController
         }
         $schema = ArrayHelper::merge($schema, $data['schema']);
 
-        return Container::get(Amis::class)->renderPage($data['title'], $schema);
+        return amis()->renderPage($data['title'], $schema);
     }
 }
