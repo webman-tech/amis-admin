@@ -2,7 +2,6 @@
 
 namespace WebmanTech\AmisAdmin\Controller;
 
-use support\Container;
 use Webman\Http\Request;
 use Webman\Http\Response;
 use WebmanTech\AmisAdmin\Amis;
@@ -91,7 +90,7 @@ abstract class AmisSourceController
      */
     protected function amisCrud(Request $request): Amis\Crud
     {
-        $routePrefix = Container::get(Amis::class)->getRequestPath($request);
+        $routePrefix = amis()->getRequestPath($request);
 
         $crud = Amis\Crud::make()
             ->config($this->crudConfig())
