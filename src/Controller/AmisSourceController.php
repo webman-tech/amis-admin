@@ -61,8 +61,8 @@ abstract class AmisSourceController
                 $order[$orderBy] = $request->get('orderDir', 'asc');
             }
             return amis_response($this->repository()->pagination(
-                $request->get('page'),
-                $request->get('perPage'),
+                $request->get('page', 1),
+                $request->get('perPage', 20),
                 array_filter($request->get(), fn($item) => $item !== ''), // 仅过滤空字符串的，保留为 0 的情况
                 $order
             ));

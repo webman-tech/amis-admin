@@ -1,7 +1,7 @@
 <?php
 /** @var string|null $title */
 /** @var array $assets */
-/** @var array $amisJSON */
+/** @var array $amis_json */
 /** @var string|null $script */
 
 $debug = $assets['debug'] ?? false;
@@ -45,7 +45,7 @@ $debug = $assets['debug'] ?? false;
 
     window.amisAppBeforeLoad && window.amisAppBeforeLoad(amis);
 
-    const amisJSON = <?= json_encode($amisJSON, $debug ? JSON_PRETTY_PRINT : JSON_ERROR_NONE) ?>;
+    const amisJSON = <?= json_encode($amis_json, $debug ? JSON_PRETTY_PRINT : JSON_ERROR_NONE) ?>;
     window.amisApp = amis.embed(
       '#root',
       amisJSON,

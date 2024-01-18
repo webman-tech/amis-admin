@@ -1,8 +1,9 @@
 <?php
 
 use WebmanTech\AmisAdmin\Amis;
-use support\Container;
 use Webman\Http\Response;
+
+// TODO 移除
 
 if (!function_exists('amis')) {
     /**
@@ -10,7 +11,7 @@ if (!function_exists('amis')) {
      */
     function amis(): Amis
     {
-        return Container::get(Amis::class);
+        return \WebmanTech\AmisAdmin\Webman\AmisFacade::amis();
     }
 }
 
@@ -23,6 +24,6 @@ if (!function_exists('amis_response')) {
      */
     function amis_response(array $data, string $msg = '', array $extra = [])
     {
-        return amis()->response($data, $msg, $extra);
+        return amis()->json($data, $msg, $extra);
     }
 }

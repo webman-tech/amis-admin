@@ -1,0 +1,155 @@
+{
+  "type": "page",
+  "title": "Login",
+  "body": [
+    {
+      "type": "flex",
+      "className": "p-1",
+      "items": [
+        {
+          "type": "container",
+          "body": [
+            {
+              "id": "u:0dd49ddb8375",
+              "type": "form",
+              "title": "${title || 'Admin'}",
+              "mode": "normal",
+              "dsType": "api",
+              "feat": "Insert",
+              "body": [
+                {
+                  "name": "username",
+                  "label": "用户名",
+                  "type": "input-text",
+                  "id": "u:49f39e8e7cad",
+                  "required": true
+                },
+                {
+                  "name": "password",
+                  "label": "密码",
+                  "type": "input-password",
+                  "id": "u:81c1af672b2d",
+                  "required": true,
+                  "validations": {},
+                  "validationErrors": {},
+                  "showCounter": false
+                }
+              ],
+              "api": {
+                "url": "http://127.0.0.1:8787/admin/auth/login",
+                "method": "post",
+                "requestAdaptor": "",
+                "adaptor": "",
+                "messages": {
+                  "success": "登录成功",
+                  "failed": "登录失败"
+                },
+                "dataType": "form"
+              },
+              "actions": [
+                {
+                  "type": "button",
+                  "label": "登录",
+                  "onEvent": {
+                    "click": {
+                      "actions": [
+                        {
+                          "actionType": "submit",
+                          "componentId": "u:0dd49ddb8375"
+                        }
+                      ]
+                    }
+                  },
+                  "level": "primary",
+                  "id": "u:9c1ccdb142f4",
+                  "size": "md",
+                  "block": false,
+                  "themeCss": {
+                    "className": {
+                      "font:hover": {},
+                      "padding-and-margin:default": {}
+                    }
+                  }
+                }
+              ],
+              "resetAfterSubmit": false,
+              "wrapWithPanel": true,
+              "autoFocus": true,
+              "actionsClassName": "",
+              "debug": false,
+              "onEvent": {
+                "submitSucc": {
+                  "weight": 0,
+                  "actions": [
+                    {
+                      "ignoreError": false,
+                      "actionType": "url",
+                      "args": {
+                        "url": "/admin/",
+                        "blank": false
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "style": {
+            "position": "static",
+            "display": "block",
+            "flex": "0 0 150px",
+            "overflowY": "visible",
+            "flexBasis": "400px",
+            "overflowX": "visible"
+          },
+          "size": "none",
+          "wrapperBody": false,
+          "id": "u:cf38d0321121",
+          "isFixedHeight": false,
+          "themeCss": {
+            "baseControlClassName": {
+              "boxShadow:default": "var(--shadows-shadow-none)"
+            }
+          }
+        }
+      ],
+      "style": {
+        "position": "relative",
+        "inset": "auto",
+        "flexWrap": "nowrap",
+        "justifyContent": "center",
+        "alignItems": "center",
+        "flexDirection": "row",
+        "overflowY": "visible",
+        "height": "100%"
+      },
+      "id": "u:33096d4a9fb4",
+      "isFixedHeight": true,
+      "isFixedWidth": false
+    }
+  ],
+  "id": "u:7a01ccc7c905",
+  "asideResizor": false,
+  "pullRefresh": {
+    "disabled": true
+  },
+  "regions": [
+    "body"
+  ],
+  "themeCss": {
+    "bodyControlClassName": {},
+    "baseControlClassName": {
+      "padding-and-margin:default": {
+        "paddingTop": "var(--sizes-size-0)",
+        "paddingRight": "var(--sizes-size-0)",
+        "paddingBottom": "var(--sizes-size-0)",
+        "paddingLeft": "var(--sizes-size-0)",
+        "marginTop": "var(--sizes-size-0)",
+        "marginRight": "var(--sizes-size-0)",
+        "marginBottom": "var(--sizes-size-0)",
+        "marginLeft": "var(--sizes-size-0)"
+      },
+      "background:default": "var(--colors-neutral-fill-10)"
+    }
+  }
+}
