@@ -3,7 +3,9 @@
 namespace WebmanTech\AmisAdmin;
 
 use WebmanTech\AmisAdmin\Contracts\PageReaderInterface;
+use WebmanTech\AmisAdmin\Contracts\RequestInterface;
 use WebmanTech\AmisAdmin\Contracts\ResponseInterface;
+use WebmanTech\AmisAdmin\Contracts\ValidatorInterface;
 use WebmanTech\AmisAdmin\Helper\ArrayHelper;
 use WebmanTech\AmisAdmin\Support\ClosureHelper;
 use WebmanTech\AmisAdmin\Support\JsonHelper;
@@ -115,6 +117,14 @@ class Config
          */
         PageReaderInterface::class => null,
         /**
+         * request 的实现
+         */
+        RequestInterface::class => null,
+        /**
+         * validator 的实现
+         */
+        ValidatorInterface::class => null,
+        /**
          *
          */
         'amis_json_replace' => [
@@ -167,6 +177,16 @@ class Config
     public function getResponse(): ResponseInterface
     {
         return $this->getOrMakeObject(ResponseInterface::class, $this->config[ResponseInterface::class]);
+    }
+
+    public function getRequest(): RequestInterface
+    {
+        return $this->getOrMakeObject(RequestInterface::class, $this->config[RequestInterface::class]);
+    }
+
+    public function getValidator(): ValidatorInterface
+    {
+        return $this->getOrMakeObject(ValidatorInterface::class, $this->config[ValidatorInterface::class]);
     }
 
     public function getPageReader(): PageReaderInterface

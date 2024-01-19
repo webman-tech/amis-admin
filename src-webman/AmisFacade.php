@@ -5,6 +5,9 @@ namespace WebmanTech\AmisAdmin\Webman;
 use Webman\Route;
 use WebmanTech\AmisAdmin\Amis;
 use WebmanTech\AmisAdmin\Config;
+use WebmanTech\AmisAdmin\Contracts\RequestInterface;
+use WebmanTech\AmisAdmin\Contracts\ResponseInterface;
+use WebmanTech\AmisAdmin\Helper\ArrayHelper;
 
 class AmisFacade
 {
@@ -28,7 +31,13 @@ class AmisFacade
     {
         $module = static::getModule();
         if (!isset(static::$configInstance[$module])) {
-            static::$configInstance[$module] = new Config(config("plugin.webman-tech.amis-admin.amis.modules.{$module}"));
+            static::$configInstance[$module] = new Config(ArrayHelper::merge(
+                [
+                    RequestInterface::class => WebmanRequest::class,
+                    ResponseInterface::class => WebmanResponse::class,
+                ],
+                config("plugin.webman-tech.amis-admin.amis.modules.{$module}"),
+            ));
         }
 
         return static::$configInstance[$module];

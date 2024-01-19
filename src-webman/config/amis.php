@@ -1,8 +1,11 @@
 <?php
 
 use WebmanTech\AmisAdmin\Contracts\PageReaderInterface;
+use WebmanTech\AmisAdmin\Contracts\RequestInterface;
 use WebmanTech\AmisAdmin\Contracts\ResponseInterface;
-use WebmanTech\AmisAdmin\PageReader\FilePageReader;
+use WebmanTech\AmisAdmin\Contracts\ValidatorInterface;
+use WebmanTech\AmisAdmin\Impl\FilePageReader;
+use WebmanTech\AmisAdmin\Impl\NullValidator;
 use WebmanTech\AmisAdmin\Webman\WebmanResponse;
 
 return [
@@ -11,8 +14,8 @@ return [
             /**
              * @see \WebmanTech\AmisAdmin\Config::$config
              */
-            ResponseInterface::class => function () {
-                return new WebmanResponse();
+            ValidatorInterface::class => function () {
+                return new NullValidator();
             },
             PageReaderInterface::class => function () {
                 return new FilePageReader(

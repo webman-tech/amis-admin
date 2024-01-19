@@ -3,8 +3,9 @@
 namespace WebmanTech\AmisAdmin\Exceptions;
 
 use RuntimeException;
+use WebmanTech\AmisAdmin\Contracts\ResourceOperateExceptionInterface;
 
-class ValidationException extends RuntimeException
+class ValidationException extends RuntimeException implements ResourceOperateExceptionInterface
 {
     public array $errors;
 
@@ -12,5 +13,13 @@ class ValidationException extends RuntimeException
     {
         $this->errors = $errors;
         parent::__construct($message ?? 'Validation Error', 422);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getData(): array
+    {
+        return [];
     }
 }

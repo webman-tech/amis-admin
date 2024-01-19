@@ -4,13 +4,20 @@ namespace WebmanTech\AmisAdmin\Support;
 
 final class ClosureHelper
 {
-    public static function getValue($maybeCallable)
+    public static function isClosure($maybeCallable): bool
     {
-        if (!$maybeCallable) {
-            return $maybeCallable;
-        }
-        if ($maybeCallable instanceof \Closure) {
-            return call_user_func($maybeCallable);
+        return $maybeCallable instanceof \Closure;
+    }
+
+    public static function call(\Closure $closure, ...$params)
+    {
+        return call_user_func_array($closure, $params);
+    }
+
+    public static function getValue($maybeCallable, ...$params)
+    {
+        if (self::isClosure($maybeCallable)) {
+            return self::call($maybeCallable, $params);
         }
         return $maybeCallable;
     }

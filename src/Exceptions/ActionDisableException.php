@@ -6,8 +6,8 @@ use RuntimeException;
 
 class ActionDisableException extends RuntimeException
 {
-    public function __construct(string $message = null)
+    public function __construct(string $action)
     {
-        parent::__construct($message ?? 'No permission', 403);
+        parent::__construct($action . ' no permission', 403);
     }
 }

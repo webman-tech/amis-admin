@@ -1,6 +1,6 @@
 <?php
 
-namespace WebmanTech\AmisAdmin\PageReader;
+namespace WebmanTech\AmisAdmin\Impl;
 
 use WebmanTech\AmisAdmin\Config;
 use WebmanTech\AmisAdmin\Contracts\PageReaderInterface;

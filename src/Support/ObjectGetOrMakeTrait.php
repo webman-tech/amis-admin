@@ -15,11 +15,12 @@ trait ObjectGetOrMakeTrait
     public function getOrMakeObject(string $key, $config): ?object
     {
         if (!isset($this->objets[$key])) {
-            $config = ClosureHelper::getValue($config);
             if (is_string($config)) {
                 $config = new $config();
             } elseif(is_array($config)) {
                 $config = new $config['class']($config['construct'] ?? []);
+            } elseif (ClosureHelper::isClosure($config)) {
+                $config = ClosureHelper::call($config);
             }
             if ($config === null) {
                 return $config;
