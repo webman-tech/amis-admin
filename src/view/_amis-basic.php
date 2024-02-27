@@ -6,6 +6,7 @@
 
 $debug = $assets['debug'] ?? false;
 ?>
+<!DOCTYPE html>
 <html lang="<?= $assets['lang'] ?? 'zh' ?>">
 <head>
     <meta charset="UTF-8"/>
