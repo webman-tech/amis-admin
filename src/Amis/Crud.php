@@ -6,6 +6,7 @@ use WebmanTech\AmisAdmin\Amis\Traits\ActionButtonSupport;
 use WebmanTech\AmisAdmin\Helper\ArrayHelper;
 
 /**
+ * crud 组件
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/crud
  */
 class Crud extends Component

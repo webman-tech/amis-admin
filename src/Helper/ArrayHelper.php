@@ -2,7 +2,10 @@
 
 namespace WebmanTech\AmisAdmin\Helper;
 
-class ArrayHelper
+/**
+ * @internal
+ */
+final class ArrayHelper
 {
     /**
      * 合并数组

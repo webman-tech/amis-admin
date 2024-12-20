@@ -14,7 +14,8 @@ class Page extends Component
     ];
 
     /**
-     * @param int $index
+     * 修改 body 内容
+     * @param int $index 用于排序，或修改已有的 body
      * @param array|Component $schema
      * @return $this
      */
@@ -24,6 +25,9 @@ class Page extends Component
         return $this;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function toArray(): array
     {
         ksort($this->schema['body']);

@@ -1,16 +1,16 @@
 <?php
 
-use WebmanTech\AmisAdmin\Amis;
-use support\Container;
+use WebmanTech\AmisAdmin\Amis as AmisStruct;
 use Webman\Http\Response;
+use WebmanTech\AmisAdmin\Facades\Amis;
 
 if (!function_exists('amis')) {
     /**
-     * @return Amis
+     * @return AmisStruct
      */
-    function amis(): Amis
+    function amis(): AmisStruct
     {
-        return Container::get(Amis::class);
+        return Amis::instance();
     }
 }
 
