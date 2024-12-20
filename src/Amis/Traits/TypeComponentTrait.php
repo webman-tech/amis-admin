@@ -167,6 +167,15 @@ use WebmanTech\AmisAdmin\Helper\ContainerHelper;
  * @method static \WebmanTech\AmisAdmin\Amis\FormField typeTransferPicker(array $schema = []) TransferPicker 穿梭选择器    https://aisuda.bce.baidu.com/amis/zh-CN/components/form/transfer-picker
  * @method static \WebmanTech\AmisAdmin\Amis\FormField typeTreeSelect(array $schema = []) TreeSelect 树形选择器    https://aisuda.bce.baidu.com/amis/zh-CN/components/form/treeselect
  * @method static \WebmanTech\AmisAdmin\Amis\FormField typeUuid(array $schema = []) UUID 字段    https://aisuda.bce.baidu.com/amis/zh-CN/components/form/uuid
+ *
+ * 自定义
+ * @method static \WebmanTech\AmisAdmin\Amis\ActionButtons typeActionButtons(array $schema = [])     
+ * @method static \WebmanTech\AmisAdmin\Amis\Crud typeCustomCrud(array $schema = [])     
+ * @method static \WebmanTech\AmisAdmin\Amis\DetailAttribute typeDetailAttribute(array $schema = [])     
+ * @method static \WebmanTech\AmisAdmin\Amis\FormField typeFormField(array $schema = [])     
+ * @method static \WebmanTech\AmisAdmin\Amis\GridBatchActions typeGridBatchActions(array $schema = [])     
+ * @method static \WebmanTech\AmisAdmin\Amis\GridColumn typeGridColumn(array $schema = [])     
+ * @method static \WebmanTech\AmisAdmin\Amis\GridColumnActions typeGridColumnActions(array $schema = [])     
  */
 trait TypeComponentTrait
 {

@@ -1,16 +1,17 @@
 <?php
 
-use WebmanTech\AmisAdmin\Amis as AmisStruct;
+use WebmanTech\AmisAdmin\Amis;
 use Webman\Http\Response;
-use WebmanTech\AmisAdmin\Facades\Amis;
+use WebmanTech\AmisAdmin\Facades\AmisFacade;
 
 if (!function_exists('amis')) {
     /**
-     * @return AmisStruct
+     * @deprecated 使用 Facades\AmisFacade:: 代替
+     * @return Amis
      */
-    function amis(): AmisStruct
+    function amis(): Amis
     {
-        return Amis::instance();
+        return AmisFacade::instance();
     }
 }
 
@@ -23,6 +24,6 @@ if (!function_exists('amis_response')) {
      */
     function amis_response(array $data, string $msg = '', array $extra = [])
     {
-        return amis()->response($data, $msg, $extra);
+        return AmisFacade::response($data, $msg, $extra);
     }
 }

@@ -5,7 +5,7 @@ namespace WebmanTech\AmisAdmin\Controller;
 use Webman\Http\Request;
 use Webman\Http\Response;
 use WebmanTech\AmisAdmin\Amis;
-use WebmanTech\AmisAdmin\Amis\Component;
+use WebmanTech\AmisAdmin\Facades\AmisFacade;
 use WebmanTech\AmisAdmin\Repository\RepositoryInterface;
 
 abstract class AmisSourceController
@@ -15,9 +15,6 @@ abstract class AmisSourceController
     use Traits\AmisSourceController\DetailTrait;
     use Traits\AmisSourceController\DeleteTrait;
     use Traits\AmisSourceController\RecoveryTrait;
-
-    public const SCENE_CREATE = 'create';
-    public const SCENE_UPDATE = 'update';
 
     /**
      * 设置只展示
@@ -81,7 +78,7 @@ abstract class AmisSourceController
      */
     protected function amisPage(Request $request): Amis\Page
     {
-        return Amis\Page::make();
+        return AmisFacade::typePage();
     }
 
     /**
@@ -90,9 +87,9 @@ abstract class AmisSourceController
      */
     protected function amisCrud(Request $request): Amis\Crud
     {
-        $routePrefix = amis()->getRequestPath($request);
+        $routePrefix = AmisFacade::getRequestPath($request);
 
-        $crud = Amis\Crud::make()
+        $crud = AmisFacade::typeCustomCrud()
             ->config($this->crudConfig())
             ->schema([
                 'primaryField' => $this->repository()->getPrimaryKey(),
@@ -133,7 +130,7 @@ abstract class AmisSourceController
     protected function grid(): array
     {
         return [
-            Amis\GridColumn::make()->name($this->repository()->getPrimaryKey()),
+            AmisFacade::typeGridColumn()->name($this->repository()->getPrimaryKey()),
         ];
     }
 
@@ -150,12 +147,12 @@ abstract class AmisSourceController
             }
 
             if (is_string($item)) {
-                $item = Amis\GridColumn::make()->name($item);
+                $item = AmisFacade::typeGridColumn()->name($item);
             }
             if (is_array($item)) {
-                $item = Amis\GridColumn::make($item);
+                $item = AmisFacade::typeGridColumn($item);
             }
-            if ($item instanceof Component) {
+            if ($item instanceof Amis\Component) {
                 $item = $item->toArray();
             }
             $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
@@ -172,7 +169,7 @@ abstract class AmisSourceController
      */
     protected function gridActions(string $routePrefix): Amis\GridColumnActions
     {
-        $actions = Amis\GridColumnActions::make()->config($this->gridActionsConfig());
+        $actions = AmisFacade::typeGridColumnActions()->config($this->gridActionsConfig());
 
         $this->addDetailAction($actions, $routePrefix);
         $this->addUpdateAction($actions, $routePrefix);
@@ -197,6 +194,6 @@ abstract class AmisSourceController
      */
     protected function gridBatchActions(): Amis\GridBatchActions
     {
-        return Amis\GridBatchActions::make();
+        return AmisFacade::typeGridBatchActions();
     }
 }

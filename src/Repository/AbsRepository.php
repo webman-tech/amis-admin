@@ -9,11 +9,6 @@ use WebmanTech\AmisAdmin\Validator\ValidatorInterface;
 
 abstract class AbsRepository implements RepositoryInterface
 {
-    public const SCENE_LIST = 'list';
-    public const SCENE_DETAIL = 'detail';
-    public const SCENE_CREATE = 'create';
-    public const SCENE_UPDATE = 'update';
-
     protected ?string $primaryKey = null;
     protected ?ValidatorInterface $validator = null;
 

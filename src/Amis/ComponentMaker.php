@@ -32,12 +32,33 @@ class ComponentMaker
     }
 
     /**
+     * 获取额外的组件
+     * @return array<string, class-string<Component>>
+     */
+    public static function getExtComponents(): array
+    {
+        return [
+            // 按照 class 的顺序写
+            'typeActionButtons' => ActionButtons::class,
+            'typeCustomCrud' => Crud::class,
+            'typeDetailAttribute' => DetailAttribute::class,
+            'typeFormField' => FormField::class,
+            'typeGridBatchActions' => GridBatchActions::class,
+            'typeGridColumn' => GridColumn::class,
+            'typeGridColumnActions' => GridColumnActions::class,
+        ];
+    }
+
+    /**
      * 根据 name 获取默认的组件类
      * @param string $name
      * @return string
      */
     public static function getDefaultClassByName(string $name): string
     {
+        if ($value = static::getExtComponents()[$name] ?? null) {
+            return $value;
+        }
         if ($value = static::getDefaultClassMap()[$name] ?? null) {
             return $value;
         }

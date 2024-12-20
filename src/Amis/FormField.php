@@ -2,7 +2,7 @@
 
 namespace WebmanTech\AmisAdmin\Amis;
 
-use WebmanTech\AmisAdmin\Facades\Amis;
+use WebmanTech\AmisAdmin\Facades\AmisFacade;
 
 /**
  * 表单的一个字段
@@ -48,7 +48,7 @@ class FormField extends Component
     {
         if (strlen($name) > 4 && strpos($name, 'type') === 0) {
             // 不再建议使用 typeXxx，使用 Amis::typeXxx 代替
-            return Amis::__callStatic($name, $arguments);
+            return AmisFacade::__callStatic($name, $arguments);
         }
 
         $value = $arguments[0] ?? null;

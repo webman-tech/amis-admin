@@ -63,7 +63,7 @@ trait CreateTrait
         if ($this->authCreate()) {
             $crud->withCreate(
                 'post:' . $routePrefix,
-                $this->buildFormFields($this->form(static::SCENE_CREATE)),
+                $this->buildFormFields($this->form($this->repository()::SCENE_CREATE)),
                 $this->authCreateVisible()
             );
         }

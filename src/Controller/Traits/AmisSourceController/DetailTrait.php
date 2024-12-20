@@ -6,6 +6,7 @@ use Webman\Http\Request;
 use Webman\Http\Response;
 use WebmanTech\AmisAdmin\Amis;
 use WebmanTech\AmisAdmin\Exceptions\ActionDisableException;
+use WebmanTech\AmisAdmin\Facades\AmisFacade;
 
 trait DetailTrait
 {
@@ -67,7 +68,7 @@ trait DetailTrait
     protected function detail(): array
     {
         return [
-            Amis\DetailAttribute::make()->name($this->repository()->getPrimaryKey()),
+            AmisFacade::typeDetailAttribute()->name($this->repository()->getPrimaryKey()),
         ];
     }
 
@@ -79,10 +80,10 @@ trait DetailTrait
     {
         foreach ($detailAttributes as &$item) {
             if (is_string($item)) {
-                $item = Amis\DetailAttribute::make()->name($item);
+                $item = AmisFacade::typeDetailAttribute()->name($item);
             }
             if (is_array($item)) {
-                $item = Amis\DetailAttribute::make($item);
+                $item = AmisFacade::typeDetailAttribute($item);
             }
             if ($item instanceof Amis\Component) {
                 $item = $item->toArray();

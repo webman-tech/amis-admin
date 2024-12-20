@@ -2,7 +2,7 @@
 
 namespace WebmanTech\AmisAdmin\Controller;
 
-use WebmanTech\AmisAdmin\Amis;
+use WebmanTech\AmisAdmin\Facades\AmisFacade;
 use WebmanTech\AmisAdmin\Helper\ArrayHelper;
 use WebmanTech\AmisAdmin\Helper\ConfigHelper;
 
@@ -10,7 +10,7 @@ class RenderController
 {
     public function app()
     {
-        return amis()->renderApp();
+        return AmisFacade::renderApp();
     }
 
     public function login()
@@ -25,8 +25,8 @@ class RenderController
             'form_width' => 400,
             'login_api' => '/admin/auth/login',
             'form' => [
-                Amis\FormField::make()->name('username')->label('用户名')->required(),
-                Amis\FormField::make()->name('password')->label('密码')->typeInputPassword()->required(),
+                AmisFacade::typeInputText()->name('username')->label('用户名')->required(),
+                AmisFacade::typeInputPassword()->name('password')->label('密码')->required(),
             ],
             'success_redirect' => '/admin',
             // 用于调整整个表单
@@ -44,7 +44,7 @@ class RenderController
 
         $schema = [];
         if (!$data['schema_overwrite']) {
-            $schema = Amis\Page::make()
+            $schema = AmisFacade::typePage()
                 ->schema([
                     'cssVars' => [
                         '--Page-body-padding' => 0,
@@ -86,6 +86,6 @@ class RenderController
         }
         $schema = ArrayHelper::merge($schema, $data['schema']);
 
-        return amis()->renderPage($data['title'], $schema);
+        return AmisFacade::renderPage($data['title'], $schema);
     }
 }

@@ -4,6 +4,11 @@ namespace WebmanTech\AmisAdmin\Repository;
 
 interface RepositoryInterface
 {
+    public const SCENE_LIST = 'list';
+    public const SCENE_DETAIL = 'detail';
+    public const SCENE_CREATE = 'create';
+    public const SCENE_UPDATE = 'update';
+
     /**
      * 主键
      * @return string
