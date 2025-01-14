@@ -80,6 +80,7 @@ class GridColumn extends Component
 
     public function toArray(): array
     {
+        $this->solveType();
         $this->solveSearchable();
         $this->solveQuickEdit();
 
@@ -99,6 +100,16 @@ class GridColumn extends Component
             $this->schema[$name] = $value;
         }
         return $this;
+    }
+
+    protected function solveType()
+    {
+        $type = $this->schema['type'];
+        if ($type === 'mapping') {
+            if (isset($this->schema['map'])) {
+                $this->schema['map'] = (object)$this->schema['map']; // 0 1 会被转为数组的形式，amis 下需要使用 object，所以强制为 object
+            }
+        }
     }
 
     protected function solveSearchable()
@@ -128,8 +139,8 @@ class GridColumn extends Component
                         'label' => strip_tags($label),
                         'value' => $value,
                     ],
-                    array_values($this->schema['map']),
-                    array_keys($this->schema['map'])
+                    array_values((array)$this->schema['map']),
+                    array_keys((array)$this->schema['map'])
                 );
             }
         } elseif ($type === 'date' || $type === 'datetime') {
@@ -156,8 +167,8 @@ class GridColumn extends Component
                         'label' => strip_tags($label),
                         'value' => $value,
                     ],
-                    array_values($this->schema['map']),
-                    array_keys($this->schema['map'])
+                    array_values((array)$this->schema['map']),
+                    array_keys((array)$this->schema['map'])
                 );
             }
         }
