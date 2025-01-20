@@ -6,6 +6,7 @@ use Webman\Http\Request;
 use Webman\Http\Response;
 use WebmanTech\AmisAdmin\Amis;
 use WebmanTech\AmisAdmin\Exceptions\ActionDisableException;
+use WebmanTech\AmisAdmin\Repository\HasPresetInterface;
 
 trait DetailTrait
 {
@@ -66,6 +67,11 @@ trait DetailTrait
      */
     protected function detail(): array
     {
+        $repository = $this->repository();
+        if ($repository instanceof HasPresetInterface) {
+            return $repository->getPresetsHelper()->pickDetail();
+        }
+
         return [
             Amis\DetailAttribute::make()->name($this->repository()->getPrimaryKey()),
         ];

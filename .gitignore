@@ -4,3 +4,7 @@ vendor
 .vscode
 .phpunit*
 composer.lock
+
+# webman 1.6 以上版本 BASE_PATH 限定在根目录，为了 tests 排除
+/config
+/tests/helpers.php

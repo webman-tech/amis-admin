@@ -120,6 +120,10 @@ class EloquentRepository extends AbsRepository
      */
     protected function searchableAttributes(): array
     {
+        if ($this instanceof HasPresetInterface) {
+            return $this->getPresetsHelper()->pickFilter();
+        }
+
         // 表下的所有字段可搜索
         $columns = $this->model()->getConnection()->getSchemaBuilder()->getColumnListing($this->model()->getTable());
         $result = [];

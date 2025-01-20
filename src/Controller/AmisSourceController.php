@@ -6,6 +6,7 @@ use Webman\Http\Request;
 use Webman\Http\Response;
 use WebmanTech\AmisAdmin\Amis;
 use WebmanTech\AmisAdmin\Amis\Component;
+use WebmanTech\AmisAdmin\Repository\HasPresetInterface;
 use WebmanTech\AmisAdmin\Repository\RepositoryInterface;
 
 abstract class AmisSourceController
@@ -132,6 +133,11 @@ abstract class AmisSourceController
      */
     protected function grid(): array
     {
+        $repository = $this->repository();
+        if ($repository instanceof HasPresetInterface) {
+            return $repository->getPresetsHelper()->pickGrid();
+        }
+
         return [
             Amis\GridColumn::make()->name($this->repository()->getPrimaryKey()),
         ];

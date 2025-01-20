@@ -2,6 +2,9 @@
 
 namespace WebmanTech\AmisAdmin\Helper;
 
+/**
+ * @internal
+ */
 class ConfigHelper
 {
     public const AMIS_MODULE = '__amis_module';

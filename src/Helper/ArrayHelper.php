@@ -2,6 +2,9 @@
 
 namespace WebmanTech\AmisAdmin\Helper;
 
+/**
+ * @internal
+ */
 class ArrayHelper
 {
     /**
