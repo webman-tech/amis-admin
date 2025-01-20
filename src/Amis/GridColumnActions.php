@@ -24,7 +24,7 @@ class GridColumnActions extends GridColumn
         $this->config['schema_recovery'] = [];
         $this->config['schema'] = [
             'type' => 'operation',
-            'label' => '操作',
+            'label' => trans('操作', [], 'amis-admin'),
             'buttons' => [],
         ];
 
@@ -40,14 +40,14 @@ class GridColumnActions extends GridColumn
      */
     public function withDetail(array $detailAttributes, string $initApi = null, string $can = '1==1')
     {
-        $label = $this->config['schema_detail']['label'] ?? '详情';
+        $label = $this->config['schema_detail']['label'] ?? trans('详情', [], 'amis-admin');
         return $this->withButtonDialog(static::INDEX_DETAIL, $label, $detailAttributes, $this->merge([
             'initApi' => $initApi,
             'visibleOn' => $can,
             'dialog' => [
                 'closeOnOutside' => true,
                 'actions' => [
-                    ['type' => 'button', 'label' => '取消', 'actionType' => 'cancel'],
+                    ['type' => 'button', 'label' => trans('取消', [], 'amis-admin'), 'actionType' => 'cancel'],
                 ],
             ],
         ], $this->config['schema_detail']));
@@ -63,7 +63,7 @@ class GridColumnActions extends GridColumn
      */
     public function withUpdate(array $formFields, string $api, string $initApi = null, string $can = '1==1')
     {
-        $label = $this->config['schema_update']['label'] ?? '修改';
+        $label = $this->config['schema_update']['label'] ?? trans('修改', [], 'amis-admin');
         return $this->withButtonDialog(static::INDEX_UPDATE, $label, $formFields, $this->merge([
             'initApi' => $initApi,
             'api' => $api,
@@ -80,10 +80,10 @@ class GridColumnActions extends GridColumn
      */
     public function withDelete(string $api, string $can = '1==1')
     {
-        $label = $this->config['schema_delete']['label'] ?? '删除';
+        $label = $this->config['schema_delete']['label'] ?? trans('删除', [], 'amis-admin');
         return $this->withButtonAjax(static::INDEX_DELETE, $label, $api, $this->merge([
             'level' => 'danger',
-            'confirmText' => "确定要{$label}？",
+            'confirmText' => trans('确定要%operate%？', ['%operate%' => $label], 'amis-admin'),
             'visibleOn' => $can,
         ], $this->config['schema_delete']));
     }
@@ -96,10 +96,10 @@ class GridColumnActions extends GridColumn
      */
     public function withRecovery(string $api, string $can = '1==1')
     {
-        $label = $this->config['schema_recovery']['label'] ?? '恢复';
+        $label = $this->config['schema_recovery']['label'] ?? trans('恢复', [], 'amis-admin');
         return $this->withButtonAjax(static::INDEX_RECOVERY, $label, $api, $this->merge([
             'level' => 'warning',
-            'confirmText' => "确定要{$label}？",
+            'confirmText' => trans('确定要%operate%？', ['%operate%' => $label], 'amis-admin'),
             'visibleOn' => $can,
         ], $this->config['schema_recovery']));
     }
