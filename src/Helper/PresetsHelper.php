@@ -31,7 +31,6 @@ class PresetsHelper implements PresetsHelperInterface
     public function withDefaultEnable(?array $keys = null)
     {
         $this->defaultEnable = $keys;
-
         return $this;
     }
 
@@ -49,7 +48,7 @@ class PresetsHelper implements PresetsHelperInterface
     public function pickFilter(?array $keys = null): array
     {
         return $this->pickColumn('filter', $keys, function ($v) {
-            if ($v === '=') {
+            if ($v === '=' || $v === true) {
                 return fn($query, $value, $attribute) => $query->where($attribute, $value);
             }
             if ($v === 'like') {
@@ -75,6 +74,13 @@ class PresetsHelper implements PresetsHelperInterface
             if ($v === null) {
                 return null;
             }
+            if ($v === true) {
+                $value = GridColumn::make()->name($column);
+                if ($this->isColumnSearchable($column)) {
+                    return $value->searchable();
+                }
+                return $value;
+            }
             return $v($column);
         });
     }
@@ -88,9 +94,16 @@ class PresetsHelper implements PresetsHelperInterface
             if ($v === null) {
                 return null;
             }
+            if ($v === true) {
+                $value = FormField::make()->name($column);
+                if ($this->isColumnRequired($column, $scene)) {
+                    return $value->required();
+                }
+                return $value;
+            }
             return $v($column, $scene);
         });
-        // 允许同时展示两个 FormItem
+        // 允许同时展示多个 FormItem
         $data = [];
         foreach ($items as $item) {
             if (is_array($item)) {
@@ -109,7 +122,7 @@ class PresetsHelper implements PresetsHelperInterface
     {
         return $this->pickColumn('rule', $keys, function ($v, string $column) use ($scene) {
             if ($v instanceof \Closure) {
-                return $v($column, $scene);
+                return $v($scene, $column);
             }
             return $v;
         }, true);
@@ -122,7 +135,7 @@ class PresetsHelper implements PresetsHelperInterface
     {
         $items = $this->pickColumn('ruleMessages', $keys, function ($v, string $column) use ($scene) {
             if ($v instanceof \Closure) {
-                return $v($column, $scene);
+                return $v($scene, $column);
             }
             return $v;
         });
@@ -140,7 +153,7 @@ class PresetsHelper implements PresetsHelperInterface
     {
         return $this->pickColumn('ruleCustomAttribute', $keys, function ($v, string $column) use ($scene) {
             if ($v instanceof \Closure) {
-                return $v($column, $scene);
+                return $v($scene, $column);
             }
             return $v;
         }, true);
@@ -206,13 +219,27 @@ class PresetsHelper implements PresetsHelperInterface
     {
         return [
             'label' => null,
-            'filter' => '=',
-            'grid' => fn(string $column) => GridColumn::make()->name($column)->searchable(),
-            'form' => fn(string $column) => FormField::make()->name($column),
-            'rule' => 'nullable',
+            'filter' => true,
+            'grid' => true,
+            'form' => true,
+            'rule' => null,
             'ruleMessages' => null,
             'ruleCustomAttribute' => null,
             'detail' => true,
         ];
+    }
+
+    protected function isColumnSearchable(string $column): bool
+    {
+        return isset($this->pickFilter([$column])[$column]);
+    }
+
+    protected function isColumnRequired(string $column, string $scene): bool
+    {
+        $rules = $this->pickRules($scene, [$column])[$column] ?? '';
+        if (is_string($rules)) {
+            $rules = array_filter(explode('|', $rules));
+        }
+        return in_array('required', $rules, true);
     }
 }

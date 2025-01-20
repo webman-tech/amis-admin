@@ -44,9 +44,56 @@ test('simple', function () {
             'code',
         ])
         ->and($presetsHelper->pickRules(AmisSourceController::SCENE_CREATE))->toBe([
-            'id' => 'nullable',
             'code' => 'required|string|max:64',
         ]);
+});
+
+test('default', function () {
+    $presetsHelper = new PresetsHelper([
+        'id' => [],
+        'code' => [
+            'rule' => 'required|string|max:64',
+        ],
+        'code2' => [
+            'filter' => null,
+            'rule' => fn(string $scene) => array_values(array_filter([
+                $scene === AmisSourceController::SCENE_CREATE ? 'required' : null,
+                'string'
+            ])),
+        ]
+    ]);
+
+    expect($presetsHelper->pickLabel())->toBe([])
+        ->and(array_keys($presetsHelper->pickFilter()))->toBe(['id', 'code']) // 无法比较匿名函数
+        ->and(components_to_array($presetsHelper->pickGrid()))->toBe(components_to_array([
+            GridColumn::make()->name('id')->searchable(),
+            GridColumn::make()->name('code')->searchable(),
+            GridColumn::make()->name('code2'),
+        ]))
+        ->and($presetsHelper->pickDetail())->toBe([
+            'id',
+            'code',
+            'code2',
+        ])
+        ->and($presetsHelper->pickRules(AmisSourceController::SCENE_CREATE))->toBe([
+            'code' => 'required|string|max:64',
+            'code2' => ['required', 'string'],
+        ])
+        ->and($presetsHelper->pickRules(AmisSourceController::SCENE_UPDATE))->toBe([
+            'code' => 'required|string|max:64',
+            'code2' => ['string'],
+        ])
+        ->and(components_to_array($presetsHelper->pickForm(AmisSourceController::SCENE_CREATE)))->toBe(components_to_array([
+            FormField::make()->name('id'),
+            FormField::make()->name('code')->required(),
+            FormField::make()->name('code2')->required(),
+        ]))
+        ->and(components_to_array($presetsHelper->pickForm(AmisSourceController::SCENE_UPDATE)))->toBe(components_to_array([
+            FormField::make()->name('id'),
+            FormField::make()->name('code')->required(),
+            FormField::make()->name('code2'),
+        ]))
+        ;
 });
 
 test('check withPresets', function () {
