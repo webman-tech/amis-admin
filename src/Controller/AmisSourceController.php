@@ -25,6 +25,11 @@ abstract class AmisSourceController
      * @var bool
      */
     protected bool $onlyShow = false;
+    /**
+     * 默认的 dialog 框大小
+     * @var string|null
+     */
+    protected ?string $defaultDialogConfig = null;
 
     /**
      * @var RepositoryInterface|null
@@ -124,6 +129,14 @@ abstract class AmisSourceController
      */
     protected function crudConfig(): array
     {
+        if ($this->defaultDialogConfig) {
+            return [
+                'schema_create' => [
+                    'dialog' => $this->defaultDialogConfig,
+                ],
+            ];
+        }
+
         return [];
     }
 
@@ -194,6 +207,17 @@ abstract class AmisSourceController
      */
     protected function gridActionsConfig(): array
     {
+        if ($this->defaultDialogConfig) {
+            return [
+                'schema_detail' => [
+                    'dialog' => $this->defaultDialogConfig,
+                ],
+                'schema_update' => [
+                    'dialog' => $this->defaultDialogConfig,
+                ],
+            ];
+        }
+
         return [];
     }
 
