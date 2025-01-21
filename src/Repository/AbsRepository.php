@@ -60,6 +60,10 @@ abstract class AbsRepository implements RepositoryInterface
      */
     protected function attributeLabelRemarks(): array
     {
+        if ($this instanceof HasPresetInterface) {
+            return $this->getPresetsHelper()->pickLabelRemark();
+        }
+
         return [];
     }
 
@@ -77,6 +81,10 @@ abstract class AbsRepository implements RepositoryInterface
      */
     protected function attributeDescriptions(): array
     {
+        if ($this instanceof HasPresetInterface) {
+            return $this->getPresetsHelper()->pickDescription();
+        }
+
         return [];
     }
 
@@ -134,7 +142,7 @@ abstract class AbsRepository implements RepositoryInterface
      * @return array 验证过后的字段
      * @throws ValidationException
      */
-    protected function validate(array $data, string $scene): array
+    public function validate(array $data, string $scene): array
     {
         return $this->validator()->validate(
             $data,

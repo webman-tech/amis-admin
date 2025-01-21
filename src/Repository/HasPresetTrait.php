@@ -2,17 +2,17 @@
 
 namespace WebmanTech\AmisAdmin\Repository;
 
-use WebmanTech\AmisAdmin\Helper\PresetsHelperInterface;
+use WebmanTech\AmisAdmin\Helper\PresetsHelper;
 
 trait HasPresetTrait
 {
-    protected ?PresetsHelperInterface $presetsHelper = null;
+    protected ?PresetsHelper $presetsHelper = null;
 
     /**
      * 获取 PresetsHelper
-     * @return PresetsHelperInterface
+     * @return PresetsHelper
      */
-    public function getPresetsHelper(): PresetsHelperInterface
+    public function getPresetsHelper(): PresetsHelper
     {
         if ($this->presetsHelper === null) {
             $this->presetsHelper = $this->createPresetsHelper();
@@ -22,7 +22,7 @@ trait HasPresetTrait
 
     /**
      * 创建 PresetsHelper
-     * @return PresetsHelperInterface
+     * @return PresetsHelper
      */
-    abstract protected function createPresetsHelper(): PresetsHelperInterface;
+    abstract protected function createPresetsHelper(): PresetsHelper;
 }

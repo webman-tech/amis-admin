@@ -26,10 +26,10 @@ abstract class AmisSourceController
      */
     protected bool $onlyShow = false;
     /**
-     * 默认的 dialog 框大小
-     * @var string|null
+     * 默认的 dialog 框配置
+     * @var array|null
      */
-    protected ?string $defaultDialogConfig = null;
+    protected ?array $defaultDialogConfig = null;
 
     /**
      * @var RepositoryInterface|null

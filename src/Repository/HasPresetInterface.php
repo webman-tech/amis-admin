@@ -2,13 +2,13 @@
 
 namespace WebmanTech\AmisAdmin\Repository;
 
-use WebmanTech\AmisAdmin\Helper\PresetsHelperInterface;
+use WebmanTech\AmisAdmin\Helper\PresetsHelper;
 
 interface HasPresetInterface
 {
     /**
      * 获取 PresetsHelper
-     * @return PresetsHelperInterface
+     * @return PresetsHelper
      */
-    public function getPresetsHelper(): PresetsHelperInterface;
+    public function getPresetsHelper(): PresetsHelper;
 }

@@ -36,7 +36,7 @@ class Component
     public static function make(array $schema = null)
     {
         /** @var static $component */
-        $component = Container::get(static::class);
+        $component = clone Container::get(static::class);
         if ($schema) {
             $component->schema($schema);
         }
