@@ -21,6 +21,7 @@ namespace WebmanTech\AmisAdmin\Amis;
  * @method $this visibleOn(string $expression)
  * @method $this required(bool $is = true)
  * @method $this requiredOn(string $expression)
+ * @method $this static (bool $is = true)
  * @method $this validations(array $rules)
  * @method $this validationErrors(array $messages)
  * @method $this validateOnChange(bool $is = true)
@@ -96,6 +97,7 @@ class FormField extends Component
         'hidden' => true,
         'visible' => true,
         'required' => true,
+        'static' => true,
         'validateOnChange' => true,
     ];
 

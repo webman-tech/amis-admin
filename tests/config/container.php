@@ -1,3 +1,3 @@
 <?php
 
-return new \Webman\Container();
+return new \Tests\Fixtures\ClearableContainer();

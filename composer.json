@@ -11,6 +11,11 @@
       "src/helper.php"
     ]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
   "require": {
     "php": ">=7.4",
     "ext-json": "*"
@@ -21,7 +26,8 @@
     "illuminate/pagination": "^8.83",
     "illuminate/validation": "^8.83",
     "webman-tech/polyfill": "^1.0",
-    "pestphp/pest": "^1.23"
+    "pestphp/pest": "^1.23",
+    "symfony/var-dumper": "^5.4"
   },
   "config": {
     "allow-plugins": {
