@@ -10,7 +10,7 @@ use WebmanTech\AmisAdmin\Repository\AbsRepository;
 
 class PresetsHelper
 {
-    protected array $presets;
+    protected array $presets = [];
     protected ?bool $defaultNoEdit = null;
     protected array $sceneKeys = [];
 
@@ -19,7 +19,7 @@ class PresetsHelper
      */
     public function __construct(array $presets = [])
     {
-        $this->presets = $presets;
+        $this->withPresets($presets);
     }
 
     /**

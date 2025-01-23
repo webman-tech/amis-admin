@@ -2,6 +2,8 @@
 
 namespace WebmanTech\AmisAdmin\Amis;
 
+use WebmanTech\AmisAdmin\Amis\Traits\TypeMappingSolver;
+
 /**
  * 详情的一个字段
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/form/static
@@ -36,6 +38,8 @@ namespace WebmanTech\AmisAdmin\Amis;
  */
 class DetailAttribute extends Component
 {
+    use TypeMappingSolver;
+
     protected array $schema = [
         'type' => 'static',
         'name' => '',
@@ -72,5 +76,20 @@ class DetailAttribute extends Component
             $this->schema[$name] = $value;
         }
         return $this;
+    }
+
+    public function toArray(): array
+    {
+        $this->solveType();
+
+        return parent::toArray();
+    }
+
+    protected function solveType()
+    {
+        $type = $this->schema['type'];
+        if ($type === 'static-mapping') {
+            $this->solveMappingMap();
+        }
     }
 }
