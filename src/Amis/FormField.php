@@ -2,6 +2,8 @@
 
 namespace WebmanTech\AmisAdmin\Amis;
 
+use WebmanTech\AmisAdmin\Amis\Traits\ComponentCommonFn;
+
 /**
  * 表单的一个字段
  *
@@ -86,6 +88,8 @@ namespace WebmanTech\AmisAdmin\Amis;
  */
 class FormField extends Component
 {
+    use ComponentCommonFn;
+
     protected array $schema = [
         'type' => 'input-text',
         'name' => '',
@@ -107,11 +111,7 @@ class FormField extends Component
             $this->schema['type'] = strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '-$1', lcfirst(substr($name, 4))));
             $this->schema($arguments[0] ?? []);
         } else {
-            $value = $arguments[0] ?? null;
-            if ($value === null) {
-                $value = $this->defaultValue[$name] ?? null;
-            }
-            $this->schema[$name] = $value;
+            $this->callToSetSchema($name, $arguments);
         }
         return $this;
     }

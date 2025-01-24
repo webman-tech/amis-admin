@@ -89,7 +89,7 @@ class Component
     protected function deepToArray(array $arr): array
     {
         $newArr = [];
-        if (isset($arr['type'])) {
+        if (isset($arr['type']) && $arr['type']) {
             $arr = $this->mergeGlobalConfigWithType($arr['type'], $arr);
         }
         foreach ($arr as $key => $item) {

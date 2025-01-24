@@ -5,8 +5,25 @@ namespace WebmanTech\AmisAdmin\Amis\Traits;
 /**
  * @internal
  */
-trait TypeMappingSolver
+trait ComponentCommonFn
 {
+    private function callToSetSchema(string $name, array $arguments)
+    {
+        $value = $arguments[0] ?? null;
+        if ($value === null) {
+            $value = $this->defaultValue[$name] ?? null;
+        }
+        if ($value === null) {
+            unset($this->schema[$name]);
+        } else {
+            $this->schema[$name] = $value;
+        }
+    }
+
+    /**
+     * 处理 mapping 类型的 map
+     * @return void
+     */
     private function solveMappingMap()
     {
         if (isset($this->schema['map']) && !is_array($this->schema['map'][0] ?? null)) {

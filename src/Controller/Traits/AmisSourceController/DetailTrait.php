@@ -6,6 +6,7 @@ use Webman\Http\Request;
 use Webman\Http\Response;
 use WebmanTech\AmisAdmin\Amis;
 use WebmanTech\AmisAdmin\Exceptions\ActionDisableException;
+use WebmanTech\AmisAdmin\Repository\AbsRepository;
 use WebmanTech\AmisAdmin\Repository\HasPresetInterface;
 
 trait DetailTrait
@@ -69,7 +70,7 @@ trait DetailTrait
     {
         $repository = $this->repository();
         if ($repository instanceof HasPresetInterface) {
-            return $repository->getPresetsHelper()->pickDetail();
+            return $repository->getPresetsHelper()->withScene(AbsRepository::SCENE_DETAIL)->pickDetail();
         }
 
         return [

@@ -121,7 +121,7 @@ class EloquentRepository extends AbsRepository
     protected function searchableAttributes(): array
     {
         if ($this instanceof HasPresetInterface) {
-            return $this->getPresetsHelper()->pickFilter();
+            return $this->getPresetsHelper()->withScene(AbsRepository::SCENE_LIST)->pickFilter();
         }
 
         // 表下的所有字段可搜索

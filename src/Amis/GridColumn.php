@@ -2,7 +2,7 @@
 
 namespace WebmanTech\AmisAdmin\Amis;
 
-use WebmanTech\AmisAdmin\Amis\Traits\TypeMappingSolver;
+use WebmanTech\AmisAdmin\Amis\Traits\ComponentCommonFn;
 
 /**
  * table 的单个 column
@@ -38,7 +38,7 @@ use WebmanTech\AmisAdmin\Amis\Traits\TypeMappingSolver;
  */
 class GridColumn extends Component
 {
-    use TypeMappingSolver;
+    use ComponentCommonFn;
 
     protected array $schema = [
         'type' => 'text',
@@ -97,11 +97,7 @@ class GridColumn extends Component
             $this->schema['type'] = lcfirst(substr($name, 4));
             $this->schema($arguments[0] ?? []);
         } else {
-            $value = $arguments[0] ?? null;
-            if ($value === null) {
-                $value = $this->defaultValue[$name] ?? null;
-            }
-            $this->schema[$name] = $value;
+            $this->callToSetSchema($name, $arguments);
         }
         return $this;
     }

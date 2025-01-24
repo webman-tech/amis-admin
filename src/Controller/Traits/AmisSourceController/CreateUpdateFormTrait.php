@@ -16,7 +16,7 @@ trait CreateUpdateFormTrait
     {
         $repository = $this->repository();
         if ($repository instanceof HasPresetInterface) {
-            return $repository->getPresetsHelper()->pickForm($scene);
+            return $repository->getPresetsHelper()->withScene($scene)->pickForm();
         }
 
         return [

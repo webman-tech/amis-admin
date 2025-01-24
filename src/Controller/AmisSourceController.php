@@ -6,6 +6,7 @@ use Webman\Http\Request;
 use Webman\Http\Response;
 use WebmanTech\AmisAdmin\Amis;
 use WebmanTech\AmisAdmin\Amis\Component;
+use WebmanTech\AmisAdmin\Repository\AbsRepository;
 use WebmanTech\AmisAdmin\Repository\HasPresetInterface;
 use WebmanTech\AmisAdmin\Repository\RepositoryInterface;
 
@@ -148,7 +149,7 @@ abstract class AmisSourceController
     {
         $repository = $this->repository();
         if ($repository instanceof HasPresetInterface) {
-            return $repository->getPresetsHelper()->pickGrid();
+            return $repository->getPresetsHelper()->withScene(AbsRepository::SCENE_LIST)->pickGrid();
         }
 
         return [

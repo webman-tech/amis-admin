@@ -2,7 +2,7 @@
 
 namespace WebmanTech\AmisAdmin\Amis;
 
-use WebmanTech\AmisAdmin\Amis\Traits\TypeMappingSolver;
+use WebmanTech\AmisAdmin\Amis\Traits\ComponentCommonFn;
 
 /**
  * 详情的一个字段
@@ -38,7 +38,7 @@ use WebmanTech\AmisAdmin\Amis\Traits\TypeMappingSolver;
  */
 class DetailAttribute extends Component
 {
-    use TypeMappingSolver;
+    use ComponentCommonFn;
 
     protected array $schema = [
         'type' => 'static',
@@ -69,11 +69,7 @@ class DetailAttribute extends Component
             $this->schema['type'] = 'static-' . lcfirst(substr($name, 4));
             $this->schema($arguments[0] ?? []);
         } else {
-            $value = $arguments[0] ?? null;
-            if ($value === null) {
-                $value = $this->defaultValue[$name] ?? null;
-            }
-            $this->schema[$name] = $value;
+            $this->callToSetSchema($name, $arguments);
         }
         return $this;
     }

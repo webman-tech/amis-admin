@@ -12,104 +12,12 @@ function components_to_array(array $items): array
     return array_map(fn(Component $item) => $item->toArray(), $items);
 }
 
-function components_to_json(array $items): string
-{
-    return json_encode(components_to_array($items));
-}
-
-test('simple', function () {
-    $presetsHelper = new PresetsHelper([
-        'id' => [
-            'label' => 'ID',
-            'labelRemark' => 'ID remark',
-            'description' => 'ID description',
-            'filter' => '=',
-            'grid' => fn(string $column) => GridColumn::make()->name($column)->searchable(),
-            'form' => null,
-            'detail' => true,
-        ],
-        'code' => [
-            'label' => '编码',
-            'filter' => '=',
-            'grid' => fn(string $column) => GridColumn::make()->name($column)->searchable(),
-            'form' => fn(string $column, string $scene) => FormField::make()->name($column)->required($scene === AbsRepository::SCENE_CREATE),
-            'detail' => true,
-            'rule' => 'required|string|max:64',
-        ],
-    ]);
-
-    expect($presetsHelper->pickLabel())->toBe(['id' => 'ID', 'code' => '编码'])
-        ->and($presetsHelper->pickLabelRemark())->toBe(['id' => 'ID remark'])
-        ->and($presetsHelper->pickDescription())->toBe(['id' => 'ID description'])
-        ->and(components_to_array($presetsHelper->pickGrid()))->toBe(components_to_array([
-            GridColumn::make()->name('id')->searchable(),
-            GridColumn::make()->name('code')->searchable()
-        ]))
-        ->and(array_keys($presetsHelper->pickFilter()))->toBe(['id', 'code']) // 无法比较匿名函数
-        ->and(components_to_array($presetsHelper->pickForm(AbsRepository::SCENE_CREATE)))->toBe(components_to_array([
-            FormField::make()->name('code')->required()
-        ]))
-        ->and(components_to_array($presetsHelper->pickDetail()))->toBe(components_to_array([
-            DetailAttribute::make()->name('id'),
-            DetailAttribute::make()->name('code'),
-        ]))
-        ->and($presetsHelper->pickRules(AbsRepository::SCENE_CREATE))->toBe([
-            'id' => 'nullable',
-            'code' => 'required|string|max:64',
-        ]);
+beforeEach(function () {
+    $this->presetsHelper = new PresetsHelper();
 });
 
-test('default', function () {
-    $presetsHelper = new PresetsHelper([
-        'id' => [],
-        'code' => [
-            'rule' => 'required|string|max:64',
-        ],
-        'code2' => [
-            'filter' => null,
-            'rule' => fn(string $scene) => array_values(array_filter([
-                $scene === AbsRepository::SCENE_CREATE ? 'required' : null,
-                'string'
-            ])),
-        ]
-    ]);
-
-    expect($presetsHelper->pickLabel())->toBe([])
-        ->and(array_keys($presetsHelper->pickFilter()))->toBe(['id', 'code']) // 无法比较匿名函数
-        ->and(components_to_array($presetsHelper->pickGrid()))->toBe(components_to_array([
-            GridColumn::make()->name('id')->searchable(),
-            GridColumn::make()->name('code')->searchable(),
-            GridColumn::make()->name('code2'),
-        ]))
-        ->and(components_to_array($presetsHelper->pickDetail()))->toBe(components_to_array([
-            DetailAttribute::make()->name('id'),
-            DetailAttribute::make()->name('code'),
-            DetailAttribute::make()->name('code2'),
-        ]))
-        ->and($presetsHelper->pickRules(AbsRepository::SCENE_CREATE))->toBe([
-            'id' => 'nullable',
-            'code' => 'required|string|max:64',
-            'code2' => ['required', 'string'],
-        ])
-        ->and($presetsHelper->pickRules(AbsRepository::SCENE_UPDATE))->toBe([
-            'id' => 'nullable',
-            'code' => 'required|string|max:64',
-            'code2' => ['string'],
-        ])
-        ->and(components_to_array($presetsHelper->pickForm(AbsRepository::SCENE_CREATE)))->toBe(components_to_array([
-            FormField::make()->name('id'),
-            FormField::make()->name('code')->required(),
-            FormField::make()->name('code2')->required(),
-        ]))
-        ->and(components_to_array($presetsHelper->pickForm(AbsRepository::SCENE_UPDATE)))->toBe(components_to_array([
-            FormField::make()->name('id'),
-            FormField::make()->name('code')->required(),
-            FormField::make()->name('code2'),
-        ]));
-});
-
-test('check withPresets', function () {
-    $presetsHelper = new PresetsHelper();
+test('support withPresets', function () {
+    $presetsHelper = $this->presetsHelper;
     expect(array_keys($presetsHelper->pickLabel()))->toBe([]);
 
     $presetsHelper->withPresets([
@@ -117,180 +25,394 @@ test('check withPresets', function () {
             'label' => 'ID',
         ],
     ]);
-    expect($presetsHelper->pickLabel())->toBe([]); // 后更改的无效
+    expect($presetsHelper->pickLabel())->toBe(['id' => 'ID']);
+});
 
-    $presetsHelper = (new PresetsHelper())
+test('support withDefaultNoEdit', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'before' => [],
+        ])
+        ->withDefaultNoEdit() // 该配置之前的定义不受影响
+        ->withPresets([
+            'after' => [],
+        ]);
+    expect($presetsHelper->pickForm())->toHaveCount(1)
+        ->and($presetsHelper->pickForm()[0]->get('name'))->toBe('before')
+        ->and($presetsHelper->pickGrid())->toHaveCount(2)
+        ->and($presetsHelper->pickDetail())->toHaveCount(2);
+});
+
+test('support withDefaultSceneKeys', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'id' => ['label' => 'ID'],
+            'code' => ['label' => 'Code']
+        ]);
+    expect($presetsHelper->pickLabel())->toBe(['id' => 'ID', 'code' => 'Code']);
+    $presetsHelper->withDefaultSceneKeys(['id']);
+    expect($presetsHelper->pickLabel())->toBe(['id' => 'ID']);
+});
+
+test('support withCrudSceneKeys', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'id' => ['label' => 'ID'],
+            'code' => ['label' => 'Code']
+        ]);
+    expect($presetsHelper->pickLabel())->toBe(['id' => 'ID', 'code' => 'Code']);
+    $presetsHelper->withCrudSceneKeys(['id']);
+    expect($presetsHelper->pickLabel())->toBe(['id' => 'ID', 'code' => 'Code'])
+        ->and($presetsHelper->withScene(AbsRepository::SCENE_CREATE)->pickLabel())->toBe(['id' => 'ID'])
+        ->and($presetsHelper->withScene(AbsRepository::SCENE_CREATE)->pickLabel())->toBe(['id' => 'ID'])
+        ->and($presetsHelper->withScene(AbsRepository::SCENE_UPDATE)->pickLabel())->toBe(['id' => 'ID'])
+        ->and($presetsHelper->withScene(AbsRepository::SCENE_DETAIL)->pickLabel())->toBe(['id' => 'ID']);
+});
+
+test('support withSceneKeys', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'id' => ['label' => 'ID'],
+            'code' => ['label' => 'Code']
+        ]);
+    expect($presetsHelper->pickLabel())->toBe(['id' => 'ID', 'code' => 'Code']);
+    $presetsHelper->withSceneKeys([
+        'scene_abc' => ['id'],
+        'scene_xyz' => ['code'],
+    ]);
+    expect($presetsHelper->pickLabel())->toBe(['id' => 'ID', 'code' => 'Code'])
+        ->and($presetsHelper->withScene('scene_abc')->pickLabel())->toBe(['id' => 'ID'])
+        ->and($presetsHelper->withScene('scene_xyz')->pickLabel())->toBe(['code' => 'Code']);
+});
+
+test('support withScene', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'id' => ['label' => 'ID'],
+            'code' => ['label' => 'Code']
+        ])
+        ->withSceneKeys([
+            'scene_abc' => ['id']
+        ]);
+    expect($presetsHelper->pickLabel())->toBe(['id' => 'ID', 'code' => 'Code'])
+        ->and($presetsHelper->withScene('scene_abc')->pickLabel())->toBe(['id' => 'ID'])
+        ->and($presetsHelper->pickLabel())->toBe(['id' => 'ID']) // withScene 具有副作用，会更改全局当前的 scene
+        ->and($presetsHelper->withScene()->pickLabel())->toBe(['id' => 'ID', 'code' => 'Code']); // 使用 withScene(null) 重置 scene
+});
+
+test('support label', function () {
+    $presetsHelper = $this->presetsHelper
         ->withPresets([
             'id' => [
                 'label' => 'ID',
             ],
         ]);
-    expect(array_keys($presetsHelper->pickLabel()))->toBe(['id']);
+    expect($presetsHelper->pickLabel())->toBe(['id' => 'ID'])
+        ->and($presetsHelper->pickGrid(['id'])[0]->get('label'))->toBe('ID')
+        ->and($presetsHelper->pickForm(['id'])[0]->get('label'))->toBe('ID')
+        ->and($presetsHelper->pickDetail(['id'])[0]->get('label'))->toBe('ID');
 });
 
-test('check withDefaultNoEdit', function () {
-    $presetsHelper = (new PresetsHelper([
-        'id' => [
-            'label' => 'ID',
-        ],
-        'code' => [
-            'label' => '编码',
-        ]
-    ]))->withDefaultNoEdit();
-    expect(array_keys($presetsHelper->pickLabel()))->toBe(['id', 'code'])
-        ->and($presetsHelper->pickForm(AbsRepository::SCENE_CREATE))->toBe([])
-        ->and($presetsHelper->pickForm(AbsRepository::SCENE_UPDATE))->toBe([])
-        ->and(components_to_array($presetsHelper->pickGrid()))->toBe(components_to_array([
-            GridColumn::make()->name('id')->searchable(),
-            GridColumn::make()->name('code')->searchable(),
-        ]))
-        ->and(components_to_array($presetsHelper->pickDetail()))->toBe(components_to_array([
-            DetailAttribute::make()->name('id'),
-            DetailAttribute::make()->name('code'),
-        ]));
+test('support labelRemark', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'id' => [
+                'labelRemark' => 'ID',
+            ],
+        ]);
+    expect($presetsHelper->pickLabelRemark())->toBe(['id' => 'ID'])
+        ->and($presetsHelper->pickGrid(['id'])[0]->get('labelRemark'))->toBeNull()
+        ->and($presetsHelper->pickForm(['id'])[0]->get('labelRemark'))->toBe('ID')
+        ->and($presetsHelper->pickDetail(['id'])[0]->get('labelRemark'))->toBeNull();
 });
 
-test('check withCrudSceneKeys', function () {
-    $presetsHelper = (new PresetsHelper([
-        'id' => [
-            'label' => 'ID',
-        ],
-        'code' => [
-            'label' => '编码',
-        ]
-    ]))->withCrudSceneKeys(['id']);
-    expect(array_keys($presetsHelper->pickLabel()))->toBe(['id', 'code'])
-        ->and(components_to_array($presetsHelper->pickForm(AbsRepository::SCENE_CREATE)))->toBe(components_to_array([
-            FormField::make()->name('id'),
-        ]));
+test('support description', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'id' => [
+                'description' => 'ID',
+            ],
+        ]);
+    expect($presetsHelper->pickDescription())->toBe(['id' => 'ID'])
+        ->and($presetsHelper->pickGrid(['id'])[0]->get('description'))->toBeNull()
+        ->and($presetsHelper->pickForm(['id'])[0]->get('description'))->toBe('ID')
+        ->and($presetsHelper->pickDetail(['id'])[0]->get('description'))->toBeNull();
 });
 
-test('check withSceneKeys', function () {
-    $presetsHelper = (new PresetsHelper([
-        'id' => [
-            'label' => 'ID',
-        ],
-        'code' => [
-            'label' => '编码',
-        ]
-    ]))->withSceneKeys([
-        'abcScene' => ['code']
+test('support filter', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'key0' => [
+            ],
+            'key1' => [
+                'filter' => true,
+            ],
+            'key2' => [
+                'filter' => '=',
+            ],
+            'key3' => [
+                'filter' => 'like',
+            ],
+            'key4' => [
+                'filter' => null,
+            ],
+        ]);
+    $filters = $presetsHelper->pickFilter();
+    expect($filters['key0'])->toBeInstanceOf(Closure::class)
+        ->and($filters['key1'])->toBeInstanceOf(Closure::class)
+        ->and($filters['key2'])->toBeInstanceOf(Closure::class)
+        ->and($filters['key3'])->toBeInstanceOf(Closure::class)
+        ->and(array_key_exists('key4', $filters))->toBeFalse();
+});
+
+test('support grid', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'default' => [
+            ],
+            'change_grid' => [
+                'grid' => fn(string $key) => GridColumn::make()->name($key),
+            ],
+            'ext_grid' => [
+                'gridExt' => fn(GridColumn $column) => $column->sortable(),
+            ],
+            'no_filter' => [
+                'filter' => null,
+            ],
+            'hidden' => [
+                'grid' => null,
+            ],
+        ]);
+    expect(components_to_array($presetsHelper->pickGrid()))->toBe(components_to_array([
+        GridColumn::make()->name('default')->searchable(),
+        GridColumn::make()->name('change_grid'),
+        GridColumn::make()->name('ext_grid')->searchable()->sortable(),
+        GridColumn::make()->name('no_filter'),
+    ]));
+});
+
+test('support form', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'default' => [
+            ],
+            'change_form' => [
+                'form' => fn(string $key) => FormField::make()->name($key),
+            ],
+            'ext_form' => [
+                'formExt' => fn(FormField $field) => $field->hidden(),
+            ],
+            'auto_required' => [
+                'rule' => 'required',
+            ],
+            'hidden' => [
+                'form' => null,
+            ],
+        ]);
+    expect(components_to_array($presetsHelper->pickForm()))->toBe(components_to_array([
+        FormField::make()->name('default'),
+        FormField::make()->name('change_form'),
+        FormField::make()->name('ext_form')->hidden(),
+        FormField::make()->name('auto_required')->required(),
+    ]));
+});
+
+test('support detail', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'default' => [
+            ],
+            'change_detail' => [
+                'detail' => fn(string $key) => DetailAttribute::make()->name($key),
+            ],
+            'ext_detail' => [
+                'detailExt' => fn(DetailAttribute $attribute) => $attribute->typeImage(),
+            ],
+            'hidden' => [
+                'detail' => null,
+            ],
+        ]);
+    expect(components_to_array($presetsHelper->pickDetail()))->toBe(components_to_array([
+        DetailAttribute::make()->name('default'),
+        DetailAttribute::make()->name('change_detail'),
+        DetailAttribute::make()->name('ext_detail')->typeImage(),
+    ]));
+});
+
+test('support rule', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'default' => [
+            ],
+            'change_rule' => [
+                'rule' => 'required',
+            ],
+            'change_rule2' => [
+                'rule' => 'required|string',
+            ],
+            'callback_rule' => [
+                'rule' => fn() => 'required',
+            ],
+            'hidden' => [
+                'rule' => null,
+            ],
+        ]);
+    expect($presetsHelper->pickRules())->toBe([
+        'default' => ['nullable'],
+        'change_rule' => ['required'],
+        'change_rule2' => ['required', 'string'],
+        'callback_rule' => ['required'],
     ]);
-    expect(array_keys($presetsHelper->pickLabel()))->toBe(['id', 'code'])
-        ->and(components_to_array($presetsHelper->pickForm('abcScene')))->toBe(components_to_array([
-            FormField::make()->name('code'),
+});
+
+test('support ruleMessages', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'default_hidden' => [
+            ],
+            'change_ruleMessages' => [
+                'ruleMessages' => ['required' => 'abc'],
+            ],
+            'callback_ruleMessages' => [
+                'ruleMessages' => fn() => ['required' => 'abc'],
+            ],
+        ]);
+    expect($presetsHelper->pickRuleMessages())->toBe([
+        'change_ruleMessages' => ['required' => 'abc'],
+        'callback_ruleMessages' => ['required' => 'abc'],
+    ]);
+});
+
+test('support ruleCustomAttribute', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'default_hidden' => [
+            ],
+            'change_ruleCustomAttribute' => [
+                'ruleCustomAttribute' => 'abc',
+            ],
+            'callback_ruleCustomAttribute' => [
+                'ruleCustomAttribute' => fn() => 'abc',
+            ],
+        ]);
+    expect($presetsHelper->pickRuleCustomAttributes())->toBe([
+        'change_ruleCustomAttribute' => 'abc',
+        'callback_ruleCustomAttribute' => 'abc',
+    ]);
+});
+
+test('support selectOptions', function () {
+    $presetsHelper = $this->presetsHelper->withPresets([
+        'id' => [
+            'selectOptions' => ['a' => 'A', 'b' => 'B'],
+        ],
+    ]);
+    expect(components_to_array($presetsHelper->pickGrid()))
+        ->toBe(components_to_array([
+            GridColumn::make()->name('id')->typeMapping(['map' => [
+                ['label' => 'A', 'value' => 'a'],
+                ['label' => 'B', 'value' => 'b'],
+            ]])->searchable()
+        ]))
+        ->and(components_to_array($presetsHelper->pickForm()))
+        ->toBe(components_to_array([
+            FormField::make()->name('id')->typeSelect(['options' => [
+                ['value' => 'a', 'label' => 'A'],
+                ['value' => 'b', 'label' => 'B'],
+            ]]),
+        ]))
+        ->and(components_to_array($presetsHelper->pickDetail()))
+        ->toBe(components_to_array([
+            DetailAttribute::make()->name('id')->typeMapping(['map' => [
+                ['label' => 'A', 'value' => 'a'],
+                ['label' => 'B', 'value' => 'b'],
+            ]]),
         ]));
 });
 
 test('support pick special keys', function () {
-    $presetsHelper = (new PresetsHelper([
-        'id' => [
-            'label' => 'ID',
-        ],
-        'code' => [
-            'label' => '编码',
-        ]
-    ]));
-    expect($presetsHelper->pickLabel())->toBe(['id' => 'ID', 'code' => '编码'])
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'id' => [
+                'label' => 'ID',
+            ],
+            'code' => [
+                'label' => 'Code',
+            ]
+        ]);
+    expect($presetsHelper->pickLabel())->toBe(['id' => 'ID', 'code' => 'Code'])
         ->and($presetsHelper->pickLabel(['id']))->toBe(['id' => 'ID']);
 });
 
-test('pickForm support multi field', function () {
-    $presetsHelper = (new PresetsHelper([
+test('support pickForm multi field', function () {
+    $presetsHelper = $this->presetsHelper->withPresets([
         'id' => [
-            'form' => fn(string $column, string $scene) => FormField::make()->name($column)
+            'form' => fn(string $column) => FormField::make()->name($column)
         ],
         'code' => [
-            'form' => fn(string $column, string $scene) => [
+            'form' => fn(string $column) => [
                 FormField::make()->name($column . '1'),
                 FormField::make()->name($column . '2'),
             ],
         ]
-    ]));
-    expect(components_to_array($presetsHelper->pickForm(AbsRepository::SCENE_CREATE)))->toBe(components_to_array([
+    ]);
+    expect(components_to_array($presetsHelper->pickForm()))->toBe(components_to_array([
         FormField::make()->name('id'),
         FormField::make()->name('code1'),
         FormField::make()->name('code2'),
     ]));
 });
 
-test('pickForm required auto support', function () {
-    $presetsHelper = (new PresetsHelper([
-        'id' => [
-            'form' => true,
-            'rule' => 'required',
+test('support extDynamic', function () {
+    $presetsHelper = $this->presetsHelper->withPresets([
+        'key_useDynamic' => [
+            'formExtDynamic' => fn(FormField $field, string $scene) => $field->required($scene === 'create'),
+            'ruleExtDynamic' => fn(array $rule, string $scene) => array_values(array_filter([
+                $scene === 'create' ? 'required' : null,
+                'string',
+            ])),
         ],
-        'code' => [
-            'form' => true,
-        ],
-    ]));
-    expect(components_to_array($presetsHelper->pickForm(AbsRepository::SCENE_CREATE)))->toBe(components_to_array([
-        FormField::make()->name('id')->required(),
-        FormField::make()->name('code'),
-    ]));
+    ]);
+
+    expect($presetsHelper->withScene()->pickForm()[0]->get('required'))->toBeFalse()
+        ->and($presetsHelper->withScene('create')->pickForm()[0]->get('required'))->toBeTrue()
+        ->and($presetsHelper->withScene()->pickRules()['key_useDynamic'])->toBe(['string'])
+        ->and($presetsHelper->withScene('create')->pickRules()['key_useDynamic'])->toBe(['required', 'string']);
 });
 
-test('pickGrid searchable auto support', function () {
-    $presetsHelper = (new PresetsHelper([
-        'id' => [
-            'grid' => true,
+test('ext and extDynamic compare', function () {
+    $globalValue = new stdClass();
+    $globalValue->value = '123';
+    $presetsHelper = $this->presetsHelper->withPresets([
+        'key_noDynamic' => [
+            'gridExt' => fn(GridColumn $column) => $column->width($globalValue->value),
+            'formExt' => fn(FormField $field) => $field->value($globalValue->value),
+            'detailExt' => fn(DetailAttribute $attribute) => $attribute->value($globalValue->value),
         ],
-        'code' => [
-            'grid' => true,
+        'key_useDynamic' => [
+            'gridExtDynamic' => fn(GridColumn $column) => $column->width($globalValue->value),
+            'formExtDynamic' => fn(FormField $field, string $scene) => $field->value($globalValue->value),
+            'detailExtDynamic' => fn(DetailAttribute $attribute, string $scene) => $attribute->value($globalValue->value),
         ],
-    ]));
-    expect(components_to_array($presetsHelper->pickGrid()))->toBe(components_to_array([
-        GridColumn::make()->name('id')->searchable(),
-        GridColumn::make()->name('code')->searchable(),
-    ]));
-});
+    ]);
+    $grids = $presetsHelper->pickGrid();
+    $forms = $presetsHelper->pickForm();
+    $details = $presetsHelper->pickDetail();
+    expect($grids[0]->get('width'))->toBe('123')
+        ->and($forms[0]->get('value'))->toBe('123')
+        ->and($details[0]->get('value'))->toBe('123')
+        ->and($grids[1]->get('width'))->toBe('123')
+        ->and($forms[1]->get('value'))->toBe('123')
+        ->and($details[1]->get('value'))->toBe('123');
 
-test('selectOptions support', function () {
-    $presetsHelper = (new PresetsHelper([
-        'id' => [
-            'label' => 'ID',
-        ],
-        'code' => [
-            'label' => '编码',
-            'filter' => null,
-        ],
-    ]));
-    expect(components_to_array($presetsHelper->pickGrid()))
-        ->toBe(components_to_array([
-            GridColumn::make()->name('id')->searchable(),
-            GridColumn::make()->name('code'),
-        ]));
-});
-
-test('gridExt formExt detailExt support', function () {
-    $presetsHelper = (new PresetsHelper([
-        'id' => [
-            'label' => 'ID',
-            'gridExt' => fn(GridColumn $column) => $column->sortable(),
-            'formExt' => fn(FormField $field) => $field->typeInputNumber(),
-            'detailExt' => fn(DetailAttribute $attribute) => $attribute->typeImage(),
-        ],
-        'code' => [
-            'label' => '编码',
-            'gridExt' => fn(GridColumn $column) => $column->sortable(),
-            'formExt' => fn(FormField $field) => $field->typeInputNumber(),
-            'detailExt' => fn(DetailAttribute $attribute) => $attribute->typeImage(),
-        ],
-    ]));
-
-    expect(components_to_json($presetsHelper->pickGrid()))
-        ->toBe(components_to_json([
-            GridColumn::make()->name('id')->searchable()->sortable(),
-            GridColumn::make()->name('code')->searchable()->sortable(),
-        ]))
-        ->and(components_to_json($presetsHelper->pickForm(AbsRepository::SCENE_CREATE)))
-        ->toBe(components_to_json([
-            FormField::make()->name('id')->typeInputNumber(),
-            FormField::make()->name('code')->typeInputNumber(),
-        ]))
-        ->and(components_to_json($presetsHelper->pickDetail()))
-        ->toBe(components_to_json([
-            DetailAttribute::make()->name('id')->typeImage(),
-            DetailAttribute::make()->name('code')->typeImage(),
-        ]));
+    $globalValue->value = '456'; // 修改值，仅 ExtDynamic 的才会变
+    $grids = $presetsHelper->pickGrid();
+    $forms = $presetsHelper->pickForm();
+    $details = $presetsHelper->pickDetail();
+    expect($grids[0]->get('width'))->toBe('123')
+        ->and($forms[0]->get('value'))->toBe('123')
+        ->and($details[0]->get('value'))->toBe('123')
+        ->and($grids[1]->get('width'))->toBe('456')
+        ->and($forms[1]->get('value'))->toBe('456')
+        ->and($details[1]->get('value'))->toBe('456');
 });
