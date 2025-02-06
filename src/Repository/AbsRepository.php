@@ -39,6 +39,10 @@ abstract class AbsRepository implements RepositoryInterface
      */
     protected function attributeLabels(): array
     {
+        if ($this instanceof HasPresetInterface) {
+            return $this->getPresetsHelper()->withScene()->pickLabel();
+        }
+
         return [];
     }
 
@@ -56,6 +60,10 @@ abstract class AbsRepository implements RepositoryInterface
      */
     protected function attributeLabelRemarks(): array
     {
+        if ($this instanceof HasPresetInterface) {
+            return $this->getPresetsHelper()->withScene()->pickLabelRemark();
+        }
+
         return [];
     }
 
@@ -73,6 +81,10 @@ abstract class AbsRepository implements RepositoryInterface
      */
     protected function attributeDescriptions(): array
     {
+        if ($this instanceof HasPresetInterface) {
+            return $this->getPresetsHelper()->withScene()->pickDescription();
+        }
+
         return [];
     }
 
@@ -130,7 +142,7 @@ abstract class AbsRepository implements RepositoryInterface
      * @return array 验证过后的字段
      * @throws ValidationException
      */
-    protected function validate(array $data, string $scene): array
+    public function validate(array $data, string $scene): array
     {
         return $this->validator()->validate(
             $data,
@@ -173,6 +185,10 @@ abstract class AbsRepository implements RepositoryInterface
      */
     protected function rules(string $scene): array
     {
+        if ($this instanceof HasPresetInterface) {
+            return $this->getPresetsHelper()->withScene($scene)->pickRules();
+        }
+
         return [];
     }
 
@@ -182,6 +198,10 @@ abstract class AbsRepository implements RepositoryInterface
      */
     protected function ruleMessages(string $scene): array
     {
+        if ($this instanceof HasPresetInterface) {
+            return $this->getPresetsHelper()->withScene($scene)->pickRuleMessages();
+        }
+
         return [];
     }
 
@@ -191,6 +211,10 @@ abstract class AbsRepository implements RepositoryInterface
      */
     protected function ruleCustomAttributes(string $scene): array
     {
+        if ($this instanceof HasPresetInterface) {
+            return $this->getPresetsHelper()->withScene($scene)->pickRuleCustomAttributes();
+        }
+
         return $this->attributeLabels();
     }
 }

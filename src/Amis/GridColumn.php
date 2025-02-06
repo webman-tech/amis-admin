@@ -2,6 +2,8 @@
 
 namespace WebmanTech\AmisAdmin\Amis;
 
+use WebmanTech\AmisAdmin\Amis\Traits\ComponentCommonFn;
+
 /**
  * table 的单个 column
  *
@@ -36,6 +38,8 @@ namespace WebmanTech\AmisAdmin\Amis;
  */
 class GridColumn extends Component
 {
+    use ComponentCommonFn;
+
     protected array $schema = [
         'type' => 'text',
         'name' => '',
@@ -93,11 +97,7 @@ class GridColumn extends Component
             $this->schema['type'] = lcfirst(substr($name, 4));
             $this->schema($arguments[0] ?? []);
         } else {
-            $value = $arguments[0] ?? null;
-            if ($value === null) {
-                $value = $this->defaultValue[$name] ?? null;
-            }
-            $this->schema[$name] = $value;
+            $this->callToSetSchema($name, $arguments);
         }
         return $this;
     }
@@ -106,9 +106,7 @@ class GridColumn extends Component
     {
         $type = $this->schema['type'];
         if ($type === 'mapping') {
-            if (isset($this->schema['map'])) {
-                $this->schema['map'] = (object)$this->schema['map']; // 0 1 会被转为数组的形式，amis 下需要使用 object，所以强制为 object
-            }
+            $this->solveMappingMap();
         }
     }
 
@@ -135,12 +133,13 @@ class GridColumn extends Component
             if (isset($this->schema['map'])) {
                 $searchable['type'] = 'select';
                 $searchable['options'] = array_map(
-                    fn($label, $value) => [
-                        'label' => strip_tags($label),
-                        'value' => $value,
-                    ],
-                    array_values((array)$this->schema['map']),
-                    array_keys((array)$this->schema['map'])
+                    function (array $item) {
+                        if (isset($item['label'])) {
+                            $item['label'] = strip_tags($item['label']); // 去除 html 结构，使得 map 带 html 格式时支持
+                        }
+                        return $item;
+                    },
+                    $this->schema['map']
                 );
             }
         } elseif ($type === 'date' || $type === 'datetime') {

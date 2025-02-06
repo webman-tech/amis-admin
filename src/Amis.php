@@ -131,6 +131,16 @@ class Amis
             return $item;
         }, $assets['js']);
 
+        $assets['lang'] = $assets['lang'] ?? 'zh';
+        if (is_callable($assets['lang'])) {
+            $assets['lang'] = call_user_func($assets['lang']);
+        }
+
+        $assets['locale'] = $assets['locale'] ?? 'zh-CN';
+        if (is_callable($assets['locale'])) {
+            $assets['locale'] = call_user_func($assets['locale']);
+        }
+
         return $assets;
     }
 }

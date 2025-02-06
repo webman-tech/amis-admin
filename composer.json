@@ -11,15 +11,30 @@
       "src/helper.php"
     ]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
   "require": {
-    "php": ">=7.4",
+    "php": "^7.4||^8.0",
     "ext-json": "*"
   },
   "require-dev": {
-    "workerman/webman-framework": "^1.3",
-    "illuminate/database": "^8.83",
-    "illuminate/pagination": "^8.83",
-    "illuminate/validation": "^8.83",
-    "webman-tech/polyfill": "^1.0"
+    "workerman/webman-framework": "^1.5|^2.0",
+    "illuminate/database": "^8.0|^9.0|^10.0|^11.0",
+    "illuminate/pagination": "^8.0|^9.0|^10.0|^11.0",
+    "illuminate/validation": "^8.0|^9.0|^10.0|^11.0",
+    "webman-tech/polyfill": "^1.0|^2.0",
+    "pestphp/pest": "^1.23|^2.0",
+    "symfony/var-dumper": "^5.4|^6.0|^7.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
+  "scripts": {
+    "test": "pest"
   }
 }

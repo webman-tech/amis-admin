@@ -2,6 +2,8 @@
 
 namespace WebmanTech\AmisAdmin\Amis;
 
+use WebmanTech\AmisAdmin\Amis\Traits\ComponentCommonFn;
+
 /**
  * 详情的一个字段
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/form/static
@@ -36,6 +38,8 @@ namespace WebmanTech\AmisAdmin\Amis;
  */
 class DetailAttribute extends Component
 {
+    use ComponentCommonFn;
+
     protected array $schema = [
         'type' => 'static',
         'name' => '',
@@ -65,12 +69,23 @@ class DetailAttribute extends Component
             $this->schema['type'] = 'static-' . lcfirst(substr($name, 4));
             $this->schema($arguments[0] ?? []);
         } else {
-            $value = $arguments[0] ?? null;
-            if ($value === null) {
-                $value = $this->defaultValue[$name] ?? null;
-            }
-            $this->schema[$name] = $value;
+            $this->callToSetSchema($name, $arguments);
         }
         return $this;
+    }
+
+    public function toArray(): array
+    {
+        $this->solveType();
+
+        return parent::toArray();
+    }
+
+    protected function solveType()
+    {
+        $type = $this->schema['type'];
+        if ($type === 'static-mapping') {
+            $this->solveMappingMap();
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace WebmanTech\AmisAdmin\Controller\Traits\AmisSourceController;
 
 use WebmanTech\AmisAdmin\Amis;
+use WebmanTech\AmisAdmin\Repository\HasPresetInterface;
 
 trait CreateUpdateFormTrait
 {
@@ -13,6 +14,11 @@ trait CreateUpdateFormTrait
      */
     protected function form(string $scene): array
     {
+        $repository = $this->repository();
+        if ($repository instanceof HasPresetInterface) {
+            return $repository->getPresetsHelper()->withScene($scene)->pickForm();
+        }
+
         return [
             //Amis\FormField::make()->name('name'),
         ];

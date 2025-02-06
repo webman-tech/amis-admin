@@ -105,7 +105,7 @@ class Crud extends Component
      */
     public function withCreate(string $api, array $form, string $can = '1==1')
     {
-        $label = $this->config['schema_create']['label'] ?? '新增';
+        $label = $this->config['schema_create']['label'] ?? trans('新增', [], 'amis-admin');
         return $this->withButtonDialog(static::INDEX_CREATE, $label, $form, $this->merge([
             'api' => $api,
             'level' => 'primary',

@@ -6,6 +6,8 @@ use Webman\Http\Request;
 use Webman\Http\Response;
 use WebmanTech\AmisAdmin\Amis;
 use WebmanTech\AmisAdmin\Amis\Component;
+use WebmanTech\AmisAdmin\Repository\AbsRepository;
+use WebmanTech\AmisAdmin\Repository\HasPresetInterface;
 use WebmanTech\AmisAdmin\Repository\RepositoryInterface;
 
 abstract class AmisSourceController
@@ -24,6 +26,11 @@ abstract class AmisSourceController
      * @var bool
      */
     protected bool $onlyShow = false;
+    /**
+     * 默认的 dialog 框配置
+     * @var array|null
+     */
+    protected ?array $defaultDialogConfig = null;
 
     /**
      * @var RepositoryInterface|null
@@ -123,6 +130,14 @@ abstract class AmisSourceController
      */
     protected function crudConfig(): array
     {
+        if ($this->defaultDialogConfig) {
+            return [
+                'schema_create' => [
+                    'dialog' => $this->defaultDialogConfig,
+                ],
+            ];
+        }
+
         return [];
     }
 
@@ -132,6 +147,11 @@ abstract class AmisSourceController
      */
     protected function grid(): array
     {
+        $repository = $this->repository();
+        if ($repository instanceof HasPresetInterface) {
+            return $repository->getPresetsHelper()->withScene(AbsRepository::SCENE_LIST)->pickGrid();
+        }
+
         return [
             Amis\GridColumn::make()->name($this->repository()->getPrimaryKey()),
         ];
@@ -188,6 +208,17 @@ abstract class AmisSourceController
      */
     protected function gridActionsConfig(): array
     {
+        if ($this->defaultDialogConfig) {
+            return [
+                'schema_detail' => [
+                    'dialog' => $this->defaultDialogConfig,
+                ],
+                'schema_update' => [
+                    'dialog' => $this->defaultDialogConfig,
+                ],
+            ];
+        }
+
         return [];
     }
 

@@ -19,7 +19,7 @@ return [
         /**
          * html 上的 lang 属性
          */
-        'lang' => config('translation.locale', 'zh'),
+        'lang' => fn() => locale(),
         /**
          * 静态资源，建议下载下来放到 public 目录下然后替换链接
          * @link https://aisuda.bce.baidu.com/amis/zh-CN/docs/start/getting-started#sdk
@@ -49,7 +49,7 @@ JS,
          * 语言
          * @link https://aisuda.bce.baidu.com/amis/zh-CN/docs/extend/i18n
          */
-        'locale' => str_replace('_', '-', config('translation.locale', 'zh-CN')),
+        'locale' => fn() => str_replace('_', '-', locale()),
         /**
          * debug
          * @link https://aisuda.bce.baidu.com/amis/zh-CN/docs/extend/debug

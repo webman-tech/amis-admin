@@ -10,6 +10,7 @@ class Install
      */
     protected static $pathRelation = array (
   'config/plugin/webman-tech/amis-admin' => 'config/plugin/webman-tech/amis-admin',
+  'resource/translations/en/amis-admin.php' => 'resource/translations/en/amis-admin.php',
 );
 
     /**
