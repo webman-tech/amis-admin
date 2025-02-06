@@ -21,13 +21,13 @@
     "ext-json": "*"
   },
   "require-dev": {
-    "workerman/webman-framework": "^1.5",
-    "illuminate/database": "^8.83",
-    "illuminate/pagination": "^8.83",
-    "illuminate/validation": "^8.83",
-    "webman-tech/polyfill": "^1.0",
-    "pestphp/pest": "^1.23",
-    "symfony/var-dumper": "^5.4"
+    "workerman/webman-framework": "^1.5|^2.0",
+    "illuminate/database": "^8.0|^9.0|^10.0|^11.0",
+    "illuminate/pagination": "^8.0|^9.0|^10.0|^11.0",
+    "illuminate/validation": "^8.0|^9.0|^10.0|^11.0",
+    "webman-tech/polyfill": "^1.0|^2.0",
+    "pestphp/pest": "^1.23|^2.0",
+    "symfony/var-dumper": "^5.4|^6.0|^7.0"
   },
   "config": {
     "allow-plugins": {
