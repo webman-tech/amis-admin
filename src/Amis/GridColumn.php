@@ -131,15 +131,9 @@ class GridColumn extends Component
         $type = $this->schema['type'];
         if ($type === 'mapping') {
             if (isset($this->schema['map'])) {
-                $searchable['type'] = 'select';
-                $searchable['options'] = array_map(
-                    function (array $item) {
-                        if (isset($item['label'])) {
-                            $item['label'] = strip_tags($item['label']); // 去除 html 结构，使得 map 带 html 格式时支持
-                        }
-                        return $item;
-                    },
-                    $this->schema['map']
+                $searchable = array_merge(
+                    $this->buildTypeSelectBySchemaMap($this->schema['map']),
+                    $searchable
                 );
             }
         } elseif ($type === 'date' || $type === 'datetime') {
@@ -159,19 +153,29 @@ class GridColumn extends Component
         $type = $this->schema['type'];
         if ($type === 'mapping') {
             if (isset($this->schema['map'])) {
-                $quickEdit = [];
-                $quickEdit['type'] = 'select';
-                $quickEdit['options'] = array_map(
-                    fn($label, $value) => [
-                        'label' => strip_tags($label),
-                        'value' => $value,
-                    ],
-                    array_values((array)$this->schema['map']),
-                    array_keys((array)$this->schema['map'])
+                $quickEdit = array_merge(
+                    $this->buildTypeSelectBySchemaMap($this->schema['map']),
+                    $quickEdit
                 );
             }
         }
 
         $this->schema['quickEdit'] = $quickEdit;
+    }
+
+    private function buildTypeSelectBySchemaMap(array $map): array
+    {
+        return [
+            'type' => 'select',
+            'options' => array_map(
+                function (array $item) {
+                    if (isset($item['label'])) {
+                        $item['label'] = strip_tags($item['label']); // 去除 html 结构，使得 map 带 html 格式时支持
+                    }
+                    return $item;
+                },
+                $map,
+            ),
+        ];
     }
 }

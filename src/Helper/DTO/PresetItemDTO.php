@@ -7,6 +7,7 @@ use WebmanTech\AmisAdmin\Amis\Component;
 use WebmanTech\AmisAdmin\Amis\DetailAttribute;
 use WebmanTech\AmisAdmin\Amis\FormField;
 use WebmanTech\AmisAdmin\Amis\GridColumn;
+use WebmanTech\AmisAdmin\Repository\AbsRepository;
 
 /**
  * @property-read string|null $label
@@ -24,6 +25,7 @@ class PresetItemDTO
 {
     private const NULL_VALUE = '%NULL%';
     private const SCENE_DEFAULT = 'default';
+    private const SCENE_UPDATE_APPEND_RULE = 'sometimes';
 
     protected string $key;
     protected array $define;
@@ -186,6 +188,12 @@ class PresetItemDTO
     {
         if (is_string($value)) {
             $value = array_values(array_filter(explode('|', $value)));
+        }
+        if (self::SCENE_UPDATE_APPEND_RULE && $this->scene === AbsRepository::SCENE_UPDATE) {
+            // 为了保证 update 场景下，可能需要部分字段更新（quickEdit），此时给字段默认添加 sometimes 规则
+            if (!in_array(self::SCENE_UPDATE_APPEND_RULE, $value, true)) {
+                array_unshift($value, self::SCENE_UPDATE_APPEND_RULE);
+            }
         }
         return $value;
     }
