@@ -265,6 +265,25 @@ test('support rule', function () {
     ]);
 });
 
+test('support rule Scene add sometimes rule', function () {
+    $presetsHelper = $this->presetsHelper
+        ->withPresets([
+            'default' => [
+            ],
+            'change_rule' => [
+                'rule' => 'required',
+            ],
+            'change_rule2' => [
+                'rule' => 'sometimes|required',
+            ],
+        ]);
+    expect($presetsHelper->withScene(AbsRepository::SCENE_UPDATE)->pickRules())->toBe([
+        'default' => ['sometimes', 'nullable'],
+        'change_rule' => ['sometimes', 'required'],
+        'change_rule2' => ['sometimes', 'required'],
+    ]);
+});
+
 test('support ruleMessages', function () {
     $presetsHelper = $this->presetsHelper
         ->withPresets([

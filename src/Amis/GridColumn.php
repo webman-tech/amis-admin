@@ -145,9 +145,12 @@ class GridColumn extends Component
 
     protected function solveQuickEdit()
     {
-        $quickEdit = $this->schema['quickEdit'] ?? false;
-        if (!$quickEdit || is_array($quickEdit)) {
+        if (!isset($this->schema['quickEdit'])) {
             return;
+        }
+        $quickEdit = $this->schema['quickEdit'];
+        if ($quickEdit === true) {
+            $quickEdit = [];
         }
 
         $type = $this->schema['type'];
