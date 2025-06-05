@@ -13,6 +13,9 @@ use Illuminate\Pagination\Paginator;
 class EloquentRepository extends AbsRepository
 {
     protected ?EloquentModel $model = null;
+    /**
+     * @var class-string<EloquentModel>
+     */
     protected string $modelClass;
     protected ?array $defaultOrder = null;
 

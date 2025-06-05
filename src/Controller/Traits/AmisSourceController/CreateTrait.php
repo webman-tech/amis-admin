@@ -21,7 +21,7 @@ trait CreateTrait
         if (!$this->authCreate()) {
             throw new ActionDisableException();
         }
-        $this->repository()->create(array_replace_recursive($request->post(), $request->file()));
+        $this->repository()->create(array_replace_recursive((array)$request->post(), (array)$request->file()));
         return amis_response(['result' => 'ok']);
     }
 
