@@ -106,10 +106,10 @@ class Component
     /**
      * 获取 schema 中的值
      * @param string $schemaKey
-     * @param null $default
+     * @param mixed $default
      * @return array|mixed
      */
-    public function get(string $schemaKey, $default = null)
+    public function get(string $schemaKey, mixed $default = null)
     {
         return ArrayHelper::get($this->toArray(), $schemaKey, $default);
     }

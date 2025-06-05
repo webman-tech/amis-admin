@@ -16,11 +16,11 @@ final class ConfigHelper
     /**
      * 获取配置
      * @param string $key
-     * @param null $default
+     * @param mixed $default
      * @param bool $solveClosure
      * @return mixed
      */
-    public static function get(string $key, $default = null, bool $solveClosure = false)
+    public static function get(string $key, mixed $default = null, bool $solveClosure = false)
     {
         $module = request()->{self::AMIS_MODULE} ?? 'amis';
         $cacheKey = "{$module}.{$key}";
