@@ -23,7 +23,7 @@ interface RepositoryInterface
 
     /**
      * 明细
-     * @param $id
+     * @param string|int $id
      * @return array
      */
     public function detail($id): array;
@@ -38,21 +38,21 @@ interface RepositoryInterface
     /**
      * 更新
      * @param array $data
-     * @param $id
+     * @param string|int $id
      * @return void
      */
     public function update(array $data, $id): void;
 
     /**
      * 删除
-     * @param $id
+     * @param string|int $id
      * @return void
      */
     public function destroy($id): void;
 
     /**
      * 恢复
-     * @param $id
+     * @param string|int $id
      * @return void
      */
     public function recovery($id): void;

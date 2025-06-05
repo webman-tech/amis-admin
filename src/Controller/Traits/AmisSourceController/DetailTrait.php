@@ -14,7 +14,7 @@ trait DetailTrait
     /**
      * 详情
      * @param Request $request
-     * @param $id
+     * @param string|int $id
      * @return Response
      */
     public function show(Request $request, $id): Response

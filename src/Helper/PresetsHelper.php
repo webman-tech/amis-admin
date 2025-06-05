@@ -86,6 +86,9 @@ class PresetsHelper
 
     protected string $scene = self::SCENE_DEFAULT;
 
+    /**
+     * @return $this
+     */
     public function withScene(?string $scene = null)
     {
         $this->scene = $scene ?? self::SCENE_DEFAULT;

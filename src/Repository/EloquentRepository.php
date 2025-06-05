@@ -16,6 +16,9 @@ class EloquentRepository extends AbsRepository
     protected string $modelClass;
     protected ?array $defaultOrder = null;
 
+    /**
+     * @param EloquentModel|class-string<EloquentModel> $model
+     */
     public function __construct($model)
     {
         $this->initModel($model);
@@ -36,9 +39,9 @@ class EloquentRepository extends AbsRepository
     }
 
     /**
-     * @param $model
+     * @param EloquentModel|class-string<EloquentModel> $model
      */
-    protected function initModel($model)
+    protected function initModel($model): void
     {
         if (is_string($model)) {
             $this->modelClass = $model;

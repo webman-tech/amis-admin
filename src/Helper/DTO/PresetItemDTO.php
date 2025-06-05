@@ -82,13 +82,19 @@ class PresetItemDTO
 
     protected string $scene = self::SCENE_DEFAULT;
 
+    /**
+     * @return $this
+     */
     public function withScene(?string $scene)
     {
         $this->scene = $scene ?? self::SCENE_DEFAULT;
         return $this;
     }
 
-    public function __get($name)
+    /**
+     * @return mixed|null
+     */
+    public function __get(string $name)
     {
         if (!array_key_exists($name, $this->attributes)) {
             $value = value($this->getDefineValueByName($name), $this->key);
@@ -109,6 +115,10 @@ class PresetItemDTO
         return $value === self::NULL_VALUE ? null : $value;
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     protected function buildFilter($value)
     {
         if ($value === '=' || $value === true) {
@@ -128,6 +138,10 @@ class PresetItemDTO
         return $value;
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     protected function buildGrid($value)
     {
         if ($value === true) {
@@ -147,6 +161,10 @@ class PresetItemDTO
         return $value;
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     protected function buildForm($value)
     {
         if ($value === true) {
@@ -168,6 +186,10 @@ class PresetItemDTO
         return $value;
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     protected function buildDetail($value)
     {
         if ($value === true) {
@@ -184,6 +206,10 @@ class PresetItemDTO
         return $value;
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     protected function buildRule($value)
     {
         if (is_string($value)) {
@@ -240,6 +266,10 @@ class PresetItemDTO
         return $this->selectOptionsInfo = $data;
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     protected function callExt(string $name, $value, bool $useScene = false)
     {
         $ext = $this->getDefineValueByName($name) ?? null;

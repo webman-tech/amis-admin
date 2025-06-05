@@ -105,7 +105,10 @@ class FormField extends Component
         'validateOnChange' => true,
     ];
 
-    public function __call($name, $arguments)
+    /**
+     * @return $this
+     */
+    public function __call(string $name, array $arguments)
     {
         if (strlen($name) > 4 && strpos($name, 'type') === 0) {
             $this->schema['type'] = strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '-$1', lcfirst(substr($name, 4))));

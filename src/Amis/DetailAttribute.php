@@ -63,7 +63,10 @@ class DetailAttribute extends Component
         return $this;
     }
 
-    public function __call($name, $arguments)
+    /**
+     * @return $this
+     */
+    public function __call(string $name, array $arguments)
     {
         if (strlen($name) > 4 && strpos($name, 'type') === 0) {
             $this->schema['type'] = 'static-' . lcfirst(substr($name, 4));
@@ -81,7 +84,7 @@ class DetailAttribute extends Component
         return parent::toArray();
     }
 
-    protected function solveType()
+    protected function solveType(): void
     {
         $type = $this->schema['type'];
         if ($type === 'static-mapping') {

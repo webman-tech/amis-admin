@@ -116,10 +116,10 @@ class Component
 
     /**
      * 合并数组
-     * @param ...$arrays
+     * @param array ...$arrays
      * @return array
      */
-    protected function merge(...$arrays): array
+    protected function merge(array ...$arrays): array
     {
         return ArrayHelper::merge(...$arrays);
     }

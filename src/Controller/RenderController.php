@@ -8,12 +8,12 @@ use WebmanTech\AmisAdmin\Helper\ConfigHelper;
 
 class RenderController
 {
-    public function app()
+    public function app(): string
     {
         return amis()->renderApp();
     }
 
-    public function login()
+    public function login(): string
     {
         // 默认值，可以被配置参数替换
         $defaultData = [

@@ -42,7 +42,7 @@ final class ConfigHelper
         return $value;
     }
 
-    public static function reset()
+    public static function reset(): void
     {
         self::$testConfig = [];
         self::$closureCache = [];

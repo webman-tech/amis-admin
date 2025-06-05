@@ -7,7 +7,7 @@ namespace WebmanTech\AmisAdmin\Amis\Traits;
  */
 trait ComponentCommonFn
 {
-    private function callToSetSchema(string $name, array $arguments)
+    private function callToSetSchema(string $name, array $arguments): void
     {
         $value = $arguments[0] ?? null;
         if ($value === null) {
@@ -22,9 +22,8 @@ trait ComponentCommonFn
 
     /**
      * 处理 mapping 类型的 map
-     * @return void
      */
-    private function solveMappingMap()
+    private function solveMappingMap(): void
     {
         if (isset($this->schema['map']) && !is_array($this->schema['map'][0] ?? null)) {
             // 将 [$value => $label] 强制转为 [{label: xx, value: xxx}] 的形式，可以防止 map 被转为 array 的情况

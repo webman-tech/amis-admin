@@ -47,6 +47,9 @@ class Crud extends Component
         parent::__construct();
     }
 
+    /**
+     * @return $this
+     */
     public function withColumns(array $columns)
     {
         $quickEditEnable = isset($this->schema['_columnQuickEditApi']) && is_array($this->schema['_columnQuickEditApi']);
@@ -115,10 +118,10 @@ class Crud extends Component
 
     /**
      * @param int $index
-     * @param $schema
+     * @param array $schema
      * @return $this
      */
-    public function withHeaderToolbar(int $index, $schema)
+    public function withHeaderToolbar(int $index, array $schema)
     {
         $this->schema['headerToolbar'][$index] = $schema;
         return $this;
@@ -126,10 +129,10 @@ class Crud extends Component
 
     /**
      * @param int $index
-     * @param $schema
+     * @param array $schema
      * @return $this
      */
-    public function withFooterToolbar(int $index, $schema)
+    public function withFooterToolbar(int $index, array $schema)
     {
         $this->schema['footerToolbar'][$index] = $schema;
         return $this;

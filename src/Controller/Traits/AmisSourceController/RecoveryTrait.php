@@ -12,7 +12,7 @@ trait RecoveryTrait
     /**
      * 恢复
      * @param Request $request
-     * @param $id
+     * @param string|int $id
      * @return Response
      */
     public function recovery(Request $request, $id): Response

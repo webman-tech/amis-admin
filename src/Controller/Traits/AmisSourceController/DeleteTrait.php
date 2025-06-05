@@ -12,7 +12,7 @@ trait DeleteTrait
     /**
      * 删除
      * @param Request $request
-     * @param $id
+     * @param string|int $id
      * @return Response
      */
     public function destroy(Request $request, $id): Response

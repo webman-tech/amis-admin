@@ -133,7 +133,7 @@ abstract class AbsRepository implements RepositoryInterface
 
     /**
      * @param array $data
-     * @param $id
+     * @param string|int $id
      */
     abstract protected function doUpdate(array $data, $id): void;
 

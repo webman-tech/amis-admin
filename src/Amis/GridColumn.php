@@ -91,7 +91,10 @@ class GridColumn extends Component
         return parent::toArray();
     }
 
-    public function __call($name, $arguments)
+    /**
+     * @return $this
+     */
+    public function __call(string $name, array $arguments)
     {
         if (strlen($name) > 4 && strpos($name, 'type') === 0) {
             $this->schema['type'] = lcfirst(substr($name, 4));
@@ -102,7 +105,7 @@ class GridColumn extends Component
         return $this;
     }
 
-    protected function solveType()
+    protected function solveType(): void
     {
         $type = $this->schema['type'];
         if ($type === 'mapping') {
@@ -110,7 +113,7 @@ class GridColumn extends Component
         }
     }
 
-    protected function solveSearchable()
+    protected function solveSearchable(): void
     {
         $searchable = $this->schema['searchable'] ?? false;
         if (!$searchable) {
@@ -143,7 +146,7 @@ class GridColumn extends Component
         $this->schema['searchable'] = $searchable;
     }
 
-    protected function solveQuickEdit()
+    protected function solveQuickEdit(): void
     {
         if (!isset($this->schema['quickEdit'])) {
             return;
