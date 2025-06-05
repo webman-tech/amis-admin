@@ -144,8 +144,8 @@ trait ActionButtonSupport
      */
     public function withButton(int $index, string $label, array $schema = [])
     {
-        $schema['type'] = $schema['type'] ?? 'button';
-        $schema['label'] = $schema['label'] ?? $label;
+        $schema['type'] ??= 'button';
+        $schema['label'] ??= $label;
         $this->setActionButton($index, $schema);
         return $this;
     }

@@ -94,7 +94,7 @@ trait DetailTrait
             if ($item instanceof Amis\Component) {
                 $item = $item->toArray();
             }
-            $item['label'] = $item['label'] ?? $this->repository()->getLabel($item['name']);
+            $item['label'] ??= $this->repository()->getLabel($item['name']);
         }
         unset($item);
         return $detailAttributes;

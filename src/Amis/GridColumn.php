@@ -96,7 +96,7 @@ class GridColumn extends Component
      */
     public function __call(string $name, array $arguments)
     {
-        if (strlen($name) > 4 && strpos($name, 'type') === 0) {
+        if (strlen($name) > 4 && str_starts_with($name, 'type')) {
             $this->schema['type'] = lcfirst(substr($name, 4));
             $this->schema($arguments[0] ?? []);
         } else {
@@ -124,8 +124,8 @@ class GridColumn extends Component
         if ($autoSolve) {
             $searchable = ['type' => 'input-text'];
         }
-        $searchable['name'] = $searchable['name'] ?? $this->schema['name'];
-        $searchable['clearable'] = $searchable['clearable'] ?? true;
+        $searchable['name'] ??= $this->schema['name'];
+        $searchable['clearable'] ??= true;
 
         if (!$autoSolve) {
             $this->schema['searchable'] = $searchable;
@@ -176,7 +176,7 @@ class GridColumn extends Component
             'options' => array_map(
                 function (array $item) {
                     if (isset($item['label'])) {
-                        $item['label'] = strip_tags($item['label']); // 去除 html 结构，使得 map 带 html 格式时支持
+                        $item['label'] = strip_tags((string) $item['label']); // 去除 html 结构，使得 map 带 html 格式时支持
                     }
                     return $item;
                 },

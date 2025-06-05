@@ -1,6 +1,6 @@
 <?php
 
-$routeMode = $routeMode ?? 'hash';
+$routeMode ??= 'hash';
 
 $script = implode("\n", [
     "const routeMode = '{$routeMode}';",

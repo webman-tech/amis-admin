@@ -120,7 +120,7 @@ class Amis
     {
         $assets = (array)ConfigHelper::get('assets', []);
 
-        $assets['js'] = $assets['js'] ?? [];
+        $assets['js'] ??= [];
         if (is_callable($assets['js'])) {
             $assets['js'] = call_user_func($assets['js']);
         }
@@ -134,12 +134,12 @@ class Amis
             return $item;
         }, $assets['js']);
 
-        $assets['lang'] = $assets['lang'] ?? 'zh';
+        $assets['lang'] ??= 'zh';
         if (is_callable($assets['lang'])) {
             $assets['lang'] = (string)call_user_func($assets['lang']);
         }
 
-        $assets['locale'] = $assets['locale'] ?? 'zh-CN';
+        $assets['locale'] ??= 'zh-CN';
         if (is_callable($assets['locale'])) {
             $assets['locale'] = (string)call_user_func($assets['locale']);
         }

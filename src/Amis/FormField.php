@@ -112,7 +112,7 @@ class FormField extends Component
     {
         if (strlen($name) > 4 && str_starts_with($name, 'type')) {
             /** @phpstan-ignore-next-line */
-            $this->schema['type'] = strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '-$1', lcfirst(substr($name, 4))));
+            $this->schema['type'] = strtolower((string) preg_replace('/(?<=[a-z])([A-Z])/', '-$1', lcfirst(substr($name, 4))));
             $this->schema($arguments[0] ?? []);
         } else {
             $this->callToSetSchema($name, $arguments);

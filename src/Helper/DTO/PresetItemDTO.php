@@ -26,19 +26,14 @@ class PresetItemDTO
     private const NULL_VALUE = '%NULL%';
     private const SCENE_DEFAULT = 'default';
     private const SCENE_UPDATE_APPEND_RULE = 'sometimes';
-
-    protected string $key;
-    protected array $define;
     protected array $attributes = [];
     protected array $config = [
         'defaultCanEdit' => true, // 默认是否可以编辑
     ];
 
-    public function __construct(string $key, array $define, array $config = [])
+    public function __construct(protected string $key, protected array $define, array $config = [])
     {
-        $this->key = $key;
         $this->config = array_merge($this->config, $config);
-        $this->define = $define;
     }
 
     /**
@@ -131,7 +126,7 @@ class PresetItemDTO
             return fn($query, $value, $attribute) => $query
                 ->whereBetween($attribute, array_map(
                     fn($timestamp) => date('Y-m-d H:i:s', (int)$timestamp),
-                    explode(',', $value)
+                    explode(',', (string) $value)
                 ));
         }
         // TODO 扩展其他 filter，或者方式（比如 static 直接注入？）

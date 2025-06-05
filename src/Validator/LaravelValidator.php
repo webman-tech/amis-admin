@@ -9,11 +9,8 @@ use WebmanTech\LaravelHttp\Facades\LaravelUploadedFile;
 
 class LaravelValidator implements ValidatorInterface
 {
-    protected Factory $factory;
-
-    public function __construct(Factory $validator)
+    public function __construct(protected Factory $factory)
     {
-        $this->factory = $validator;
     }
 
     /**

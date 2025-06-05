@@ -49,7 +49,7 @@ class EloquentRepository extends AbsRepository
         if (is_string($model)) {
             $this->modelClass = $model;
         } elseif ($model instanceof EloquentModel) {
-            $this->modelClass = get_class($model);
+            $this->modelClass = $model::class;
             $this->model = $model;
         } else {
             throw new \InvalidArgumentException('model error');

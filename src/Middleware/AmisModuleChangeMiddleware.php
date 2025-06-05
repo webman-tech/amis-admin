@@ -9,11 +9,8 @@ use WebmanTech\AmisAdmin\Helper\ConfigHelper;
 
 class AmisModuleChangeMiddleware implements MiddlewareInterface
 {
-    protected string $moduleName;
-
-    public function __construct(string $moduleName)
+    public function __construct(protected string $moduleName)
     {
-        $this->moduleName = $moduleName;
     }
 
     /**

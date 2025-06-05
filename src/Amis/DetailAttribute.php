@@ -58,7 +58,7 @@ class DetailAttribute extends Component
     public function copyable(string $content = null)
     {
         $this->schema['copyable'] = [
-            'content' => $content === null ? "\${$this->schema['name']}" : $content,
+            'content' => $content ?? "\${$this->schema['name']}",
         ];
         return $this;
     }
@@ -68,7 +68,7 @@ class DetailAttribute extends Component
      */
     public function __call(string $name, array $arguments)
     {
-        if (strlen($name) > 4 && strpos($name, 'type') === 0) {
+        if (strlen($name) > 4 && str_starts_with($name, 'type')) {
             $this->schema['type'] = 'static-' . lcfirst(substr($name, 4));
             $this->schema($arguments[0] ?? []);
         } else {

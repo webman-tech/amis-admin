@@ -6,11 +6,8 @@ use RuntimeException;
 
 class ValidationException extends RuntimeException
 {
-    public array $errors;
-
-    public function __construct(array $errors, string $message = null)
+    public function __construct(public array $errors, string $message = null)
     {
-        $this->errors = $errors;
         parent::__construct($message ?? 'Validation Error', 422);
     }
 }
