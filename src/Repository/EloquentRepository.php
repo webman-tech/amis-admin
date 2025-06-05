@@ -147,7 +147,7 @@ class EloquentRepository extends AbsRepository
     protected function buildOrder(EloquentBuilder $query, array $order): EloquentBuilder
     {
         if (!$order) {
-            $order = $this->defaultOrder;
+            $order = $this->defaultOrder ?? [];
         }
         foreach ($order as $column => $direction) {
             $query->orderBy($column, $direction);

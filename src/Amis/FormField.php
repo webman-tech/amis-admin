@@ -7,14 +7,14 @@ use WebmanTech\AmisAdmin\Amis\Traits\ComponentCommonFn;
 /**
  * 表单的一个字段
  *
- * @method $this type(string $value)
- * @method $this name(string $value)
- * @method $this label(string|false $value)
- * @method $this value(string $value)
- * @method $this size(string $value) 'xs' | 'sm' | 'md' | 'lg' | 'full'
- * @method $this placeholder(string $value)
- * @method $this labelRemark(string|array $value)
- * @method $this description(string $value)
+ * @method $this type(string|null $value)
+ * @method $this name(string|null $value)
+ * @method $this label(string|false|null $value)
+ * @method $this value(string|null $value)
+ * @method $this size(string|null $value) 'xs' | 'sm' | 'md' | 'lg' | 'full'
+ * @method $this placeholder(string|null $value)
+ * @method $this labelRemark(string|array|null $value)
+ * @method $this description(string|null $value)
  * @method $this disabled(bool $is = true)
  * @method $this disabledOn(string $expression)
  * @method $this hidden(bool $is = true)
@@ -110,7 +110,8 @@ class FormField extends Component
      */
     public function __call(string $name, array $arguments)
     {
-        if (strlen($name) > 4 && strpos($name, 'type') === 0) {
+        if (strlen($name) > 4 && str_starts_with($name, 'type')) {
+            /** @phpstan-ignore-next-line */
             $this->schema['type'] = strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '-$1', lcfirst(substr($name, 4))));
             $this->schema($arguments[0] ?? []);
         } else {

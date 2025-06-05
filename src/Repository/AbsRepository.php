@@ -172,6 +172,9 @@ abstract class AbsRepository implements RepositoryInterface
         }
         if ($validator = ConfigHelper::get('validator')) {
             $this->validator = call_user_func($validator);
+            if (!$this->validator instanceof ValidatorInterface) {
+                throw new \InvalidArgumentException('validator must be instance of ' . ValidatorInterface::class);
+            }
         } else {
             $this->validator = new NullValidator();
         }

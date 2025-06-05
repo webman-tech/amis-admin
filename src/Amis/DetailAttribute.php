@@ -8,13 +8,13 @@ use WebmanTech\AmisAdmin\Amis\Traits\ComponentCommonFn;
  * 详情的一个字段
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/form/static
  *
- * @method $this name(string $value)
- * @method $this label(string $value)
- * @method $this value(string $value)
- * @method $this type(string $value)
- * @method $this badge(array $schema)
- * @method $this labelRemark(string $value)
- * @method $this description(string $value)
+ * @method $this name(string|null $value)
+ * @method $this label(string|null $value)
+ * @method $this value(string|null $value)
+ * @method $this type(string|null $value)
+ * @method $this badge(array|null $schema)
+ * @method $this labelRemark(string|null $value)
+ * @method $this description(string|null $value)
  * @method $this hidden(bool $is = true)
  * @method $this hiddenOn(string $expression)
  * @method $this visible(bool $is = true)

@@ -176,7 +176,7 @@ class PresetItemDTO
             if (($info = $this->getSelectOptionsInfo()) !== null) {
                 $value->typeSelect(['options' => $info['options']]);
             }
-            if (in_array('required', $this->rule, true)) {
+            if (in_array('required', $this->rule ?? [], true)) {
                 $value->required();
             }
         }
