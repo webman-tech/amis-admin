@@ -2,10 +2,10 @@
 
 namespace WebmanTech\AmisAdmin\Middleware;
 
-use WebmanTech\AmisAdmin\Helper\ConfigHelper;
 use Webman\Http\Request;
 use Webman\Http\Response;
 use Webman\MiddlewareInterface;
+use WebmanTech\AmisAdmin\Helper\ConfigHelper;
 
 class AmisModuleChangeMiddleware implements MiddlewareInterface
 {
@@ -21,6 +21,7 @@ class AmisModuleChangeMiddleware implements MiddlewareInterface
      */
     public function process(Request $request, callable $handler): Response
     {
+        /* @phpstan-ignore-next-line */
         $request->{ConfigHelper::AMIS_MODULE} = $this->moduleName;
 
         return $handler($request);

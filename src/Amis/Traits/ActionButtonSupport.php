@@ -153,7 +153,7 @@ trait ActionButtonSupport
     /**
      * 分割线
      * @param int $index
-     * @return ActionButtonSupport
+     * @return $this
      */
     public function withDivider(int $index)
     {

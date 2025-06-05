@@ -6,7 +6,6 @@ use Illuminate\Contracts\Pagination\Paginator as PaginatorInterface;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Collection as DBCollection;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -101,7 +100,7 @@ class EloquentRepository extends AbsRepository
      * 构建搜索条件
      * @param EloquentBuilder $query
      * @param array $search
-     * @return mixed
+     * @return EloquentBuilder
      */
     protected function buildSearch(EloquentBuilder $query, array $search): EloquentBuilder
     {
@@ -279,9 +278,9 @@ class EloquentRepository extends AbsRepository
      */
     public function recovery($id): void
     {
-        /** @var SoftDeletes $query */
-        $query = $this->query();
-        $query->withTrashed()
+        /* @phpstan-ignore-next-line */
+        $this->query()
+            ->withTrashed()
             ->whereKey($id)
             ->restore();
     }
