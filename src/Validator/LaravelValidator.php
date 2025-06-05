@@ -5,7 +5,7 @@ namespace WebmanTech\AmisAdmin\Validator;
 use Illuminate\Contracts\Validation\Factory;
 use Webman\Http\UploadFile;
 use WebmanTech\AmisAdmin\Exceptions\ValidationException;
-use WebmanTech\Polyfill\LaravelUploadedFile;
+use WebmanTech\LaravelHttp\Facades\LaravelUploadedFile;
 
 class LaravelValidator implements ValidatorInterface
 {

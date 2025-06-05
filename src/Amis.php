@@ -2,12 +2,12 @@
 
 namespace WebmanTech\AmisAdmin;
 
-use Webman\Http\Request;
-use WebmanTech\AmisAdmin\Helper\ArrayHelper;
-use WebmanTech\AmisAdmin\Helper\ConfigHelper;
 use support\view\Raw;
 use Throwable;
+use Webman\Http\Request;
 use Webman\Http\Response;
+use WebmanTech\AmisAdmin\Helper\ArrayHelper;
+use WebmanTech\AmisAdmin\Helper\ConfigHelper;
 
 class Amis
 {
@@ -78,8 +78,8 @@ class Amis
             'assets' => $this->getAssets(),
         ];
         $pageData = ConfigHelper::get('page', []);
-        if (isset($appData['amisJSON']) && is_callable($appData['amisJSON'])) {
-            $pageData['amisJSON'] = call_user_func($appData['amisJSON']);
+        if (isset($pageData['amisJSON']) && is_callable($pageData['amisJSON'])) {
+            $pageData['amisJSON'] = call_user_func($pageData['amisJSON']);
         }
         $schema['type'] = 'page';
         $data = ArrayHelper::merge(
