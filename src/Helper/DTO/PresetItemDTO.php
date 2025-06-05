@@ -189,7 +189,7 @@ class PresetItemDTO
         if (is_string($value)) {
             $value = array_values(array_filter(explode('|', $value)));
         }
-        if (self::SCENE_UPDATE_APPEND_RULE && $this->scene === AbsRepository::SCENE_UPDATE) {
+        if ($this->scene === AbsRepository::SCENE_UPDATE) {
             // 为了保证 update 场景下，可能需要部分字段更新（quickEdit），此时给字段默认添加 sometimes 规则
             if (!in_array(self::SCENE_UPDATE_APPEND_RULE, $value, true)) {
                 array_unshift($value, self::SCENE_UPDATE_APPEND_RULE);

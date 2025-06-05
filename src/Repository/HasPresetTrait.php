@@ -4,6 +4,7 @@ namespace WebmanTech\AmisAdmin\Repository;
 
 use WebmanTech\AmisAdmin\Helper\PresetsHelper;
 
+/* @phpstan-ignore-next-line */
 trait HasPresetTrait
 {
     protected ?PresetsHelper $presetsHelper = null;
