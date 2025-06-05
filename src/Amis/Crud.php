@@ -56,7 +56,7 @@ class Crud extends Component
         foreach ($columns as $index => &$column) {
             if ($column instanceof GridColumnActions) {
                 // 去除操作栏为空 buttons 的
-                if (count($column->get('buttons', [])) <= 0) {
+                if (count((array)$column->get('buttons', [])) <= 0) {
                     unset($columns[$index]);
                     continue;
                 }

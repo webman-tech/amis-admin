@@ -42,7 +42,7 @@ class Amis
             'view_path' => '../vendor/webman-tech/amis-admin/src', // 相对 app 目录
             'assets' => $this->getAssets(),
         ];
-        $appData = ConfigHelper::get('app', []);
+        $appData = (array)ConfigHelper::get('app', []);
         if (isset($appData['amisJSON']) && is_callable($appData['amisJSON'])) {
             $appData['amisJSON'] = call_user_func($appData['amisJSON']);
         }
@@ -77,7 +77,7 @@ class Amis
             'view_path' => '../vendor/webman-tech/amis-admin/src', // 相对 app 目录
             'assets' => $this->getAssets(),
         ];
-        $pageData = ConfigHelper::get('page', []);
+        $pageData = (array)ConfigHelper::get('page', []);
         if (isset($pageData['amisJSON']) && is_callable($pageData['amisJSON'])) {
             $pageData['amisJSON'] = call_user_func($pageData['amisJSON']);
         }
@@ -107,7 +107,10 @@ class Amis
     public function getRequestPath(Request $request): string
     {
         if ($requestPathGetter = ConfigHelper::get('request_path_getter')) {
-            return $requestPathGetter($request);
+            if (!is_callable($requestPathGetter)) {
+                throw new \InvalidArgumentException('request_path_getter 必须是个 callable');
+            }
+            return (string)$requestPathGetter($request);
         }
 
         return $request->path();
@@ -115,7 +118,7 @@ class Amis
 
     private function getAssets(): array
     {
-        $assets = ConfigHelper::get('assets', []);
+        $assets = (array)ConfigHelper::get('assets', []);
 
         $assets['js'] = $assets['js'] ?? [];
         if (is_callable($assets['js'])) {
@@ -133,12 +136,12 @@ class Amis
 
         $assets['lang'] = $assets['lang'] ?? 'zh';
         if (is_callable($assets['lang'])) {
-            $assets['lang'] = call_user_func($assets['lang']);
+            $assets['lang'] = (string)call_user_func($assets['lang']);
         }
 
         $assets['locale'] = $assets['locale'] ?? 'zh-CN';
         if (is_callable($assets['locale'])) {
-            $assets['locale'] = call_user_func($assets['locale']);
+            $assets['locale'] = (string)call_user_func($assets['locale']);
         }
 
         return $assets;

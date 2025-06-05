@@ -22,7 +22,7 @@ trait UpdateTrait
         if (!$this->authUpdate($id)) {
             throw new ActionDisableException();
         }
-        $this->repository()->update($request->post(), $id);
+        $this->repository()->update((array)$request->post(), $id);
         return amis_response(['result' => 'ok']);
     }
 

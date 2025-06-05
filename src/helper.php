@@ -1,8 +1,8 @@
 <?php
 
-use WebmanTech\AmisAdmin\Amis;
 use support\Container;
 use Webman\Http\Response;
+use WebmanTech\AmisAdmin\Amis;
 
 if (!function_exists('amis')) {
     /**
@@ -10,6 +10,7 @@ if (!function_exists('amis')) {
      */
     function amis(): Amis
     {
+        /** @phpstan-ignore-next-line */
         return Container::get(Amis::class);
     }
 }

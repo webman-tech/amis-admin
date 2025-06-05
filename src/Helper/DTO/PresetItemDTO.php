@@ -215,7 +215,7 @@ class PresetItemDTO
         if (is_string($value)) {
             $value = array_values(array_filter(explode('|', $value)));
         }
-        if ($this->scene === AbsRepository::SCENE_UPDATE) {
+        if ($this->scene === AbsRepository::SCENE_UPDATE && is_array($value)) {
             // 为了保证 update 场景下，可能需要部分字段更新（quickEdit），此时给字段默认添加 sometimes 规则
             if (!in_array(self::SCENE_UPDATE_APPEND_RULE, $value, true)) {
                 array_unshift($value, self::SCENE_UPDATE_APPEND_RULE);
@@ -247,6 +247,7 @@ class PresetItemDTO
         if (!is_array($defineSelectOptions)) {
             throw new \InvalidArgumentException('selectOptions must be an array or Closure return array');
         }
+        /** @phpstan-ignore-next-line */
         if (isset($defineSelectOptions[0]['value'])) {
             // 二维数组的形式
             $data['options'] = $defineSelectOptions;
@@ -257,7 +258,7 @@ class PresetItemDTO
             foreach ($defineSelectOptions as $value => $label) {
                 $data['options'][] = [
                     'value' => (string)$value, // 强制为 string，保证行为一致
-                    'label' => strip_tags($label), // 去除 html
+                    'label' => strip_tags((string)$label), // 去除 html
                 ];
             }
         }
@@ -273,7 +274,7 @@ class PresetItemDTO
     protected function callExt(string $name, $value, bool $useScene = false)
     {
         $ext = $this->getDefineValueByName($name) ?? null;
-        if ($ext) {
+        if ($ext && is_callable($ext)) {
             if ($useScene) {
                 $result = $ext($value, $this->scene);
             } else {

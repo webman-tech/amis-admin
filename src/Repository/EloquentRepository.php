@@ -113,7 +113,10 @@ class EloquentRepository extends AbsRepository
         $searchableAttributes = $this->searchableAttributes();
         foreach ($search as $attribute => $value) {
             if (array_key_exists($attribute, $searchableAttributes) && $value !== '' && $value !== null) {
-                $query = call_user_func($searchableAttributes[$attribute], $query, $value, $attribute);
+                $newQuery = call_user_func($searchableAttributes[$attribute], $query, $value, $attribute);
+                if ($newQuery instanceof EloquentBuilder) {
+                    return $newQuery;
+                }
             }
         }
         return $query;

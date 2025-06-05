@@ -37,6 +37,7 @@ class Component
     public static function make(array $schema = null)
     {
         /** @var static $component */
+        /** @phpstan-ignore-next-line */
         $component = clone Container::get(static::class);
         if ($schema) {
             $component->schema($schema);
@@ -133,13 +134,13 @@ class Component
     protected function mergeGlobalConfigWithType(string $type, array $schema): array
     {
         $componentTypeName = 'type' . Str::studly($type);
-        $componentConfig = ConfigHelper::get('components.' . $componentTypeName, [], true);
+        $componentConfig = (array)ConfigHelper::get('components.' . $componentTypeName, [], true);
         if ($componentConfig === [] && Str::contains($type, 'static-')) {
             // 支持兼容 typeStaticImage 到 typeImage 的配置
             $componentTypeName = str_replace('typeStatic', 'type', $componentTypeName);
-            $componentConfig = ConfigHelper::get('components.' . $componentTypeName, [], true);
+            $componentConfig = (array)ConfigHelper::get('components.' . $componentTypeName, [], true);
         }
-        if ($globalSchema = $componentConfig['schema'] ?? []) {
+        if (($globalSchema = $componentConfig['schema'] ?? []) && is_array($globalSchema)) {
             if (isset($globalSchema['type'])) {
                 $schema['type'] = $globalSchema['type']; // 允许做全局的 type 修改，这样可以做自定义组件
             }
