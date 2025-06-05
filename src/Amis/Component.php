@@ -3,9 +3,9 @@
 namespace WebmanTech\AmisAdmin\Amis;
 
 use Illuminate\Support\Str;
+use support\Container;
 use WebmanTech\AmisAdmin\Helper\ArrayHelper;
 use WebmanTech\AmisAdmin\Helper\ConfigHelper;
-use support\Container;
 
 /**
  * amis 组件
@@ -32,7 +32,7 @@ class Component
 
     /**
      * @param array|null $schema
-     * @return $this
+     * @return static
      */
     public static function make(array $schema = null)
     {
