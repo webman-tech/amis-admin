@@ -38,7 +38,7 @@ class GridColumnActions extends GridColumn
      * @param string $can
      * @return $this
      */
-    public function withDetail(array $detailAttributes, string $initApi = null, string $can = '1==1')
+    public function withDetail(array $detailAttributes, ?string $initApi = null, string $can = '1==1')
     {
         $label = $this->config['schema_detail']['label'] ?? trans('详情', [], 'amis-admin');
         return $this->withButtonDialog(static::INDEX_DETAIL, $label, $detailAttributes, $this->merge([
@@ -61,7 +61,7 @@ class GridColumnActions extends GridColumn
      * @param string $can
      * @return $this
      */
-    public function withUpdate(array $formFields, string $api, string $initApi = null, string $can = '1==1')
+    public function withUpdate(array $formFields, string $api, ?string $initApi = null, string $can = '1==1')
     {
         $label = $this->config['schema_update']['label'] ?? trans('修改', [], 'amis-admin');
         return $this->withButtonDialog(static::INDEX_UPDATE, $label, $formFields, $this->merge([

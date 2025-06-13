@@ -55,7 +55,7 @@ class DetailAttribute extends Component
      * @param null|string $content
      * @return $this
      */
-    public function copyable(string $content = null)
+    public function copyable(?string $content = null)
     {
         $this->schema['copyable'] = [
             'content' => $content ?? "\${$this->schema['name']}",

@@ -34,7 +34,7 @@ class Component
      * @param array|null $schema
      * @return static
      */
-    public static function make(array $schema = null)
+    public static function make(?array $schema = null)
     {
         /** @var static $component */
         /** @phpstan-ignore-next-line */
