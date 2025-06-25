@@ -64,7 +64,7 @@ trait UpdateTrait
     {
         if ($this->authUpdate()) {
             $actions->withUpdate(
-                $this->buildFormFields($this->form(static::SCENE_UPDATE)),
+                $this->buildFormFields($this->form($this->repository()::SCENE_UPDATE)),
                 "put:{$routePrefix}/\${{$this->repository()->getPrimaryKey()}}",
                 "get:{$routePrefix}/\${{$this->repository()->getPrimaryKey()}}",
                 $this->authUpdateVisible()

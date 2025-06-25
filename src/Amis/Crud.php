@@ -118,10 +118,10 @@ class Crud extends Component
 
     /**
      * @param int $index
-     * @param array $schema
+     * @param array|ActionButtons $schema
      * @return $this
      */
-    public function withHeaderToolbar(int $index, array $schema)
+    public function withHeaderToolbar(int $index, $schema)
     {
         $this->schema['headerToolbar'][$index] = $schema;
         return $this;
@@ -129,10 +129,10 @@ class Crud extends Component
 
     /**
      * @param int $index
-     * @param array $schema
+     * @param array|ActionButtons $schema
      * @return $this
      */
-    public function withFooterToolbar(int $index, array $schema)
+    public function withFooterToolbar(int $index, $schema)
     {
         $this->schema['footerToolbar'][$index] = $schema;
         return $this;

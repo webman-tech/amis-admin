@@ -18,9 +18,6 @@ abstract class AmisSourceController
     use Traits\AmisSourceController\DeleteTrait;
     use Traits\AmisSourceController\RecoveryTrait;
 
-    public const SCENE_CREATE = 'create';
-    public const SCENE_UPDATE = 'update';
-
     /**
      * 设置只展示
      * @var bool
