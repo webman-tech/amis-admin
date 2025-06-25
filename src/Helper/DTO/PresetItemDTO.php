@@ -92,7 +92,7 @@ class PresetItemDTO
     public function __get(string $name)
     {
         if (!array_key_exists($name, $this->attributes)) {
-            $value = value($this->getDefineValueByName($name), $this->key);
+            $value = value($this->getDefineValueByName($name), $this->key, $this->scene);
             if ($value === null) {
                 $value = self::NULL_VALUE;
             } else {
@@ -126,7 +126,7 @@ class PresetItemDTO
             return fn($query, $value, $attribute) => $query
                 ->whereBetween($attribute, array_map(
                     fn($timestamp) => date('Y-m-d H:i:s', (int)$timestamp),
-                    explode(',', (string) $value)
+                    explode(',', (string)$value)
                 ));
         }
         // TODO 扩展其他 filter，或者方式（比如 static 直接注入？）
@@ -139,6 +139,9 @@ class PresetItemDTO
      */
     protected function buildGrid($value)
     {
+        if ($value === false) {
+            return null;
+        }
         if ($value === true) {
             $value = GridColumn::make()
                 ->name($this->key)
@@ -162,6 +165,9 @@ class PresetItemDTO
      */
     protected function buildForm($value)
     {
+        if ($value === false) {
+            return null;
+        }
         if ($value === true) {
             $value = FormField::make()
                 ->name($this->key)
@@ -187,6 +193,9 @@ class PresetItemDTO
      */
     protected function buildDetail($value)
     {
+        if ($value === false) {
+            return null;
+        }
         if ($value === true) {
             $value = DetailAttribute::make()
                 ->name($this->key)

@@ -109,6 +109,16 @@ abstract class AbsRepository implements RepositoryInterface
     }
 
     /**
+     * 获取需要追加的字段
+     * @param string $scene
+     * @return array
+     */
+    protected function appendAttributes(string $scene): array
+    {
+        return [];
+    }
+
+    /**
      * @inheritDoc
      */
     public function create(array $data): void

@@ -97,7 +97,8 @@ class EloquentRepository extends AbsRepository
         }
         $itemCollection
             ->makeHidden($this->hiddenAttributes(static::SCENE_LIST))
-            ->makeVisible($this->visibleAttributes(static::SCENE_LIST));
+            ->makeVisible($this->visibleAttributes(static::SCENE_LIST))
+            ->append($this->appendAttributes(static::SCENE_LIST));
 
         return $this->solvePaginationResult($paginator);
     }
@@ -216,7 +217,8 @@ class EloquentRepository extends AbsRepository
         $query = $this->extDetailQuery($query);
         $collection = $query->findOrFail($id)
             ->makeHidden($this->hiddenAttributes(static::SCENE_DETAIL))
-            ->makeVisible($this->visibleAttributes(static::SCENE_DETAIL));
+            ->makeVisible($this->visibleAttributes(static::SCENE_DETAIL))
+            ->append($this->appendAttributes(static::SCENE_DETAIL));
 
         return $this->solveDetailResult($collection);
     }
