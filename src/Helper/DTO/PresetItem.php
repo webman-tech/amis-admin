@@ -6,7 +6,7 @@ use Closure;
 use WebmanTech\AmisAdmin\Amis\DetailAttribute;
 use WebmanTech\AmisAdmin\Amis\FormField;
 use WebmanTech\AmisAdmin\Amis\GridColumn;
-use WebmanTech\AmisAdmin\Repository\AbsRepository;
+use WebmanTech\AmisAdmin\Repository\RepositoryInterface;
 
 final class PresetItem
 {
@@ -83,6 +83,7 @@ final class PresetItem
     public function getFilter(): ?Closure
     {
         return $this->getOrSetCacheValue(__FUNCTION__, function () {
+            /** @var bool|string|null|Closure $value */
             $value = value($this->filter);
             if ($value === null || $value === false) {
                 return null;
@@ -114,7 +115,9 @@ final class PresetItem
      */
     public function getGrid(): null|array
     {
+        /** @var GridColumn[]|null $value */
         $value = $this->getOrSetCacheValue(__FUNCTION__, function () {
+            /** @var bool|null|array|GridColumn $value */
             $value = value($this->grid, $this->getKey());
             if ($value === false || $value === null) {
                 return null;
@@ -171,7 +174,9 @@ final class PresetItem
      */
     public function getForm(): null|array
     {
+        /** @var FormField[]|null $value */
         $value = $this->getOrSetCacheValue(__FUNCTION__, function () {
+            /** @var bool|null|FormField|array $value */
             $value = value($this->form, $this->getKey());
             if ($value === false || $value === null) {
                 return null;
@@ -249,7 +254,9 @@ final class PresetItem
      */
     public function getDetail(): null|array
     {
+        /** @var DetailAttribute[]|null $value */
         $value = $this->getOrSetCacheValue(__FUNCTION__, function () {
+            /** @var bool|null|array|DetailAttribute $value */
             $value = value($this->detail, $this->getKey());
             if ($value === false || $value === null) {
                 return null;
@@ -304,7 +311,9 @@ final class PresetItem
 
     public function getRules(): ?array
     {
+        /** @var array|null $value */
         $value = $this->getOrSetCacheValue(__FUNCTION__, function () {
+            /** @var bool|null|string|array $value */
             $value = value($this->rule);
             if ($value === false || $value === null) {
                 return null;
@@ -325,7 +334,7 @@ final class PresetItem
         }
 
         // 更新时默认添加 sometimes 规则
-        if ($this->getScene() === AbsRepository::SCENE_UPDATE && is_array($value)) {
+        if ($this->getScene() === RepositoryInterface::SCENE_UPDATE && is_array($value)) {
             // 为了保证 update 场景下，可能需要部分字段更新（quickEdit），此时给字段默认添加 sometimes 规则
             if (!in_array(self::RULE_SOMETIMES, $value, true)) {
                 array_unshift($value, self::RULE_SOMETIMES);
@@ -340,7 +349,7 @@ final class PresetItem
         return $this->getOrSetCacheValue(__FUNCTION__, fn() => value($this->ruleMessages));
     }
 
-    public function getRuleCustomAttribute()
+    public function getRuleCustomAttribute(): mixed
     {
         return $this->getOrSetCacheValue(__FUNCTION__, fn() => value($this->ruleCustomAttribute));
     }
@@ -351,6 +360,7 @@ final class PresetItem
     private function getSelectOptions(): ?array
     {
         return $this->getOrSetCacheValue(__FUNCTION__, function () {
+            /** @var null|array|mixed $value */
             $value = value($this->selectOptions);
             if ($value === null) {
                 return null;
