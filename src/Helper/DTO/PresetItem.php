@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WebmanTech\AmisAdmin\Helper\DTO;
 
 use Closure;
@@ -19,7 +21,7 @@ final class PresetItem
         private readonly null|string|Closure       $label = null,
         private readonly null|string|Closure       $labelRemark = null,
         private readonly null|string|Closure       $description = null,
-        private readonly null|bool|Closure         $filter = true,
+        private readonly null|bool|string|Closure  $filter = true,
         private readonly null|bool|Closure         $grid = true,
         private readonly null|Closure              $gridExt = null,
         private readonly null|Closure              $gridExtDynamic = null,
