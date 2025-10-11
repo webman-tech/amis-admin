@@ -35,6 +35,7 @@ use WebmanTech\AmisAdmin\Amis\Traits\ComponentCommonFn;
  * @method $this typeBarcode(array $schema = [])
  * @method $this typeTag(array $schema = [])
  * @method $this typeAvatar(array $schema = [])
+ * @method $this typeTpl(array $schema = [])
  */
 class GridColumn extends Component
 {
@@ -176,7 +177,7 @@ class GridColumn extends Component
             'options' => array_map(
                 function (array $item) {
                     if (isset($item['label'])) {
-                        $item['label'] = strip_tags((string) $item['label']); // 去除 html 结构，使得 map 带 html 格式时支持
+                        $item['label'] = strip_tags((string)$item['label']); // 去除 html 结构，使得 map 带 html 格式时支持
                     }
                     return $item;
                 },
