@@ -136,8 +136,8 @@ class GridColumn extends Component
         if ($type === 'mapping') {
             if (isset($this->schema['map'])) {
                 $searchable = array_merge(
+                    $searchable,
                     $this->buildTypeSelectBySchemaMap($this->schema['map']),
-                    $searchable
                 );
             }
         } elseif ($type === 'date' || $type === 'datetime') {
