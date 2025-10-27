@@ -116,7 +116,7 @@ class EloquentRepository extends AbsRepository
             if (array_key_exists($attribute, $searchableAttributes) && $value !== '' && $value !== null) {
                 $newQuery = call_user_func($searchableAttributes[$attribute], $query, $value, $attribute);
                 if ($newQuery instanceof EloquentBuilder) {
-                    return $newQuery;
+                    $query = $newQuery;
                 }
             }
         }
