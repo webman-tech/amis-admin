@@ -106,6 +106,10 @@ final class PresetItem
 
             // TODO 扩展其他 filter，或者方式（比如 static 直接注入？）
 
+
+            if (is_string($value)) {
+                throw new \InvalidArgumentException("filter value not support: {$value}");
+            }
             return $value;
         });
     }
