@@ -2,6 +2,7 @@
 
 namespace WebmanTech\AmisAdmin\Helper\DTO;
 
+use Carbon\Carbon;
 use Closure;
 use WebmanTech\AmisAdmin\Amis\DetailAttribute;
 use WebmanTech\AmisAdmin\Amis\FormField;
@@ -99,7 +100,7 @@ final class PresetItem
             if ($value === 'datetime-range') {
                 return fn($query, $value, $attribute) => $query
                     ->whereBetween($attribute, array_map(
-                        fn($timestamp) => date('Y-m-d H:i:s', (int)$timestamp),
+                        fn($timestamp) => Carbon::createFromTimestamp((int)$timestamp),
                         explode(',', (string)$value)
                     ));
             }
