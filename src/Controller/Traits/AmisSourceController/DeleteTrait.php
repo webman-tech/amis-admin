@@ -34,6 +34,9 @@ trait DeleteTrait
         if ($this->onlyShow) {
             return false;
         }
+        if ($this->hiddenDestroy) {
+            return false;
+        }
 
         return true;
     }
@@ -46,6 +49,9 @@ trait DeleteTrait
     protected function authDestroyVisible(): string
     {
         if ($this->onlyShow) {
+            return '1==0';
+        }
+        if ($this->hiddenDestroy) {
             return '1==0';
         }
 

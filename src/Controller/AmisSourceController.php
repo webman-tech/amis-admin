@@ -23,7 +23,16 @@ abstract class AmisSourceController
      */
     protected bool $onlyShow = false;
     /**
+     * 隐藏删除按钮
+     * @var bool
+     */
+    protected ?bool $hiddenDestroy = false;
+    /**
      * 默认的 dialog 框配置
+     * 比如设置为默认为大的输入框
+     * [
+     *    'size' => 'lg',
+     * ]
      * @var array|null
      */
     protected ?array $defaultDialogConfig = null;

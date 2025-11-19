@@ -34,6 +34,9 @@ trait RecoveryTrait
         if ($this->onlyShow) {
             return false;
         }
+        if ($this->hiddenDestroy) {
+            return false;
+        }
 
         return true;
     }
@@ -46,6 +49,9 @@ trait RecoveryTrait
     protected function authRecoveryVisible(): string
     {
         if ($this->onlyShow) {
+            return '1==0';
+        }
+        if ($this->hiddenDestroy) {
             return '1==0';
         }
 
