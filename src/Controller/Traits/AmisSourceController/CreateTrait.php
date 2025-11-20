@@ -45,10 +45,6 @@ trait CreateTrait
      */
     protected function authCreateVisible(): string
     {
-        if ($this->onlyShow) {
-            return '1==0';
-        }
-
         return '1==1';
     }
 

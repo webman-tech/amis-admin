@@ -48,13 +48,6 @@ trait DeleteTrait
      */
     protected function authDestroyVisible(): string
     {
-        if ($this->onlyShow) {
-            return '1==0';
-        }
-        if ($this->hiddenDestroy) {
-            return '1==0';
-        }
-
         return '!this.deleted_at';
     }
 

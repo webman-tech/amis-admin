@@ -47,10 +47,6 @@ trait UpdateTrait
      */
     protected function authUpdateVisible(): string
     {
-        if ($this->onlyShow) {
-            return '1==0';
-        }
-
         return '1==1';
     }
 
