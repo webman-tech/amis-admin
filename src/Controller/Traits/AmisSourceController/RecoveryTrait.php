@@ -6,6 +6,7 @@ use Webman\Http\Request;
 use Webman\Http\Response;
 use WebmanTech\AmisAdmin\Amis;
 use WebmanTech\AmisAdmin\Exceptions\ActionDisableException;
+use WebmanTech\AmisAdmin\Repository\EloquentRepository;
 
 trait RecoveryTrait
 {
@@ -36,6 +37,12 @@ trait RecoveryTrait
         }
         if ($this->hiddenDestroy) {
             return false;
+        }
+
+        $repository = $this->repository();
+        if ($repository instanceof EloquentRepository) {
+            // 当模型 use SoftDeleted 后存在
+            return method_exists($repository->model(), 'trashed');
         }
 
         return true;
