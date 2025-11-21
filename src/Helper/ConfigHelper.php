@@ -2,6 +2,8 @@
 
 namespace WebmanTech\AmisAdmin\Helper;
 
+use function WebmanTech\CommonUtils\config;
+
 /**
  * @internal
  */
@@ -46,27 +48,5 @@ final class ConfigHelper
     {
         self::$testConfig = [];
         self::$closureCache = [];
-    }
-
-    private static ?string $viewPath = null;
-
-    public static function getViewPath(): string
-    {
-        if (self::$viewPath !== null) {
-            return self::$viewPath;
-        }
-
-        // 相对 app 目录的路径
-        $guessPaths = [
-            '../vendor/webman-tech/amis-admin/src',
-            '../vendor/webman-tech/components-monorepo/packages/amis-admin/src',
-        ];
-        foreach ($guessPaths as $guessPath) {
-            if (is_dir(app_path() . '/' . $guessPath)) {
-                return self::$viewPath = $guessPath;
-            }
-        }
-
-        throw new \RuntimeException('找不到 amis-admin 模板路径');
     }
 }

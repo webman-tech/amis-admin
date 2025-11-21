@@ -3,9 +3,9 @@
 namespace WebmanTech\AmisAdmin\Amis;
 
 use Illuminate\Support\Str;
-use support\Container;
 use WebmanTech\AmisAdmin\Helper\ArrayHelper;
 use WebmanTech\AmisAdmin\Helper\ConfigHelper;
+use WebmanTech\CommonUtils\Container;
 
 /**
  * amis 组件

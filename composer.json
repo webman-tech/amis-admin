@@ -15,6 +15,7 @@
     "sort-packages": true
   },
   "require": {
-    "php": "^8.2"
+    "php": "^8.2",
+    "webman-tech/common-utils": "^1.0 || dev-main"
   }
 }

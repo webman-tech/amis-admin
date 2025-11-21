@@ -2,12 +2,13 @@
 
 namespace WebmanTech\AmisAdmin;
 
-use support\view\Raw;
 use Throwable;
 use Webman\Http\Request;
 use Webman\Http\Response;
 use WebmanTech\AmisAdmin\Helper\ArrayHelper;
 use WebmanTech\AmisAdmin\Helper\ConfigHelper;
+use WebmanTech\CommonUtils\Local;
+use WebmanTech\CommonUtils\View;
 
 class Amis
 {
@@ -38,8 +39,8 @@ class Amis
     public function renderApp(array $schema = [])
     {
         $defaultData = [
-            'view' => 'amis-app',
-            'view_path' => ConfigHelper::getViewPath(),
+            'view' => '',
+            'view_path' => __DIR__ . '/view/amis-app.php',
             'assets' => $this->getAssets(),
         ];
         $appData = (array)ConfigHelper::get('app', []);
@@ -54,13 +55,10 @@ class Amis
                 'amisJSON' => $schema,
             ],
         );
-        /**
-         * Fix https://github.com/walkor/webman-framework/commit/a559a642058aa9d5fd9dea9d129dc31b615c56eb
-         */
-        $app = $data['view_path'];
-        unset($data['view_path']);
 
-        return Raw::render($data['view'], $data, $app);
+        $view = Local::combinePath($data['view_path'], $data['view']);
+        unset($data['view_path'], $data['view']);
+        return View::renderPHP($view, $data);
     }
 
     /**
@@ -73,8 +71,8 @@ class Amis
     public function renderPage(string $title, array $schema = [])
     {
         $defaultData = [
-            'view' => 'amis-page',
-            'view_path' => ConfigHelper::getViewPath(),
+            'view' => '',
+            'view_path' => __DIR__ . '/view/amis-page.php',
             'assets' => $this->getAssets(),
         ];
         $pageData = (array)ConfigHelper::get('page', []);
@@ -90,13 +88,10 @@ class Amis
                 'title' => $title,
             ],
         );
-        /**
-         * Fix https://github.com/walkor/webman-framework/commit/a559a642058aa9d5fd9dea9d129dc31b615c56eb
-         */
-        $app = $data['view_path'];
-        unset($data['view_path']);
 
-        return Raw::render($data['view'], $data, $app);
+        $view = Local::combinePath($data['view_path'], $data['view']);
+        unset($data['view_path'], $data['view']);
+        return View::renderPHP($view, $data);
     }
 
     /**

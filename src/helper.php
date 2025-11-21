@@ -1,8 +1,8 @@
 <?php
 
-use support\Container;
 use Webman\Http\Response;
 use WebmanTech\AmisAdmin\Amis;
+use WebmanTech\CommonUtils\Container;
 
 if (!function_exists('amis')) {
     /**
