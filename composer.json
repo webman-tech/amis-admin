@@ -16,6 +16,6 @@
   },
   "require": {
     "php": "^8.2",
-    "webman-tech/common-utils": "^1.0 || dev-main"
+    "webman-tech/common-utils": "^5.0 || dev-main"
   }
 }
