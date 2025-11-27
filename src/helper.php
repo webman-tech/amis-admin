@@ -11,7 +11,7 @@ if (!function_exists('amis')) {
     function amis(): Amis
     {
         /** @phpstan-ignore-next-line */
-        return Container::get(Amis::class);
+        return Container::getCurrent()->get(Amis::class);
     }
 }
 

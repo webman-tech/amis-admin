@@ -38,7 +38,7 @@ class Component
     {
         /** @var static $component */
         /** @phpstan-ignore-next-line */
-        $component = clone Container::get(static::class);
+        $component = clone Container::getCurrent()->get(static::class);
         if ($schema) {
             $component->schema($schema);
         }
@@ -135,7 +135,7 @@ class Component
     {
         $componentTypeName = 'type' . Str::studly($type);
         $componentConfig = (array)ConfigHelper::get('components.' . $componentTypeName, [], true);
-        if ($componentConfig === [] && Str::contains($type, 'static-')) {
+        if ($componentConfig === [] && str_contains($type, 'static-')) {
             // 支持兼容 typeStaticImage 到 typeImage 的配置
             $componentTypeName = str_replace('typeStatic', 'type', $componentTypeName);
             $componentConfig = (array)ConfigHelper::get('components.' . $componentTypeName, [], true);
