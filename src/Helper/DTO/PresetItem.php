@@ -100,6 +100,16 @@ final class PresetItem
             if ($value === 'datetime-range') {
                 return fn($query, $value, $attribute) => $this->applyDateTimeRange($query, $value, $attribute);
             }
+            // 带类型的 filter，用于 MongoDB 等对类型敏感的数据库
+            if ($value === '=int') {
+                return fn($query, $value, $attribute) => $query->where($attribute, (int)$value);
+            }
+            if ($value === '=bool') {
+                return fn($query, $value, $attribute) => $query->where($attribute, filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE));
+            }
+            if ($value === '=float') {
+                return fn($query, $value, $attribute) => $query->where($attribute, (float)$value);
+            }
 
             // TODO 扩展其他 filter，或者方式（比如 static 直接注入？）
 
