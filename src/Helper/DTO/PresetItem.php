@@ -98,11 +98,7 @@ final class PresetItem
                 return fn($query, $value, $attribute) => $query->where($attribute, 'like', '%' . $value . '%');
             }
             if ($value === 'datetime-range') {
-                return fn($query, $value, $attribute) => $query
-                    ->whereBetween($attribute, array_map(
-                        fn($timestamp) => Carbon::createFromTimestamp((int)$timestamp),
-                        explode(',', (string)$value)
-                    ));
+                return fn($query, $value, $attribute) => $this->applyDateTimeRange($query, $value, $attribute);
             }
 
             // TODO 扩展其他 filter，或者方式（比如 static 直接注入？）
@@ -402,6 +398,44 @@ final class PresetItem
     private function getFormDefaultValue(): ?string
     {
         return $this->getOrSetCacheValue(__FUNCTION__, fn() => value($this->formDefaultValue));
+    }
+
+    /**
+     * 应用时间区间查询，支持单边和双边
+     * @param mixed $query 查询构建器
+     * @param string $value 格式: "start_timestamp,end_timestamp" 或 "start_timestamp," 或 ",end_timestamp"
+     * @param string $attribute 字段名
+     * @return mixed
+     */
+    private function applyDateTimeRange($query, string $value, string $attribute)
+    {
+        $parts = explode(',', $value);
+
+        if (count($parts) !== 2) {
+            return $query;
+        }
+
+        [$start, $end] = $parts;
+
+        //双边查询
+        if ($start !== '' && $end !== '') {
+            return $query->whereBetween($attribute, [
+                Carbon::createFromTimestamp((int)$start),
+                Carbon::createFromTimestamp((int)$end),
+            ]);
+        }
+
+        //只有开始时间
+        if ($start !== '' && $end === '') {
+            return $query->where($attribute, '>=', Carbon::createFromTimestamp((int)$start));
+        }
+
+        //只有结束时间
+        if ($start === '' && $end !== '') {
+            return $query->where($attribute, '<=', Carbon::createFromTimestamp((int)$end));
+        }
+
+        return $query;
     }
 
     private array $cache = [];
