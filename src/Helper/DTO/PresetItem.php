@@ -9,6 +9,9 @@ use WebmanTech\AmisAdmin\Amis\FormField;
 use WebmanTech\AmisAdmin\Amis\GridColumn;
 use WebmanTech\AmisAdmin\Repository\RepositoryInterface;
 
+/**
+ * @phpstan-type OrmQuery = \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
+ */
 final class PresetItem
 {
     public const SCENE_DEFAULT = 'default';
@@ -412,10 +415,10 @@ final class PresetItem
 
     /**
      * 应用时间区间查询，支持单边和双边
-     * @param mixed $query 查询构建器
+     * @param OrmQuery $query
      * @param string $value 格式: "start_timestamp,end_timestamp" 或 "start_timestamp," 或 ",end_timestamp"
      * @param string $attribute 字段名
-     * @return mixed
+     * @return OrmQuery
      */
     private function applyDateTimeRange($query, string $value, string $attribute)
     {
@@ -436,6 +439,7 @@ final class PresetItem
         }
 
         //只有开始时间
+        /** @phpstan-ignore-next-line */
         if ($start !== '' && $end === '') {
             return $query->where($attribute, '>=', Carbon::createFromTimestamp((int)$start));
         }
