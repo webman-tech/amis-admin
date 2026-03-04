@@ -43,7 +43,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `docs/`：文档
 - `src/Install.php`：Webman 安装脚本
 
-测试文件位于项目根目录的 `tests/Unit/AmisAdmin/`。
+测试文件位于项目根目录的 `tests/Unit/AmisAdmin/`。测试环境配置和 Helper 函数详见根目录 [CLAUDE.md](../../CLAUDE.md) 的测试相关章节。
 
 ## 代码风格
 
@@ -55,4 +55,3 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 2. **只做基础 CRUD**：不实现具体业务逻辑
 3. **amis 版本**：关注 amis 组件版本更新
 4. **跨框架**：代码设计时考虑 Laravel 和 TP 的兼容性（目前主要支持 Laravel）
-5. **测试位置**：单元测试在项目根目录的 `tests/Unit/AmisAdmin/` 下，而非包内
