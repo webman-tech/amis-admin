@@ -5,6 +5,7 @@
 /** @var string|null $script */
 
 $debug = $assets['debug'] ?? false;
+$crudPerPageScript = file_get_contents(__DIR__ . '/amis-crud-per-page.js');
 ?>
 <!DOCTYPE html>
 <html lang="<?= $assets['lang'] ?? 'zh' ?>">
@@ -41,10 +42,13 @@ $debug = $assets['debug'] ?? false;
 <script type="text/javascript">
   (function () {
     <?= $script ?? '' ?>
+    <?= $crudPerPageScript ?>
 
     const amis = amisRequire('amis/embed');
+    const amisLib = amisRequire('amis');
 
     window.amisAppBeforeLoad && window.amisAppBeforeLoad(amis);
+    initCrudPerPagePersistence(amisLib);
 
     const amisJSON = <?= json_encode($amisJSON, $debug ? JSON_PRETTY_PRINT : JSON_ERROR_NONE) ?>;
     window.amisApp = amis.embed(
