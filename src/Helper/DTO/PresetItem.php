@@ -433,20 +433,20 @@ final class PresetItem
         //双边查询
         if ($start !== '' && $end !== '') {
             return $query->whereBetween($attribute, [
-                Carbon::createFromTimestamp((int)$start),
-                Carbon::createFromTimestamp((int)$end),
+                Carbon::createFromTimestamp((int)$start, date_default_timezone_get()),
+                Carbon::createFromTimestamp((int)$end, date_default_timezone_get()),
             ]);
         }
 
         //只有开始时间
         /** @phpstan-ignore-next-line */
         if ($start !== '' && $end === '') {
-            return $query->where($attribute, '>=', Carbon::createFromTimestamp((int)$start));
+            return $query->where($attribute, '>=', Carbon::createFromTimestamp((int)$start, date_default_timezone_get()));
         }
 
         //只有结束时间
         if ($start === '' && $end !== '') {
-            return $query->where($attribute, '<=', Carbon::createFromTimestamp((int)$end));
+            return $query->where($attribute, '<=', Carbon::createFromTimestamp((int)$end, date_default_timezone_get()));
         }
 
         return $query;
