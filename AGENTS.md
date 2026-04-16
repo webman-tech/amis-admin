@@ -39,6 +39,23 @@
 
 测试文件位于项目根目录的 `tests/Unit/AmisAdmin/`。测试环境配置和 Helper 函数详见根目录 [AGENTS.md](../../AGENTS.md) 的测试相关章节。
 
+## 工作流程
+
+```
+HTTP 请求
+    │
+    ▼
+AmisSourceController (业务 Controller 继承此类)
+    │
+    ├── PresetsHelper ──→ 预设 CRUD 场景配置
+    │
+    ├── Repository (AbsRepository / EloquentRepository)
+    │       └── 数据库 CRUD
+    │
+    └── Amis 组件 (Crud/Page/FormField/GridColumn...)
+            └── 生成 JSON 配置 ──→ amis 前端渲染
+```
+
 ## 代码风格
 
 与根项目保持一致，详见根目录 [AGENTS.md](../../AGENTS.md)。
