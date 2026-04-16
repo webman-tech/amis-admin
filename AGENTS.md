@@ -16,26 +16,24 @@
 
 测试、静态分析等通用命令与根项目一致，详见根目录 [AGENTS.md](../../AGENTS.md)。
 
-## 项目架构
-
-### 核心组件
-- **AmisSourceController**：数据源控制器，处理 CRUD 操作
-- **Amis**：amis 配置生成类
-- **Helper**：
-  - `ConfigHelper`：配置助手，支持场景和闭包解析
-  - `PresetsHelper`：预设助手，提供 CRUD 场景预设
-  - `ArrayHelper`：数组助手，处理数组合并
-- **Component**：Amis 组件封装
-
-### 目录结构
-- `src/`：源代码
-  - `Amis/`：amis 配置相关
-  - `Controller/`：控制器
-  - `Helper/`：助手类
+## 目录结构
+- `src/`：
+  - `Amis.php`：amis 配置生成主入口
+  - `Amis/`：amis 各组件封装（Crud/Page/FormField/GridColumn 等）
+  - `Controller/`：
+    - `AmisSourceController.php`：数据源控制器，处理 CRUD 操作，通过 `Traits/` 拆分各操作
+    - `RenderController.php`：页面渲染控制器
+  - `Repository/`：
+    - `AbsRepository.php`：基础操作抽象，业务 Repository 继承此类
+    - `EloquentRepository.php`：Eloquent 实现
+  - `Helper/`：
+    - `PresetsHelper.php`：预设助手，提供 CRUD 场景预设配置
+  - `Validator/`：验证器接口及 Laravel 实现
   - `Middleware/`：中间件
-  - `Repository/`：仓库类
-  - `Validator/`：验证器
-- `copy/`：配置文件模板
+  - `Exceptions/`：异常类
+  - `view/`：视图模板（amis-app/amis-page）
+  - `helper.php`：全局辅助函数
+- `copy/`：配置文件模板（用于 Install.php）
 - `docs/`：文档
 - `src/Install.php`：Webman 安装脚本
 
