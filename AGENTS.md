@@ -1,7 +1,3 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## 项目概述
 
 基于 [amis](https://github.com/baidu/amis) 的管理后台快速搭建组件，通过 JSON 配置化方式为 webman 提供管理后台能力。
@@ -18,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 开发命令
 
-测试、静态分析等通用命令与根项目一致，详见根目录 [CLAUDE.md](../../CLAUDE.md)。
+测试、静态分析等通用命令与根项目一致，详见根目录 [AGENTS.md](../../AGENTS.md)。
 
 ## 项目架构
 
@@ -43,11 +39,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `docs/`：文档
 - `src/Install.php`：Webman 安装脚本
 
-测试文件位于项目根目录的 `tests/Unit/AmisAdmin/`。测试环境配置和 Helper 函数详见根目录 [CLAUDE.md](../../CLAUDE.md) 的测试相关章节。
+测试文件位于项目根目录的 `tests/Unit/AmisAdmin/`。测试环境配置和 Helper 函数详见根目录 [AGENTS.md](../../AGENTS.md) 的测试相关章节。
 
 ## 代码风格
 
-与根项目保持一致，详见根目录 [CLAUDE.md](../../CLAUDE.md)。
+与根项目保持一致，详见根目录 [AGENTS.md](../../AGENTS.md)。
 
 ## 注意事项
 
