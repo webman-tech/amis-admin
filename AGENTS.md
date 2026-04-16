@@ -34,7 +34,8 @@
   - `view/`：视图模板（amis-app/amis-page）
   - `helper.php`：全局辅助函数
 - `copy/`：配置文件模板（用于 Install.php）
-- `docs/`：文档
+- `skills/`：AI 技能
+  - `webman-tech-amis-admin-best-practices`：amis-admin 使用的最佳实践
 - `src/Install.php`：Webman 安装脚本
 
 测试文件位于项目根目录的 `tests/Unit/AmisAdmin/`。测试环境配置和 Helper 函数详见根目录 [AGENTS.md](../../AGENTS.md) 的测试相关章节。
