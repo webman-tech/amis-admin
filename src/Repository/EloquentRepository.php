@@ -289,9 +289,8 @@ class EloquentRepository extends AbsRepository
      */
     public function recovery($id): void
     {
-        /* @phpstan-ignore-next-line */
         $this->query()
-            ->withTrashed()
+            ->withTrashed() // @phpstan-ignore-line method.notFound — withTrashed 来自 SoftDeletes，stub 未声明
             ->whereKey($id)
             ->restore();
     }

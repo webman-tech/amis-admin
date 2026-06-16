@@ -445,6 +445,7 @@ final class PresetItem
         }
 
         //只有结束时间
+        /** @phpstan-ignore-next-line identical.alwaysTrue — 过前面分支后 $start 必为空字符串 */
         if ($start === '' && $end !== '') {
             return $query->where($attribute, '<=', Carbon::createFromTimestamp((int)$end, date_default_timezone_get()));
         }
