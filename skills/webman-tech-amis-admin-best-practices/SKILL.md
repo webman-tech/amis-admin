@@ -13,6 +13,12 @@ description: webman-tech/amis-admin 最佳实践。使用场景：用户搭建 a
 
 ---
 
+## 开发约定
+
+- **如果是通过浏览器进行验证的，改代码后先整页刷新（reload）再验证**：admin 是 amis **hash 路由 SPA**
+
+---
+
 ## 必须配置
 
 ```php
@@ -318,3 +324,4 @@ Route::group('/user', function () {
 | 搜索不生效 | `filter: false` 或未配置 `searchableAttributes` | 给 PresetItem 设置 `filter` 参数 |
 | 更新时必填报错 | update 场景缺少 `sometimes` 规则 | PresetItem 会自动添加，无需手动处理 |
 | 多应用配置互相干扰 | 未挂载 `AmisModuleChangeMiddleware` | 每个应用路由组挂载对应中间件 |
+| 新增透传字段前端拿不到 | 非 Preset 字段被 scene 过滤 | 注册 `PresetItem(grid: false, filter: false)` 并加入 scene keys |
