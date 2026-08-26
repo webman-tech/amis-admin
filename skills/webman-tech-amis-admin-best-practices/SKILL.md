@@ -1,6 +1,6 @@
 ---
 name: webman-tech-amis-admin-best-practices
-description: webman-tech/amis-admin 最佳实践。使用场景：用户搭建 amis 管理后台时，给出明确的推荐写法。
+description: Amis 管理后台开发。触发：CRUD 页面、PresetItem 字段配置、Repository 模式、自定义按钮、权限控制、多应用后台。
 ---
 
 # webman-tech/amis-admin 最佳实践
